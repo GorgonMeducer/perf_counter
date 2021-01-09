@@ -96,7 +96,7 @@ int main (void)
         {
             printf("no interrupt \r\n");
         }
-        printf("used clock cycle: %d", clock() - tStart);
+        printf("used clock cycle: %d", (int32_t)(clock() - tStart));
     } while(0);
     
     while (1) {

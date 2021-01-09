@@ -181,4 +181,30 @@ extern int32_t stop_cycle_counter(void);
  */
 extern void delay_us(int32_t iUs);
 
+/*! \note the prototype of this clock() is different from the one defined in
+ *!           time.h. As clock_t is usually defined as unsigned int, it is
+ *!           not big enough in Cortex-M system to hold a time-stamp. clock()
+ *!           defined here returns the timestamp since the begining of main()
+ *!           and its unit is clock cycle (rather than 1ms). Hence, for a system
+ *!           running under several hundreds MHz or even 1GHz, e.g. RT10xx from 
+ *!           NXP, it is very easy to see a counter overflow as clock_t is 
+ *!           defined as uint32_t in timer.h.
+ *!           Since we are not allowed to change the defintion of clock_t in
+ *!           official header file, i.e. time.h, I use a compatible prototype 
+ *!           after I checked the AAPCS spec. So, the return of the clock() is 
+ *!           int64_t, which will use the R0 to store the lower 32bits and R1 
+ *!           to store the higher 32bits. When you are using the prototype from
+ *!           timer.h, caller will only take the lower 32bits stored in R0 and 
+ *!           the higher 32bits stored in R1 will be ignored.
+ *! 
+ *!           If you want to use the non-overflow version of this clock(), please
+ *!           1) define the MACRO: __PERF_CNT_USE_LONG_CLOCK__ in your project 
+ *!           and 2) do not include system header file <time.h>
+ *!
+ */
+#ifdef __PERF_CNT_USE_LONG_CLOCK__
+__attribute__((nothrow)) 
+extern int64_t clock(void);
+#endif
+
 #endif
