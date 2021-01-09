@@ -1,0 +1,13 @@
+
+*.axf
+*.dep
+*.d
+*.o
+*.Scr
+*.gabwan01
+*.map
+example/Out/example.build_log.htm
+example/Out/perf_counter.build_log.htm
+*.lnp
+example/Out/example.htm
+example/Out/perf_counter.lib
