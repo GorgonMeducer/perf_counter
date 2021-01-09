@@ -14,7 +14,7 @@
 /*
  * Define the Device Header File: 
  */
-#define CMSIS_device_header "ARMCM3.h"
+#define CMSIS_device_header "ARMCM0.h"
 
 
 

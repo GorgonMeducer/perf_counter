@@ -11,3 +11,4 @@ example/Out/perf_counter.build_log.htm
 *.lnp
 example/Out/example.htm
 example/Out/perf_counter.lib
+*.scvd

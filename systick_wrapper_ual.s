@@ -24,12 +24,18 @@
                 EXPORT  |$Sub$$SysTick_Handler|
                 IMPORT  user_code_insert_to_systick_handler
                 IMPORT  |$Super$$SysTick_Handler|
+                push    {r4, r5}
                 push	{r4, lr}
-                bl	    user_code_insert_to_systick_handler
-                pop	    {r4, lr}
-                b	    |$Super$$SysTick_Handler|
+                LDR      R0, =user_code_insert_to_systick_handler
+                BLX      R0
+                pop	    {r4, r5}
+                mov      lr, r5
+                pop	    {r4, r5}
+                LDR      R0, =|$Super$$SysTick_Handler|
+                BX      R0
                 ENDP
                 
+                ALIGN
                 AREA    |.text|, CODE, READONLY
 
 __ensure_systick_wrapper   PROC
