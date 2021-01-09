@@ -1,20 +1,19 @@
-/*----------------------------------------------------------------------------
- * Name:    Blinky.c
- * Purpose: LED Flasher for MPS2
- * Note(s): possible defines set in "options for target - C/C++ - Define"
- *            __USE_LCD    - enable Output on GLCD
- *            __USE_TIMER0 - use Timer0  to generate timer interrupt
- *                         - use SysTick to generate timer interrupt (default)
- *----------------------------------------------------------------------------
- * This file is part of the uVision/ARM development tools.
- * This software may only be used under the terms of a valid, current,
- * end user licence from KEIL for a compatible version of KEIL software
- * development tools. Nothing else gives you the right to use this software.
- *
- * This software is supplied "AS IS" without warranties of any kind.
- *
- * Copyright (c) 2015 Keil - An ARM Company. All rights reserved.
- *----------------------------------------------------------------------------*/
+/****************************************************************************
+*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*                                                                           *
+*  Licensed under the Apache License, Version 2.0 (the "License");          *
+*  you may not use this file except in compliance with the License.         *
+*  You may obtain a copy of the License at                                  *
+*                                                                           *
+*     http://www.apache.org/licenses/LICENSE-2.0                            *
+*                                                                           *
+*  Unless required by applicable law or agreed to in writing, software      *
+*  distributed under the License is distributed on an "AS IS" BASIS,        *
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+*  See the License for the specific language governing permissions and      *
+*  limitations under the License.                                           *
+*                                                                           *
+****************************************************************************/
 
 #include <stdio.h>
 #include <stdint.h>

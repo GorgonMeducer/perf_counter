@@ -1,9 +1,28 @@
+/****************************************************************************
+*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*                                                                           *
+*  Licensed under the Apache License, Version 2.0 (the "License");          *
+*  you may not use this file except in compliance with the License.         *
+*  You may obtain a copy of the License at                                  *
+*                                                                           *
+*     http://www.apache.org/licenses/LICENSE-2.0                            *
+*                                                                           *
+*  Unless required by applicable law or agreed to in writing, software      *
+*  distributed under the License is distributed on an "AS IS" BASIS,        *
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *
+*  See the License for the specific language governing permissions and      *
+*  limitations under the License.                                           *
+*                                                                           *
+****************************************************************************/
+
+/*============================ INCLUDES ======================================*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include "cmsis_compiler.h"
 #include "perf_counter.h"
 
+/*============================ MACROS ========================================*/
 /* IO definitions (access restrictions to peripheral registers) */
 /**
     \defgroup CMSIS_glob_defs CMSIS Global Defines
@@ -33,16 +52,7 @@
 #define SysTick             ((SysTick_Type   *)     SysTick_BASE     ) /*!< SysTick configuration struct */
 #define SCB                 ((SCB_Type       *)     SCB_BASE      )   /*!< SCB configuration struct */
 
-/*
-  \brief  Structure type to access the System Timer (SysTick).
- */
-typedef struct
-{
-  __IOM uint32_t CTRL;                   /*!< Offset: 0x000 (R/W)  SysTick Control and Status Register */
-  __IOM uint32_t LOAD;                   /*!< Offset: 0x004 (R/W)  SysTick Reload Value Register */
-  __IOM uint32_t VAL;                    /*!< Offset: 0x008 (R/W)  SysTick Current Value Register */
-  __IM  uint32_t CALIB;                  /*!< Offset: 0x00C (R/ )  SysTick Calibration Register */
-} SysTick_Type;
+
 
 /* SysTick Control / Status Register Definitions */
 #define SysTick_CTRL_COUNTFLAG_Pos         16U                                            /*!< SysTick CTRL: COUNTFLAG Position */
@@ -78,6 +88,29 @@ typedef struct
 /*@} end of group CMSIS_SysTick */
 
 
+
+
+#define SCB_ICSR_PENDSTCLR_Pos             25U                                            /*!< SCB ICSR: PENDSTCLR Position */
+#define SCB_ICSR_PENDSTCLR_Msk             (1UL << SCB_ICSR_PENDSTCLR_Pos)                /*!< SCB ICSR: PENDSTCLR Mask */
+
+#define SCB_ICSR_PENDSTSET_Pos             26U                                            /*!< SCB ICSR: PENDSTSET Position */
+#define SCB_ICSR_PENDSTSET_Msk             (1UL << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB ICSR: PENDSTSET Mask */
+
+
+/*============================ MACROFIED FUNCTIONS ===========================*/
+/*============================ TYPES =========================================*/
+
+/*
+  \brief  Structure type to access the System Timer (SysTick).
+ */
+typedef struct
+{
+  __IOM uint32_t CTRL;                   /*!< Offset: 0x000 (R/W)  SysTick Control and Status Register */
+  __IOM uint32_t LOAD;                   /*!< Offset: 0x004 (R/W)  SysTick Reload Value Register */
+  __IOM uint32_t VAL;                    /*!< Offset: 0x008 (R/W)  SysTick Current Value Register */
+  __IM  uint32_t CALIB;                  /*!< Offset: 0x00C (R/ )  SysTick Calibration Register */
+} SysTick_Type;
+
 /*
   \brief  Structure type to access the System Control Block (SCB).
  */
@@ -106,13 +139,19 @@ typedef struct
   __IOM uint32_t CPACR;                  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register */
 } SCB_Type;
 
-#define SCB_ICSR_PENDSTCLR_Pos             25U                                            /*!< SCB ICSR: PENDSTCLR Position */
-#define SCB_ICSR_PENDSTCLR_Msk             (1UL << SCB_ICSR_PENDSTCLR_Pos)                /*!< SCB ICSR: PENDSTCLR Mask */
-
-#define SCB_ICSR_PENDSTSET_Pos             26U                                            /*!< SCB ICSR: PENDSTSET Position */
-#define SCB_ICSR_PENDSTSET_Msk             (1UL << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB ICSR: PENDSTSET Mask */
-
+/*============================ GLOBAL VARIABLES ==============================*/
 extern uint32_t SystemCoreClock;
+
+/*============================ LOCAL VARIABLES ===============================*/
+volatile static int32_t s_nCycleCounts = 0;
+volatile static int32_t s_nOffset = 0;
+
+volatile static int64_t s_lSystemClockCounts = 0; 
+
+/*============================ PROTOTYPES ====================================*/
+/*============================ IMPLEMENTATION ================================*/
+/*============================ INCLUDES ======================================*/
+
 
 /**
   \brief   System Tick Configuration
@@ -145,13 +184,6 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
     }
     return (0UL);                                                     /* Function successful */
 }
-
-
-
-volatile static int32_t s_nCycleCounts = 0;
-static volatile int32_t s_nOffset = 0;
-
-volatile static int64_t s_lSystemClockCounts = 0; 
 
 void user_code_insert_to_systick_handler(void)
 {
@@ -221,7 +253,6 @@ int32_t stop_cycle_counter(void)
     return nTemp - s_nOffset;
 }
 
-
 __attribute__((constructor(255)))
 void __perf_counter_init(void)
 {
@@ -235,7 +266,6 @@ void delay_us(int32_t iUs)
     start_cycle_counter();
     while(stop_cycle_counter() < iUs);
 }
-
 
 _ARMABI 
 int64_t clock(void)
