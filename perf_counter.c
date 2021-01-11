@@ -243,19 +243,19 @@ static __attribute__((always_inline)) int32_t check_systick(void)
 
     /*! \note Since we cannot stop counting temporarily, there are several 
      *!       conditions which we should take into consideration:
-     *!       Condition one: when assign nTemp with the register value (LOAD-VAL), 
-     *!           the underflow didn't happen and when we check the PENDSTSET bit,
+     *!       Condition 1: when assign nTemp with the register value (LOAD-VAL), 
+     *!           the underflow didn't happen but when we check the PENDSTSET bit,
      *!           the underflow happens, for this condition, we should not
      *!           do any compensation. When this happens, the (LOAD-nTemp) is  
-     *!           smaller than PERF_CNT_COMPENSATION_THRESHOLD (a big value) as
+     *!           smaller than PERF_CNT_COMPENSATION_THRESHOLD (a small value) as
      *!           long as LOAD is bigger than (or equals to) the 
      *!           PERF_CNT_COMPENSATION_THRESHOLD;
-     *!       Condition two: when assign nTemp with the register value (LOAD-VAL), 
+     *!       Condition 2: when assign nTemp with the register value (LOAD-VAL), 
      *!           the VAL is zero and underflow happened and the PENDSTSET bit
      *!           is set, for this condition, we should not do any compensation.
      *!           When this happens, the (LOAD-nTemp) is equals to zero.
-     *!       Condition Three: when initialising nTemp with the register value
-     *!           VAL, the underflow has already happened, hence the PENDSTSET 
+     *!       Condition 3: when assign nTemp with the register value (LOAD-VAL),
+     *!           the underflow has already happened, hence the PENDSTSET 
      *!           is set, for this condition, we should compensate the return 
      *!           value. When this happens, the (LOAD-nTemp) is bigger than (or
      *!           equals to) PERF_CNT_COMPENSATION_THRESHOLD.
