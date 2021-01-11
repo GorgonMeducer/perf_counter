@@ -217,20 +217,19 @@ void start_cycle_counter(void)
     }
 }
 
+/*! \note this function should only be called when irq is disabled
+ *!       hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
+ *!       won't change. 
+ */
 static __attribute__((always_inline)) int32_t check_systick(void)
 {
-    int32_t nTemp = 0;
-    bool bPendST = false;
-    
-    SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
-    nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
-    bPendST = (0 != (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk));
-    SysTick->CTRL |= SysTick_CTRL_ENABLE_Msk;
-    
+    int32_t nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
+
     /*! \note here is a corner case: SysTick->VAL is zero and SysTick Pending bit is set.
      *!       we should check this corner condition with (nTemp != SysTick->LOAD)
      */
-    if (bPendST && (nTemp != SysTick->LOAD)) {  
+    if (    (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk) 
+        &&  (nTemp != SysTick->LOAD)) {  
         nTemp += SysTick->LOAD;
     }
     
