@@ -22,6 +22,10 @@
 #include "cmsis_compiler.h"
 #include "perf_counter.h"
 
+#ifndef PERF_CNT_COMPENSATION_THRESHOLD
+#   define PERF_CNT_COMPENSATION_THRESHOLD       16
+#endif
+
 /*============================ MACROS ========================================*/
 /* IO definitions (access restrictions to peripheral registers) */
 /**
@@ -192,6 +196,14 @@ void user_code_insert_to_systick_handler(void)
     s_lSystemClockCounts += wLoad;
 }
 
+/*! \brief   initialise cycle counter service
+ *!          and don't forget to tell the function whether the systick is already
+ *!          used by user applications. 
+ *!          Don't worry, this cycle counter service won't affect your existing
+ *!          systick service.
+ *! \param bSysTickIsOccupied  A boolean value which indicates whether SysTick
+ *!          is already used by user application.
+ */
 void init_cycle_counter(bool bSysTickIsOccupied)
 {
     if (!bSysTickIsOccupied) {
@@ -205,16 +217,20 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     __ensure_systick_wrapper();
 }
 
-/* Function : start_time
-	This function will be called right before starting the timed portion of the benchmark.
-	Implementation may be capturing a system timer (as implemented in the example code) 
-	or zeroing some system parameters - e.g. setting the cpu clocks cycles to 0.
+/*! \brief try to start the performance counter
+ *! \retval false the LOAD register is too small
+ *! \retval true performance counter starts
 */
-void start_cycle_counter(void)
+bool start_cycle_counter(void)
 {
+    if (SysTick->LOAD < PERF_CNT_COMPENSATION_THRESHOLD) {
+        return false;
+    }
+    
     safe_atom_code(){
         s_nCycleCounts =  (int32_t)SysTick->VAL - (int32_t)SysTick->LOAD;
     }
+    return true;
 }
 
 /*! \note this function should only be called when irq is disabled
@@ -225,22 +241,41 @@ static __attribute__((always_inline)) int32_t check_systick(void)
 {
     int32_t nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
 
-    /*! \note here is a corner case: SysTick->VAL is zero and SysTick Pending bit is set.
-     *!       we should check this corner condition with (nTemp != SysTick->LOAD)
+    /*! \note Since we cannot stop counting temporarily, there are several 
+     *!       conditions which we should take into consideration:
+     *!       Condition one: when assign nTemp with the register value (LOAD-VAL), 
+     *!           the underflow didn't happen and when we check the PENDSTSET bit,
+     *!           the underflow happens, for this condition, we should not
+     *!           do any compensation. When this happens, the (LOAD-nTemp) is  
+     *!           smaller than PERF_CNT_COMPENSATION_THRESHOLD (a big value) as
+     *!           long as LOAD is bigger than (or equals to) the 
+     *!           PERF_CNT_COMPENSATION_THRESHOLD;
+     *!       Condition two: when assign nTemp with the register value (LOAD-VAL), 
+     *!           the VAL is zero and underflow happened and the PENDSTSET bit
+     *!           is set, for this condition, we should not do any compensation.
+     *!           When this happens, the (LOAD-nTemp) is equals to zero.
+     *!       Condition Three: when initialising nTemp with the register value
+     *!           VAL, the underflow has already happened, hence the PENDSTSET 
+     *!           is set, for this condition, we should compensate the return 
+     *!           value. When this happens, the (LOAD-nTemp) is bigger than (or
+     *!           equals to) PERF_CNT_COMPENSATION_THRESHOLD.
+     *!       The following code implements an equivalent logic.
      */
-    if (    (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk) 
-        &&  (nTemp != SysTick->LOAD)) {  
-        nTemp += SysTick->LOAD;
+    if (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk){
+        if (((int32_t)SysTick->LOAD - nTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
+            nTemp += SysTick->LOAD;
+        } 
     }
     
     return nTemp;
 }
 
-/* Function : stop_time
-	This function will be called right after ending the timed portion of the benchmark.
-	Implementation may be capturing a system timer (as implemented in the example code) 
-	or other system parameters - e.g. reading the current value of cpu cycles counter.
-*/
+/*! \brief calculate the elapsed cycle count since the last start point
+ *! 
+ *! \note you can have multiple stop_cycle_counter following one start point
+ *!  
+ *! \return the elapsed cycle count.
+ */ 
 int32_t stop_cycle_counter(void)
 {
     int32_t nTemp = 0;
