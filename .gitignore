@@ -12,3 +12,4 @@ example/Out/perf_counter.build_log.htm
 example/Out/example.htm
 example/Out/perf_counter.lib
 *.scvd
+*.iex
