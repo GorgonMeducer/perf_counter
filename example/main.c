@@ -19,7 +19,12 @@
 #include <stdio.h>
 #include <cmsis_compiler.h>
 #include "perf_counter.h"
+
+#ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
+#else
+typedef int64_t clock_t ;
+#endif
 
 void systimer_1ms_handler(void)
 {

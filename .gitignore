@@ -13,3 +13,5 @@ example/Out/example.htm
 example/Out/perf_counter.lib
 *.scvd
 *.iex
+*.crf
+*.lst
