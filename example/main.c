@@ -105,6 +105,7 @@ int main (void)
     } while(0);
     
     while (1) {
-
+        printf("hello world\r\n");
+        delay_us(1000000);
     }
 }

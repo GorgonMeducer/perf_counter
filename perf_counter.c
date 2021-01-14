@@ -27,7 +27,7 @@
 #endif
 
 #ifndef PERF_CNT_DELAY_US_COMPENSATION
-#   define PERF_CNT_DELAY_US_COMPENSATION           20
+#   define PERF_CNT_DELAY_US_COMPENSATION           82
 #endif
 
 /*============================ MACROS ========================================*/
@@ -153,7 +153,7 @@ extern uint32_t SystemCoreClock;
 /*============================ LOCAL VARIABLES ===============================*/
 volatile static int32_t s_nCycleCounts = 0;
 volatile static int32_t s_nOffset = 0;
-
+volatile static int32_t s_nUnit = 1;
 volatile static int64_t s_lSystemClockCounts = 0; 
 
 /*============================ PROTOTYPES ====================================*/
@@ -195,7 +195,7 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
 
 void user_code_insert_to_systick_handler(void)
 {
-    uint32_t wLoad = SysTick->LOAD;
+    uint32_t wLoad = SysTick->LOAD + 1;
     s_nCycleCounts += wLoad;
     s_lSystemClockCounts += wLoad;
 }
@@ -216,6 +216,8 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     start_cycle_counter();
     //s_nSystemClockCounts = s_nCycleCounts;
     s_nOffset = stop_cycle_counter();
+    
+    s_nUnit = SystemCoreClock / 1000000ul;
     
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
@@ -267,7 +269,7 @@ static __attribute__((always_inline)) int32_t check_systick(void)
      */
     if (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk){
         if (((int32_t)SysTick->LOAD - nTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
-            nTemp += SysTick->LOAD;
+            nTemp += SysTick->LOAD + 1;
         } 
     }
     
@@ -299,7 +301,7 @@ void __perf_counter_init(void)
 
 void delay_us(int32_t iUs)
 {
-    iUs *= SystemCoreClock / 1000000ul;
+    iUs *= s_nUnit;
     
     if (iUs <= PERF_CNT_DELAY_US_COMPENSATION) {
         return ;
