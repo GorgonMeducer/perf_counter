@@ -23,7 +23,11 @@
 #include "perf_counter.h"
 
 #ifndef PERF_CNT_COMPENSATION_THRESHOLD
-#   define PERF_CNT_COMPENSATION_THRESHOLD       16
+#   define PERF_CNT_COMPENSATION_THRESHOLD          16
+#endif
+
+#ifndef PERF_CNT_DELAY_US_COMPENSATION
+#   define PERF_CNT_DELAY_US_COMPENSATION           20
 #endif
 
 /*============================ MACROS ========================================*/
@@ -296,6 +300,12 @@ void __perf_counter_init(void)
 void delay_us(int32_t iUs)
 {
     iUs *= SystemCoreClock / 1000000ul;
+    
+    if (iUs <= PERF_CNT_DELAY_US_COMPENSATION) {
+        return ;
+    } 
+    
+    iUs -= PERF_CNT_DELAY_US_COMPENSATION;
     
     start_cycle_counter();
     while(stop_cycle_counter() < iUs);
