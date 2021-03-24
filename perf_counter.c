@@ -211,7 +211,7 @@ void user_code_insert_to_systick_handler(void)
 void init_cycle_counter(bool bSysTickIsOccupied)
 {
     if (!bSysTickIsOccupied) {
-        SysTick_Config(SystemCoreClock/1000);
+        SysTick_Config(0x01000000);             //!< use the longest period
     }
     start_cycle_counter();
     //s_nSystemClockCounts = s_nCycleCounts;
