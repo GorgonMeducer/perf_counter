@@ -334,8 +334,21 @@ void delay_us(int32_t iUs)
  *!           and 2) do not include system header file <time.h>
  *!
  */
-_ARMABI 
+__attribute__((nothrow)) 
 int64_t clock(void)
+{
+    int64_t lTemp = 0;
+    
+    __IRQ_SAFE {
+        lTemp = check_systick() + s_lSystemClockCounts;
+    }
+
+    return lTemp;
+}
+
+
+__attribute__((nothrow)) 
+int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
     

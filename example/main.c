@@ -80,6 +80,19 @@ int main (void)
             printf("Processing item with ID = %d\r\n", _->chID);
         }
     }
+    
+    int32_t iCycleResult = 0;
+    
+    /* measure cycles and store it in a dedicated variable without printf */
+    __cycleof__("delay_us(1000ul)", 
+        /* insert code to __cycleof__ body, "{}" can be omitted  */
+        {
+            iCycleResult = _;   /*< "_" stores the result */
+        }) {
+        delay_us(1000ul);
+    }
+    
+    printf("\r\n delay_us(1000ul) takes %d cycles\r\n", (int)iCycleResult);
 
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
@@ -96,15 +109,15 @@ int main (void)
 
     //! demo of using clock() in timer.h
     do {
-        clock_t tStart = clock();
+        int64_t tStart = get_system_ticks();
         __IRQ_SAFE {
             printf("no interrupt \r\n");
         }
-        printf("used clock cycle: %d", (int32_t)(clock() - tStart));
+        printf("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
     } while(0);
     
     while (1) {
-        printf("hello world\r\n");
+        printf("\r\nhello world\r\n");
         delay_us(1000000);
     }
 }

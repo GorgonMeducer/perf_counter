@@ -24,6 +24,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#if defined(__clang__)
+#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
+#endif
+
 /*============================ MACROS ========================================*/
 
 #ifndef __PLOOC_VA_NUM_ARGS_IMPL
@@ -103,21 +107,21 @@
 #define __using2(__declare, __on_leave_expr)                                    \
             for (__declare, *CONNECT3(__using_, __LINE__,_ptr) = NULL;          \
                  CONNECT3(__using_, __LINE__,_ptr)++ == NULL;                   \
-                 __on_leave_expr                                                \
+                 (__on_leave_expr)                                              \
                 )
 
 #define __using3(__declare, __on_enter_expr, __on_leave_expr)                   \
             for (__declare, *CONNECT3(__using_, __LINE__,_ptr) = NULL;          \
                  CONNECT3(__using_, __LINE__,_ptr)++ == NULL ?                  \
                     ((__on_enter_expr),1) : 0;                                  \
-                 __on_leave_expr                                                \
+                 (__on_leave_expr)                                              \
                 )
                 
 #define __using4(__dcl1, __dcl2, __on_enter_expr, __on_leave_expr)              \
             for (__dcl1, __dcl2, *CONNECT3(__using_, __LINE__,_ptr) = NULL;     \
                  CONNECT3(__using_, __LINE__,_ptr)++ == NULL ?                  \
                     ((__on_enter_expr),1) : 0;                                  \
-                 __on_leave_expr                                                \
+                 (__on_leave_expr)                                              \
                 )
                
 #define using(...)                                                              \
@@ -131,7 +135,7 @@
 #define __with2(__type, __addr)                                                 \
             using(__type *_=(__addr))
 #define __with3(__type, __addr, __item)                                         \
-            using(__type *_=(__addr), *__item = _, _=_, )
+            using(__type *_=(__addr), *__item = _, _=_,_=_ )
 
 #define with(...)                                                               \
             CONNECT2(__with, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
@@ -179,19 +183,19 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
             
-#define __cycleof__(__STR)                                                      \
-            for (int32_t nCycles = 0,                                           \
-                    CONNECT2(__cycle_count_s_, __LINE__) = 1;                   \
-                 CONNECT2(__cycle_count_s_, __LINE__)-- ?                       \
-                    (start_cycle_counter(),1) :                                 \
-                    (                                                           \
-                    printf( "\r\n-[Cycle Report]"                               \
-                        "--------------------------------------------\r\n"      \
-                        __STR                                                   \
-                        " total cycle count: %d [%08x]\r\n", nCycles, nCycles)  \
-                    ,0);                                                        \
-                    nCycles = stop_cycle_counter()                              \
-                 )
+#define __cycleof__(__STR, ...)                                                 \
+            using(int64_t _ = get_system_ticks(), {                             \
+                _ = get_system_ticks() - _;                                     \
+                if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
+                    printf("\r\n");                                             \
+                    printf("-[Cycle Report]");                                  \
+                    printf("--------------------------------------------\r\n"); \
+                    printf(__STR " total cycle count: %d [%08x]\r\n",           \
+                            (int)_, (int)_);                                    \
+                } else {                                                        \
+                    __VA_ARGS__                                                 \
+                };                                                              \
+            })
                     
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -244,6 +248,9 @@ extern void delay_us(int32_t iUs);
 __attribute__((nothrow)) 
 extern int64_t clock(void);
 #endif
+
+__attribute__((nothrow)) 
+extern int64_t get_system_ticks(void);
 
 
 /*----------------------------------------------------------------------------*
