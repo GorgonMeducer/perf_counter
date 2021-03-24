@@ -90,11 +90,6 @@
 #define using(...)                                                              \
             CONNECT2(__using, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
-
-#define safe_atom_code()                                                        \
-            using(  uint32_t CONNECT2(temp,__LINE__) = __disable_irq(),         \
-                    __set_PRIMASK(CONNECT2(temp,__LINE__)))
-
 #define __with2(__type, __addr)                                                 \
             using(__type *_=(__addr))
 #define __with3(__type, __addr, __item)                                         \
