@@ -97,7 +97,7 @@ int main (void)
     //! demo of using clock() in timer.h
     do {
         clock_t tStart = clock();
-        safe_atom_code() {
+        __IRQ_SAFE {
             printf("no interrupt \r\n");
         }
         printf("used clock cycle: %d", (int32_t)(clock() - tStart));

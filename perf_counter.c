@@ -179,8 +179,8 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
         return (1UL);                                                   /* Reload value impossible */
     }
   
-    safe_atom_code(){
-        SysTick->CTRL = 0;
+    __IRQ_SAFE {
+        SysTick->CTRL  = 0;
         
         SysTick->LOAD  = (uint32_t)(ticks - 1UL);                         /* set reload register */
         //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
@@ -188,7 +188,7 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
         SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
                            SysTick_CTRL_TICKINT_Msk   |
                            SysTick_CTRL_ENABLE_Msk;                     /* Enable SysTick IRQ and SysTick Timer */
-        SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;
+        SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
     }
     return (0UL);                                                     /* Function successful */
 }
@@ -233,7 +233,7 @@ bool start_cycle_counter(void)
         return false;
     }
     
-    safe_atom_code(){
+    __IRQ_SAFE {
         s_nCycleCounts =  (int32_t)SysTick->VAL - (int32_t)SysTick->LOAD;
     }
     return true;
@@ -286,7 +286,7 @@ int32_t stop_cycle_counter(void)
 {
     int32_t nTemp = 0;
 
-    safe_atom_code(){
+    __IRQ_SAFE {
         nTemp = check_systick() + s_nCycleCounts;
     }
 
@@ -339,7 +339,7 @@ int64_t clock(void)
 {
     int64_t lTemp = 0;
     
-    safe_atom_code(){
+    __IRQ_SAFE {
         lTemp = check_systick() + s_lSystemClockCounts;
     }
 

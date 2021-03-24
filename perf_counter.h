@@ -26,12 +26,38 @@
 
 /*============================ MACROS ========================================*/
 
-#define __PLOOC_VA_NUM_ARGS_IMPL(   _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,_12,  \
-                                    _13,_14,_15,_16,__N,...)      __N
+#ifndef __PLOOC_VA_NUM_ARGS_IMPL
+#   define __PLOOC_VA_NUM_ARGS_IMPL(   _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,   \
+                                    _12,_13,_14,_15,_16,__N,...)      __N
+#endif
+
+#ifndef __PLOOC_VA_NUM_ARGS
 #define __PLOOC_VA_NUM_ARGS(...)                                                \
             __PLOOC_VA_NUM_ARGS_IMPL( 0,##__VA_ARGS__,16,15,14,13,12,11,10,9,   \
                                       8,7,6,5,4,3,2,1,0)
-            
+#endif
+
+
+#undef __CONNECT2
+#undef __CONNECT3
+#undef __CONNECT4
+#undef __CONNECT5
+#undef __CONNECT6
+#undef __CONNECT7
+#undef __CONNECT8
+#undef __CONNECT9
+
+#undef CONNECT2
+#undef CONNECT3
+#undef CONNECT4
+#undef CONNECT5
+#undef CONNECT6
+#undef CONNECT7
+#undef CONNECT8
+#undef CONNECT9
+
+#undef CONNECT
+
 #define __CONNECT2(__A, __B)                        __A##__B
 #define __CONNECT3(__A, __B, __C)                   __A##__B##__C
 #define __CONNECT4(__A, __B, __C, __D)              __A##__B##__C##__D
@@ -62,6 +88,13 @@
             
             
 
+
+#undef __using1
+#undef __using2
+#undef __using3
+#undef __using4
+#undef using
+
 #define __using1(__declare)                                                     \
             for (__declare, *CONNECT3(__using_, __LINE__,_ptr) = NULL;          \
                  CONNECT3(__using_, __LINE__,_ptr)++ == NULL;                   \
@@ -90,6 +123,11 @@
 #define using(...)                                                              \
             CONNECT2(__using, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
+
+#undef __with2
+#undef __with3
+#undef with
+
 #define __with2(__type, __addr)                                                 \
             using(__type *_=(__addr))
 #define __with3(__type, __addr, __item)                                         \
@@ -103,6 +141,11 @@
 #ifndef dimof
 #   define dimof(__array)          (sizeof(__array)/sizeof(__array[0]))
 #endif
+
+
+#undef foreach2
+#undef foreach3
+#undef foreach
 
 #define foreach2(__type, __array)                                               \
             using(__type *_ = __array)                                         \
@@ -126,7 +169,13 @@
             using(  uint32_t CONNECT2(temp,__LINE__) = __disable_irq(),         \
                     __set_PRIMASK(CONNECT2(temp,__LINE__)))
 #endif
-
+            
+#ifndef __IRQ_SAFE
+#   define __IRQ_SAFE                                                           \
+            using(  uint32_t CONNECT2(temp,__LINE__) = __disable_irq(),         \
+                    __set_PRIMASK(CONNECT2(temp,__LINE__)))
+#endif
+            
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
             
