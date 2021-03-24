@@ -77,20 +77,20 @@ int main (void)
     /*! demo of __cycleof__() operation */
     __cycleof__() {
         foreach(example_lv0_t, s_tItem) {
-            printf("Processing item with ID = %d\r\n", _.chID);
+            printf("Processing item with ID = %d\r\n", _->chID);
         }
     }
 
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
-        _.wA = 1;
-        _.hwB = 2;
-        _.chC = 3;
+        _->wA = 1;
+        _->hwB = 2;
+        _->chC = 3;
         
         with(example_lv1_t, &pitem->tLV1) {
-            _.wLV1A = 4;
-            _.hwLV1B = 5;
-            _.chLV1C = 6;
+            _->wLV1A = 4;
+            _->hwLV1B = 5;
+            _->chLV1C = 6;
         }
     }
 
