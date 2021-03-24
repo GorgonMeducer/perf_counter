@@ -289,7 +289,7 @@ extern int64_t get_system_ticks(void);
 extern void init_cycle_counter(bool bSysTickIsOccupied);
 
 
-/*! \note  if you are using a compiler rather than armcc or armclang, e.g. iar,
+/*! \note  if you are using a compiler other than armcc or armclang, e.g. iar,
  *!        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
  *!        of your target toolchain as it use the $Super$$ which is only supported
  *!        by armlink. For this condition, you have to manually put this function
