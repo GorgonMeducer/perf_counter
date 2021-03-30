@@ -71,6 +71,8 @@ int main (void)
         printf("\t In Body a=%d \r\n", ++a);
     }    
 
+    __cycleof__("Calibration") {}
+
 
     printf("\r\n\r\n\r\n\r\n");
 
