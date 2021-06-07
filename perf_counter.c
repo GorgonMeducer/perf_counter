@@ -179,7 +179,7 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
         return (1UL);                                                   /* Reload value impossible */
     }
   
-    __IRQ_SAFE {
+    //__IRQ_SAFE {
         SysTick->CTRL  = 0;
         
         SysTick->LOAD  = (uint32_t)(ticks - 1UL);                         /* set reload register */
@@ -188,8 +188,8 @@ static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
         SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
                            SysTick_CTRL_TICKINT_Msk   |
                            SysTick_CTRL_ENABLE_Msk;                     /* Enable SysTick IRQ and SysTick Timer */
-        SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
-    }
+        //SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
+    //}
     return (0UL);                                                     /* Function successful */
 }
 
@@ -210,15 +210,20 @@ void user_code_insert_to_systick_handler(void)
  */
 void init_cycle_counter(bool bSysTickIsOccupied)
 {
-    if (!bSysTickIsOccupied) {
-        SysTick_Config(0x01000000);             //!< use the longest period
+    __IRQ_SAFE {
+        if (!bSysTickIsOccupied) {
+            SysTick_Config(0x01000000);             //!< use the longest period
+        }
+        SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
     }
+    
     start_cycle_counter();
     //s_nSystemClockCounts = s_nCycleCounts;
     s_nOffset = stop_cycle_counter();
     
     s_nUnit = SystemCoreClock / 1000000ul;
-#if !(defined(__IS_COMPILER_GCC__) && __IS_COMPILER_GCC__)
+#if     ((defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__)\
+    ||  (defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__))
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
 #endif
