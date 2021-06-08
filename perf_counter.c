@@ -27,7 +27,7 @@
 #endif
 
 #ifndef PERF_CNT_DELAY_US_COMPENSATION
-#   define PERF_CNT_DELAY_US_COMPENSATION           82
+#   define PERF_CNT_DELAY_US_COMPENSATION           90
 #endif
 
 /*============================ MACROS ========================================*/
@@ -305,18 +305,18 @@ void __perf_counter_init(void)
     init_cycle_counter(true);
 }
 
-void delay_us(int32_t iUs)
+void delay_us(int32_t nUs)
 {
-    iUs *= s_nUnit;
+    int64_t lUs = nUs * s_nUnit;
     
-    if (iUs <= PERF_CNT_DELAY_US_COMPENSATION) {
+    if (lUs <= PERF_CNT_DELAY_US_COMPENSATION) {
         return ;
     } 
     
-    iUs -= PERF_CNT_DELAY_US_COMPENSATION;
+    lUs -= PERF_CNT_DELAY_US_COMPENSATION;
     
-    start_cycle_counter();
-    while(stop_cycle_counter() < iUs);
+    lUs += get_system_ticks();
+    while(get_system_ticks() < lUs);
 }
 
 /*! \note the prototype of this clock() is different from the one defined in
