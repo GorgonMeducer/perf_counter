@@ -58,13 +58,12 @@ example_lv0_t s_tItem[8] = {
     {.chID = 7},
 };
 
-extern void CM7_BLX_R14_Test(void);
-
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
 int main (void) 
 {
+    
     /*! demo of using() block */
     using(int a = 0,printf("========= On Enter =======\r\n"), 
                     printf("========= On Leave =======\r\n")) {
