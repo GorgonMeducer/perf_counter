@@ -18,7 +18,8 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "ARMCM3.h"                     // Keil::Board Support:V2M-MPS2:Common
+#include "perf_counter.h"
+#include "ARMCM0.h"                     // Keil::Board Support:V2M-MPS2:Common
 #include <assert.h>
 
 extern

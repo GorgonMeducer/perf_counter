@@ -142,6 +142,22 @@ int stdout_putchar(char txchar)
     return (int) txchar;
 }
 
+
+int _write (int fd, char *ptr, int len)
+{
+    if (fd == 1) {
+        int n = len;
+        do {
+            stdout_putchar(*ptr++);
+        } while(--n);
+        
+        return len;
+    } 
+  
+    return -1;
+}
+
+
 int stderr_putchar(char txchar)
 {
 	return stdout_putchar(txchar);

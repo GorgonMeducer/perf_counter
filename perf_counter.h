@@ -24,10 +24,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#if defined(__clang__)
-#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
-#endif
-
 /*============================ MACROS ========================================*/
 
 //! \name The macros to identify the compiler
@@ -87,6 +83,14 @@
 #define __PLOOC_VA_NUM_ARGS(...)                                                \
             __PLOOC_VA_NUM_ARGS_IMPL( 0,##__VA_ARGS__,16,15,14,13,12,11,10,9,   \
                                       8,7,6,5,4,3,2,1,0)
+#endif
+
+#if defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
+#elif defined(__IS_COMPILER_GCC__)
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
 

@@ -16,3 +16,7 @@ example/Out/perf_counter.lib
 *.crf
 *.lst
 example/example.uvguix.gabriel
+example/GCC_Out/gcc_example.elf
+example/GCC_Out/gcc_example.build_log.htm
+example/GCC_Out/perf_counter_gcc.build_log.htm
+example/GCC_Out/libperf_counter_gcc.a

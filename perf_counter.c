@@ -22,6 +22,12 @@
 #include "cmsis_compiler.h"
 #include "perf_counter.h"
 
+#if defined(__IS_COMPILER_GCC__)
+#   pragma GCC diagnostic ignored "-Wattributes"
+#endif
+
+
+/*============================ MACROS ========================================*/
 #ifndef PERF_CNT_COMPENSATION_THRESHOLD
 #   define PERF_CNT_COMPENSATION_THRESHOLD          16
 #endif
@@ -30,7 +36,7 @@
 #   define PERF_CNT_DELAY_US_COMPENSATION           90
 #endif
 
-/*============================ MACROS ========================================*/
+
 /* IO definitions (access restrictions to peripheral registers) */
 /**
     \defgroup CMSIS_glob_defs CMSIS Global Defines
@@ -222,11 +228,11 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     s_nOffset = stop_cycle_counter();
     
     s_nUnit = SystemCoreClock / 1000000ul;
-#if     ((defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__)\
-    ||  (defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__))
+//#if     ((defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__)\
+//    ||  (defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__))
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
-#endif
+//#endif
 }
 
 /*! \brief try to start the performance counter

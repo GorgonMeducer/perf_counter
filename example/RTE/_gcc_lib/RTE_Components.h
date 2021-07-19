@@ -4,7 +4,7 @@
  *      *** Do not modify ! ***
  *
  * Project: 'gcc_example' 
- * Target:  'example' 
+ * Target:  'gcc_lib' 
  */
 
 #ifndef RTE_COMPONENTS_H
