@@ -228,11 +228,12 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     s_nOffset = stop_cycle_counter();
     
     s_nUnit = SystemCoreClock / 1000000ul;
-//#if     ((defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__)\
-//    ||  (defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__))
+#if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
+    ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
+    ||  defined(__IS_COMPILER_GCC__)
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
-//#endif
+#endif
 }
 
 /*! \brief try to start the performance counter
