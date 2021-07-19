@@ -16,15 +16,15 @@
 ;****************************************************************************/
 
 
-	.syntax	unified
-	.arch	armv6-m
-    
+    .syntax	unified
+    .arch	armv6-m
+
     .text
-	.thumb
-	.thumb_func
-	.align	2
-	.globl	__wrap_SysTick_Handler
-	.type	__wrap_SysTick_Handler, %function
+    .thumb
+    .thumb_func
+    .align	2
+    .globl	__wrap_SysTick_Handler
+    .type	__wrap_SysTick_Handler, %function
 
 __wrap_SysTick_Handler:
     push    {r4, r5}
@@ -38,8 +38,8 @@ __wrap_SysTick_Handler:
     bx      R0
                 
 
-	.globl	__ensure_systick_wrapper
-	.type	__ensure_systick_wrapper, %function
+    .globl	__ensure_systick_wrapper
+    .type	__ensure_systick_wrapper, %function
 
 __ensure_systick_wrapper:
     bx      lr
