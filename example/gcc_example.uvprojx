@@ -267,7 +267,8 @@
             <BSSAddressRange></BSSAddressRange>
             <IncludeLibs></IncludeLibs>
             <IncludeDir></IncludeDir>
-            <Misc>-Wl,--wrap=SysTick_Handler
+            <Misc>-Wl,--wrap=SysTick_Handler 
+"../lib/libperf_counter_gcc.a"
 --specs=nosys.specs -Wl,--gc-sections
 -mcpu=cortex-m0 -lc -ffunction-sections  -fdata-sections
 -fshort-enums -fshort-wchar</Misc>
@@ -395,11 +396,6 @@
                   </Aarm>
                 </FileArm>
               </FileOption>
-            </File>
-            <File>
-              <FileName>libperf_counter_gcc.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\lib\libperf_counter_gcc.a</FilePath>
             </File>
           </Files>
         </Group>
@@ -824,30 +820,6 @@
               <FileName>systick_wrapper_gcc.s</FileName>
               <FileType>2</FileType>
               <FilePath>..\systick_wrapper_gcc.s</FilePath>
-            </File>
-            <File>
-              <FileName>libperf_counter_gcc.a</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\lib\libperf_counter_gcc.a</FilePath>
-              <FileOption>
-                <CommonProperty>
-                  <UseCPPCompiler>2</UseCPPCompiler>
-                  <RVCTCodeConst>0</RVCTCodeConst>
-                  <RVCTZI>0</RVCTZI>
-                  <RVCTOtherData>0</RVCTOtherData>
-                  <ModuleSelection>0</ModuleSelection>
-                  <IncludeInBuild>0</IncludeInBuild>
-                  <AlwaysBuild>2</AlwaysBuild>
-                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
-                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
-                  <PublicsOnly>2</PublicsOnly>
-                  <StopOnExitCode>11</StopOnExitCode>
-                  <CustomArgument></CustomArgument>
-                  <IncludeLibraryModules></IncludeLibraryModules>
-                  <ComprImg>1</ComprImg>
-                </CommonProperty>
-                <FileArm/>
-              </FileOption>
             </File>
           </Files>
         </Group>
