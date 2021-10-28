@@ -204,17 +204,17 @@
 #undef foreach
 
 #define foreach2(__type, __array)                                               \
-            using(__type *_ = __array)                                         \
+            using(__type *_ = __array)                                          \
             for (   uint_fast32_t CONNECT2(count,__LINE__) = dimof(__array);    \
                     CONNECT2(count,__LINE__) > 0;                               \
-                    _++, CONNECT2(count,__LINE__)--                            \
+                    _++, CONNECT2(count,__LINE__)--                             \
                 )
 
 #define foreach3(__type, __array, __item)                                       \
-            using(__type *_ = __array, *__item = _, _ = _, )                \
+            using(__type *_ = __array, *__item = _, _ = _, )                    \
             for (   uint_fast32_t CONNECT2(count,__LINE__) = dimof(__array);    \
                     CONNECT2(count,__LINE__) > 0;                               \
-                    _++, __item = _, CONNECT2(count,__LINE__)--               \
+                    _++, __item = _, CONNECT2(count,__LINE__)--                 \
                 )
 
 #define foreach(...)                                                            \
@@ -299,11 +299,15 @@ extern void delay_us(int32_t iUs);
  *!
  */
 #ifdef __PERF_CNT_USE_LONG_CLOCK__
+#if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow)) 
+#endif
 extern int64_t clock(void);
 #endif
 
+#if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow)) 
+#endif
 extern int64_t get_system_ticks(void);
 
 
@@ -356,5 +360,11 @@ extern void init_cycle_counter(bool bSysTickIsOccupied);
  */
 extern void user_code_insert_to_systick_handler(void);
 
+
+#if defined(__clang__)
+#   pragma clang diagnostic pop
+#elif defined(__IS_COMPILER_GCC__)
+#   pragma GCC diagnostic pop
+#endif
 
 #endif
