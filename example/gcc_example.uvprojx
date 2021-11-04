@@ -243,7 +243,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\lib</IncludePath>
+              <IncludePath></IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -268,7 +268,7 @@
             <IncludeLibs></IncludeLibs>
             <IncludeDir></IncludeDir>
             <Misc>-Wl,--wrap=SysTick_Handler 
-"../lib/libperf_counter_gcc.a"
+
 --specs=nosys.specs -Wl,--gc-sections
 -mcpu=cortex-m0 -lc -ffunction-sections  -fdata-sections
 -fshort-enums -fshort-wchar</Misc>
@@ -401,6 +401,9 @@
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
+        </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
         </Group>
       </Groups>
     </Target>
@@ -826,6 +829,9 @@
         <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -835,6 +841,13 @@
     <components>
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.5.0" condition="ARMv6_7_8-M Device">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+        <targetInfos>
+          <targetInfo name="example"/>
+          <targetInfo name="gcc_lib"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvendor="GorgonMeducer" Cversion="1.6.1">
+        <package name="perf_counter" schemaVersion="1.4" url="https://github.com/GorgonMeducer/perf_counter/blob/main/cmsis-pack/" vendor="GorgonMeducer" version="1.6.1"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>
