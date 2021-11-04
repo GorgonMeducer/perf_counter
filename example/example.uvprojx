@@ -10,7 +10,7 @@
       <TargetName>example_arm_compiler_6</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6160001::V6.16.1::..\..\Program Files\ARMCompiler6.16.1</pCCUsed>
+      <pCCUsed>6170000::V6.17::.\Arm Compiler 6.17</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>__PERF_CNT_USE_LONG_CLOCK__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\lib</IncludePath>
+              <IncludePath></IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -402,6 +402,75 @@
         </Group>
         <Group>
           <GroupName>perf_counter_lib</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
           <Files>
             <File>
               <FileName>perf_counter.c</FileName>
@@ -511,6 +580,25 @@
               <FileName>perf_counter.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\lib\perf_counter.lib</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds/>
+              </FileOption>
             </File>
           </Files>
         </Group>
@@ -523,13 +611,16 @@
         <Group>
           <GroupName>::Device</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
+        </Group>
       </Groups>
     </Target>
     <Target>
       <TargetName>library</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6160001::V6.16.1::..\..\Program Files\ARMCompiler6.16.1</pCCUsed>
+      <pCCUsed>6170000::V6.17::.\Arm Compiler 6.17</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1179,13 +1270,16 @@
             </GroupArmAds>
           </GroupOption>
         </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
+        </Group>
       </Groups>
     </Target>
     <Target>
       <TargetName>example_arm compiler_5</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060960::V5.06 update 7 (build 960)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -1577,6 +1671,75 @@
         </Group>
         <Group>
           <GroupName>perf_counter_lib</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArmAds>
+              <Cads>
+                <interw>2</interw>
+                <Optim>0</Optim>
+                <oTime>2</oTime>
+                <SplitLS>2</SplitLS>
+                <OneElfS>2</OneElfS>
+                <Strict>2</Strict>
+                <EnumInt>2</EnumInt>
+                <PlainCh>2</PlainCh>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <uSurpInc>2</uSurpInc>
+                <uC99>2</uC99>
+                <uGnu>2</uGnu>
+                <useXO>2</useXO>
+                <v6Lang>0</v6Lang>
+                <v6LangP>0</v6LangP>
+                <vShortEn>2</vShortEn>
+                <vShortWch>2</vShortWch>
+                <v6Lto>2</v6Lto>
+                <v6WtE>2</v6WtE>
+                <v6Rtti>2</v6Rtti>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Cads>
+              <Aads>
+                <interw>2</interw>
+                <Ropi>2</Ropi>
+                <Rwpi>2</Rwpi>
+                <thumb>2</thumb>
+                <SplitLS>2</SplitLS>
+                <SwStkChk>2</SwStkChk>
+                <NoWarn>2</NoWarn>
+                <uSurpInc>2</uSurpInc>
+                <useXO>2</useXO>
+                <ClangAsOpt>0</ClangAsOpt>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aads>
+            </GroupArmAds>
+          </GroupOption>
           <Files>
             <File>
               <FileName>perf_counter.c</FileName>
@@ -1698,6 +1861,9 @@
         <Group>
           <GroupName>::Device</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -1715,6 +1881,14 @@
       </component>
       <component Cclass="Device" Cgroup="Startup" Cvendor="ARM" Cversion="1.2.2" condition="ARMCM0 CMSIS">
         <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+        <targetInfos>
+          <targetInfo name="example_arm compiler_5"/>
+          <targetInfo name="example_arm_compiler_6"/>
+          <targetInfo name="library"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvendor="GorgonMeducer" Cversion="1.6.0">
+        <package name="perf_counter" schemaVersion="1.4" url="" vendor="GorgonMeducer" version="1.6.0"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
           <targetInfo name="example_arm_compiler_6"/>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<package schemaVersion="1.4" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="PACK.xsd">
+  <vendor>GorgonMeducer</vendor>
+  <name>perf_counter</name>
+  <description>A dedicated performance counter for Cortex-M systick. It shares the SysTick with users' original SysTick function without interfere it. This library will bring new functionalities, such as performance counter, delay_us and clock() service defined in time.h</description>
+  <url></url>
+  <supportContact>https://github.com/GorgonMeducer/perf_counter/issues</supportContact>
+  <license>lib/LICENSE</license>
+  <!-- optional license file -->
+  <!-- 
+  <license>
+  </license>
+  -->
+  
+  <releases>
+    <release version="1.6.0">
+      - Add CMSIS-Pack
+      - Enhance support for IAR and GCC
+    </release>
+  </releases>
+
+  <keywords>
+    <!-- keywords for indexing -->
+    <keyword>Cortex-M</keyword>
+    <keyword>SysTick</keyword>
+    <keyword>Performance Analaysis</keyword>
+  </keywords>
+
+  <!-- apis section (optional - for Application Programming Interface descriptions) -->
+  <!-- 
+  <apis>
+  </apis>
+  -->
+
+  <!-- boards section (mandatory for Board Support Packs) -->
+  <!-- 
+  <boards>
+  </boards>
+  -->
+
+  <!-- devices section (mandatory for Device Family Packs) -->
+  <!--
+  <devices>
+  </devices>
+  -->
+
+  <!-- examples section (optional for all Software Packs)-->
+  <!--
+  <examples>
+  </examples>
+  -->
+  
+  <!-- conditions section (optional for all Software Packs)-->
+  <!--
+  <conditions>
+  </conditions>
+  -->
+  
+<components>
+    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.0">
+      <description>A dedicated performance counter for Cortex-M systick.</description>
+      <files>
+        <!--<file category="doc"    name="Docs/MySWComp.htm"/>-->
+        <file category="header"         name="lib/perf_counter.h"/>
+        <file category="library"        name="lib/perf_counter.lib"/>
+      </files>
+    </component>
+</components>
+  
+  <!-- optional taxonomy section for defining new component Class and Group names -->
+  <!--
+  <taxonomy>
+  </taxonomy>
+  -->
+  
+</package>
