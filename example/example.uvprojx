@@ -1608,7 +1608,7 @@
               <MiscControls></MiscControls>
               <Define>__PERF_CNT_USE_LONG_CLOCK__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\lib</IncludePath>
+              <IncludePath></IncludePath>
             </VariousControls>
           </Cads>
           <Aads>

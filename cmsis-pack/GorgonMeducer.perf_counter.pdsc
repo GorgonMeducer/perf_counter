@@ -4,7 +4,7 @@
   <vendor>GorgonMeducer</vendor>
   <name>perf_counter</name>
   <description>A dedicated performance counter for Cortex-M systick. It shares the SysTick with users' original SysTick function without interfere it. This library will bring new functionalities, such as performance counter, delay_us and clock() service defined in time.h</description>
-  <url>https://github.com/GorgonMeducer/perf_counter/blob/main/cmsis-pack/</url>
+  <url>https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/</url>
   <supportContact>https://github.com/GorgonMeducer/perf_counter/issues</supportContact>
   <license>lib/LICENSE</license>
   <!-- optional license file -->
@@ -13,11 +13,18 @@
   </license>
   -->
   
+  <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
+  
   <releases>
-    <release version="1.6.0">
+    <release date="2021-11-04" version="1.6.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.1.pack">
+      - Add GCC support to CMSIS-Pack
+    </release>
+  
+    <release date="2021-11-04" version="1.6.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.0.pack">
       - Add CMSIS-Pack
       - Enhance support for IAR and GCC
     </release>
+    
   </releases>
 
   <keywords>
@@ -26,7 +33,19 @@
     <keyword>SysTick</keyword>
     <keyword>Performance Analaysis</keyword>
   </keywords>
-
+  
+    <conditions> 
+      <condition id="Arm Compiler">
+        <description>Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang).</description>
+        <accept Tcompiler="ARMCC" Toptions="AC6"/>
+        <accept Tcompiler="ARMCC" Toptions="AC6LTO"/>
+        <accept Tcompiler="ARMCC" Toptions="AC5"/>
+      </condition>
+      <condition id="Arm GCC">
+        <description>GNU Tools for Arm Embedded Processors.</description>
+        <accept Tcompiler="GCC"/>
+      </condition>
+    </conditions>
   <!-- apis section (optional - for Application Programming Interface descriptions) -->
   <!-- 
   <apis>
@@ -58,12 +77,12 @@
   -->
   
 <components>
-    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.0">
+    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.1" >
       <description>A dedicated performance counter for Cortex-M systick.</description>
       <files>
-        <!--<file category="doc"    name="Docs/MySWComp.htm"/>-->
-        <file category="header"         name="lib/perf_counter.h"/>
-        <file category="library"        name="lib/perf_counter.lib"/>
+        <file category="header"     name="lib/perf_counter.h"/>
+        <file category="library"    name="lib/perf_counter.lib"         condition="Arm Compiler"/>
+        <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Arm GCC"/>
       </files>
     </component>
 </components>
