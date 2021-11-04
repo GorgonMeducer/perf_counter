@@ -20,6 +20,13 @@
 #include <cmsis_compiler.h>
 #include "perf_counter.h"
 
+#if defined(__clang__)
+#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
+#elif defined(__IS_COMPILER_GCC__)
+#   pragma GCC diagnostic ignored "-Wpedantic"
+#endif
+
+
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
 #else
