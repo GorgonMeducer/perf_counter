@@ -14,15 +14,10 @@
   -->
   
   <releases>
-    <release date="2021-11-04" version="1.6.1">
-      - Add GCC support to CMSIS-Pack
-    </release>
-  
-    <release date="2021-11-04" version="1.6.0">
+    <release version="1.6.0">
       - Add CMSIS-Pack
       - Enhance support for IAR and GCC
     </release>
-    
   </releases>
 
   <keywords>
@@ -31,19 +26,7 @@
     <keyword>SysTick</keyword>
     <keyword>Performance Analaysis</keyword>
   </keywords>
-  
-    <conditions> 
-      <condition id="Arm Compiler">
-        <description>Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang).</description>
-        <accept Tcompiler="ARMCC" Toptions="AC6"/>
-        <accept Tcompiler="ARMCC" Toptions="AC6LTO"/>
-        <accept Tcompiler="ARMCC" Toptions="AC5"/>
-      </condition>
-      <condition id="Arm GCC">
-        <description>GNU Tools for Arm Embedded Processors.</description>
-        <accept Tcompiler="GCC"/>
-      </condition>
-    </conditions>
+
   <!-- apis section (optional - for Application Programming Interface descriptions) -->
   <!-- 
   <apis>
@@ -75,12 +58,12 @@
   -->
   
 <components>
-    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.1" >
+    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.0">
       <description>A dedicated performance counter for Cortex-M systick.</description>
       <files>
-        <file category="header"     name="lib/perf_counter.h"/>
-        <file category="library"    name="lib/perf_counter.lib"         condition="Arm Compiler"/>
-        <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Arm GCC"/>
+        <!--<file category="doc"    name="Docs/MySWComp.htm"/>-->
+        <file category="header"         name="lib/perf_counter.h"/>
+        <file category="library"        name="lib/perf_counter.lib"/>
       </files>
     </component>
 </components>
