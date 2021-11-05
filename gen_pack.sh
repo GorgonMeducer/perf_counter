@@ -36,20 +36,24 @@ PACK_BUILD=build/
 
 # Specify directories included in pack relative to base directory
 # All directories:
-PACK_DIRS=`ls -d */`
+# PACK_DIRS=`ls -d */`
 # Do not include the build directory if it is local
-PACK_DIRS=${PACK_DIRS//$PACK_BUILD/}
-PACK_DIRS=${PACK_DIRS//$PACK_WAREHOUSE/}
+# PACK_DIRS=${PACK_DIRS//$PACK_BUILD/}
+# PACK_DIRS=${PACK_DIRS//$PACK_WAREHOUSE/}
 
 # alternative: specify directory names to be added to pack base directory
-# PACK_DIRS="
-#  Source
-#  Include
-#"
+PACK_DIRS="
+  lib
+"
+
   
 # Specify file names to be added to pack base directory
 PACK_BASE_FILES="
-  License.txt
+  perf_counter.c
+  perf_counter.h
+  systick_wrapper_gcc.s
+  systick_wrapper_ual.s
+  LICENSE
   README.md
 "
 

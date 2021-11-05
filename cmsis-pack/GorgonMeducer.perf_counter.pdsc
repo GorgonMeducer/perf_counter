@@ -16,6 +16,9 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-11-05" version="1.6.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.2.pack">
+      - Add options for selecting between source code and library.
+    </release>
     <release date="2021-11-04" version="1.6.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.1.pack">
       - Add GCC support to CMSIS-Pack
     </release>
@@ -39,6 +42,33 @@
       <condition id="Arm GCC">
         <description>GNU Tools for Arm Embedded Processors.</description>
         <accept Tcompiler="GCC"/>
+      </condition>
+      <condition id="Cortex-M Processors">
+        <description>Support All Cortex-M based processors</description>
+        <accept  Dcore="Cortex-M0"/>
+        <accept  Dcore="Cortex-M0+"/>
+        <accept  Dcore="Cortex-M1"/>
+        <accept  Dcore="Cortex-M3"/>
+        <accept  Dcore="Cortex-M4"/>
+        <accept  Dcore="Cortex-M7"/>
+        <accept  Dcore="Cortex-M23"/>
+        <accept  Dcore="Cortex-M33"/>
+        <accept  Dcore="Cortex-M35P"/>
+        <accept  Dcore="Cortex-M55"/>
+        <accept  Dcore="SC000"/>
+        <accept  Dcore="SC300"/>
+        <accept  Dcore="ARMV8MBL"/>
+        <accept  Dcore="ARMV8MML"/>
+      </condition>
+      <condition id="Cortex-M Arm GCC">
+        <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
+        <require condition="Arm GCC"/>
+        <require condition="Cortex-M Processors"/>
+      </condition>
+      <condition id="Cortex-M Arm Compiler">
+        <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
+        <require condition="Arm Compiler"/>
+        <require condition="Cortex-M Processors"/>
       </condition>
     </conditions>
   <!-- apis section (optional - for Application Programming Interface descriptions) -->
@@ -72,12 +102,21 @@
   -->
   
 <components>
-    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cversion="1.6.1" >
+    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.2" >
       <description>A dedicated performance counter for Cortex-M systick.</description>
       <files>
         <file category="header"     name="lib/perf_counter.h"/>
-        <file category="library"    name="lib/perf_counter.lib"         condition="Arm Compiler"/>
-        <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Arm GCC"/>
+        <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
+        <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
+      </files>
+    </component>
+    <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.2" >
+      <description>A dedicated performance counter for Cortex-M systick.</description>
+      <files>
+        <file category="header"     name="lib/perf_counter.h"/>
+        <file category="source"     name="perf_counter.c" />
+        <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler"/>
+        <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC"/>
       </files>
     </component>
 </components>
