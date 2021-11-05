@@ -198,6 +198,8 @@ if [ $errorlevel -ne 0 ]; then
   exit
 fi
 
+cp -f  ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_WAREHOUSE}
+
 echo "build of pack succeeded"
 # Clean up
 echo "cleaning up ..."
