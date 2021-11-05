@@ -63,7 +63,13 @@
             <accept  Dcore="ARMV8MBL"/>
             <accept  Dcore="ARMV8MML"/>
         </condition>
-            <condition id="Cortex-M Arm GCC">
+        
+        <condition id="CMSIS-CORE">
+            <description>Require CMSIS-CORE Support</description>
+            <require Cclass="CMSIS" Cgroup="CORE"/>
+        </condition>
+        
+        <condition id="Cortex-M Arm GCC">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm GCC"/>
             <require condition="Cortex-M Processors"/>
@@ -72,6 +78,19 @@
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm Compiler"/>
             <require condition="Cortex-M Processors"/>
+        </condition>
+        
+        <condition id="Cortex-M Arm GCC CMSIS-CORE">
+            <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
+            <require condition="Arm GCC"/>
+            <require condition="Cortex-M Processors"/>
+            <require condition="CMSIS-CORE"/>
+        </condition>
+        <condition id="Cortex-M Arm Compiler CMSIS-CORE">
+            <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
+            <require condition="Arm Compiler"/>
+            <require condition="Cortex-M Processors"/>
+            <require condition="CMSIS-CORE"/>
         </condition>
         
     </conditions>
@@ -105,15 +124,8 @@
   </conditions>
   -->
 
-    <requirements>
-        <packages>
-            <package name="CMSIS" vendor="ARM" version="5.4.0"/>
-        </packages>
-    </requirements>
-
-
     <components>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.3" >
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.3" isDefaultVariant="true">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
@@ -121,13 +133,13 @@
             <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
           </files>
         </component>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.3" >
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.3" condition="CMSIS-CORE">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
             <file category="source"     name="perf_counter.c" />
-            <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler"/>
-            <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC"/>
+            <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler CMSIS-CORE"/>
+            <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
           </files>
         </component>
     </components>
