@@ -86,10 +86,10 @@
 #endif
 
 #if defined(__clang__)
-#   pragma clang diagnostic push
+//#   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #elif defined(__IS_COMPILER_GCC__)
-#   pragma GCC diagnostic push
+//#   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
@@ -361,10 +361,10 @@ extern void init_cycle_counter(bool bSysTickIsOccupied);
 extern void user_code_insert_to_systick_handler(void);
 
 
-#if defined(__clang__)
-#   pragma clang diagnostic pop
-#elif defined(__IS_COMPILER_GCC__)
-#   pragma GCC diagnostic pop
-#endif
+//#if defined(__clang__)
+//#   pragma clang diagnostic pop
+//#elif defined(__IS_COMPILER_GCC__)
+//#   pragma GCC diagnostic pop
+//#endif
 
 #endif
