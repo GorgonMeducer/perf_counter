@@ -84,7 +84,7 @@ int main (void)
 
     /*! demo of __cycleof__() operation */
     __cycleof__() {
-        foreach(example_lv0_t, s_tItem) {
+        foreach(example_lv0_t, s_tItem, ptItem) {
             printf("Processing item with ID = %d\r\n", _->chID);
         }
     }
@@ -95,7 +95,7 @@ int main (void)
     __cycleof__("delay_us(1000ul)", 
         /* insert code to __cycleof__ body, "{}" can be omitted  */
         {
-            iCycleResult = _;   /*< "_" stores the result */
+            iCycleResult = __cycle_count__;   /*< "__cycle_count__" stores the result */
         }) {
         delay_us(1000ul);
     }
