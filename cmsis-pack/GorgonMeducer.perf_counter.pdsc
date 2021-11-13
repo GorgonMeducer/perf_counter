@@ -16,6 +16,11 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-11-13" version="1.6.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.4.pack">
+      - Improve support for IAR
+      - Fix issues found in foreach
+      - Other minor update
+    </release>
     <release date="2021-11-05" version="1.6.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.3.pack">
       - Add CMSIS Dependency Check
     </release>
