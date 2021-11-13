@@ -211,7 +211,7 @@
                 )
 
 #define foreach3(__type, __array, __item)                                       \
-            using(__type *_ = __array, *__item = _, _ = _, )                    \
+            using(__type *_ = __array, *__item = _, _ = _, _ = _ )              \
             for (   uint_fast32_t CONNECT2(count,__LINE__) = dimof(__array);    \
                     CONNECT2(count,__LINE__) > 0;                               \
                     _++, __item = _, CONNECT2(count,__LINE__)--                 \
@@ -238,7 +238,8 @@
 
             
 #define __cycleof__(__STR, ...)                                                 \
-            using(int64_t _ = get_system_ticks(), {                             \
+            using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
+                _=_, {                                                          \
                 _ = get_system_ticks() - _;                                     \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
                     printf("\r\n");                                             \

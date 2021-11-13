@@ -178,7 +178,7 @@ volatile static int64_t s_lSystemClockCounts = 0;
            function <b>SysTick_Config</b> is not included. In this case, the file <b><i>device</i>.h</b>
            must contain a vendor-specific implementation of this function.
  */
-static __attribute__((always_inline)) uint32_t SysTick_Config(uint32_t ticks)
+__STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 {
     if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
     {
@@ -256,7 +256,7 @@ bool start_cycle_counter(void)
  *!       hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
  *!       won't change. 
  */
-static __attribute__((always_inline)) int32_t check_systick(void)
+__STATIC_INLINE int32_t check_systick(void)
 {
     int32_t nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
 
@@ -306,7 +306,11 @@ int32_t stop_cycle_counter(void)
     return nTemp - s_nOffset;
 }
 
+#if defined(__IS_COMPILER_IAR__)
+__attribute__((constructor))
+#else
 __attribute__((constructor(255)))
+#endif
 void __perf_counter_init(void)
 {
     init_cycle_counter(true);
@@ -347,7 +351,9 @@ void delay_us(int32_t nUs)
  *!           and 2) do not include system header file <time.h>
  *!
  */
+#if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow)) 
+#endif
 int64_t clock(void)
 {
     int64_t lTemp = 0;
@@ -360,7 +366,9 @@ int64_t clock(void)
 }
 
 
+#if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow)) 
+#endif
 int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
