@@ -130,7 +130,7 @@
   -->
 
     <components>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.3" isDefaultVariant="true">
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.4" isDefaultVariant="true">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
@@ -138,7 +138,7 @@
             <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
           </files>
         </component>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.3" condition="CMSIS-CORE">
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.4" condition="CMSIS-CORE">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
