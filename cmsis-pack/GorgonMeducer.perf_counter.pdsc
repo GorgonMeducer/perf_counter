@@ -16,6 +16,9 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-12-05" version="1.6.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.5.pack">
+      - Include stddef.h in perf_counter.h to solve missing NULL definition issue.
+    </release>
     <release date="2021-11-13" version="1.6.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.4.pack">
       - Improve support for IAR
       - Fix issues found in foreach
@@ -130,7 +133,7 @@
   -->
 
     <components>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.4" isDefaultVariant="true">
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.5" isDefaultVariant="true">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
@@ -138,7 +141,7 @@
             <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
           </files>
         </component>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.4" condition="CMSIS-CORE">
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.5" condition="CMSIS-CORE">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
