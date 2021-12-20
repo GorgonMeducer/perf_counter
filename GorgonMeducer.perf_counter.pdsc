@@ -167,6 +167,10 @@
           <files>
             <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
           </files>
+          <Pre_Include_Global_h>
+//! \brief Enable RTOS Patch for perf_counter
+#define __PERF_CNT_USE_RTOS__
+          </Pre_Include_Global_h>
         </component>
     </components>
   

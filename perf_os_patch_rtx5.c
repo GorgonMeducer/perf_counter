@@ -116,3 +116,23 @@ task_cycle_info_t * get_rtos_task_cycle_info(void)
     
     return &(((struct __task_cycle_info_t *)curr->stack_mem)->tInfo);
 }
+
+void start_task_cycle_counter(void)
+{
+    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
+    if (NULL != ptInfo) {
+        ptInfo->dwUsedTotal = 0;
+    }
+}
+
+int32_t stop_task_cycle_counter(void)
+{
+    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
+    if (NULL != ptInfo) {
+        return (int32_t)ptInfo->dwUsedTotal;
+    }
+    
+    return 0;
+}
+
+

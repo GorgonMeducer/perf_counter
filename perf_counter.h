@@ -319,6 +319,7 @@ __attribute__((nothrow))
 extern int64_t get_system_ticks(void);
 
 
+#if defined(__PERF_CNT_USE_RTOS__)
 /*! \brief provide cycle information for target task if perf_counter is used
  *!        together with an RTOS in the support list.
  *!        
@@ -327,6 +328,25 @@ extern int64_t get_system_ticks(void);
  */
 extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
+/*! \brief start cycle counter for current task
+ */
+extern void start_task_cycle_counter(void);
+
+/*! \brief calculate the elapsed cycle count for current task since the last 
+ *!        start point
+ *! 
+ *! \note you can have multiple stop_cycle_counter following one start point
+ *!  
+ *! \return the elapsed cycle count.
+ */
+extern int32_t stop_task_cycle_counter(void);
+
+#else
+
+#   define start_task_cycle_counter         start_cycle_counter
+#   define stop_task_cycle_counter          stop_cycle_counter
+
+#endif
 
 /*----------------------------------------------------------------------------*
  * Please ignore the following APIs unless you have encountered some known    *
