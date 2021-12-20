@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2021-12-20" version="1.7.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.4.pack">
+    <release date="2021-12-20" version="1.7.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.0.pack">
       - Add new feature for RTOS. Now you can get cycle information for the current thread.
       - Other minor update
     </release>
