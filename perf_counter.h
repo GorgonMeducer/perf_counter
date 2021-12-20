@@ -319,13 +319,13 @@ __attribute__((nothrow))
 extern int64_t get_system_ticks(void);
 
 
-/*! \brief provide cycle information for target thread if perf_counter is used
+/*! \brief provide cycle information for target task if perf_counter is used
  *!        together with an RTOS in the support list.
  *!        
  *!        Support RTOS List:
  *!           - RTX5
  */
-extern task_cycle_info_t * get_rtos_thread_cycle_info(void);
+extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
 
 /*----------------------------------------------------------------------------*
