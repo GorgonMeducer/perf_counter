@@ -21,6 +21,8 @@
 
 #include "rtx_os.h"
 #include "perf_counter.h"
+#include "cmsis_compiler.h"
+#include "rtx_evr.h"                    // RTX Event Recorder definitions
 
 /*============================ MACROS ========================================*/
 
@@ -53,11 +55,10 @@ struct __task_cycle_info_t {
 /*============================ IMPLEMENTATION ================================*/
 
 
-__attribute__((used))
 /*! \brief wrapper function for rtos context switching */
-void WRAP_FUNC(osRtxThreadSwitch) (osRtxThread_t *thread)
+void __on_context_switch (osRtxThread_t *thread)
 {
-    extern void ORIG_FUNC(osRtxThreadSwitch) (osRtxThread_t *thread);
+    
     //assert(NULL != ptThread);
 
     do {
@@ -88,8 +89,21 @@ void WRAP_FUNC(osRtxThreadSwitch) (osRtxThread_t *thread)
         ptFrame->dwLastTimeStamp = dwTimeStamp;
         ptFrame->tInfo.wActiveCount++;
     } while(0);
+}
+
+__attribute__((used))
+void EvrRtxThreadSwitched (osThreadId_t thread_id) 
+{
+    __on_context_switch((osRtxThread_t *)thread_id);
     
-    ORIG_FUNC(osRtxThreadSwitch)(thread);
+#if defined(RTE_Compiler_EventRecorder)
+#   define EvtRtxThreadSwitched     \
+        EventID(EventLevelOp,     EvtRtxThreadNo, 0x19U)    
+    
+    (void)EventRecord2(EvtRtxThreadSwitched, (uint32_t)thread_id, 0U);
+#else
+    (void)thread_id;
+#endif
 }
 
 

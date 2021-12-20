@@ -81,10 +81,9 @@
             <require Cclass="CMSIS" Cgroup="CORE"/>
         </condition>
         
-        <condition id="CMSIS-RTOS2-RTX5">
-            <description>Require CMSIS-RTOS2-RTX5 Support</description>
-            <require Cclass="CMSIS" Cgroup="CORE"/>
-            <require Cclass="CMSIS" Cgroup="RTOS2 (API)" Csub="Keil RTX5">
+        <condition id="RTX5">
+            <description>Require RTX5 Support</description>
+            <accept Cclass="CMSIS" Cgroup="RTOS2" Csub="Keil RTX5" Cvariant="Source"/>
         </condition>
         
         <condition id="Cortex-M Arm GCC">
@@ -150,7 +149,6 @@
             <file category="header"     name="lib/perf_counter.h"/>
             <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
             <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
-            <file category="source"     name="lib/perf_os_patch_rtx5.c"     condition="CMSIS-RTOS2-RTX5"/>
           </files>
         </component>
 
@@ -161,7 +159,13 @@
             <file category="source"     name="perf_counter.c" />
             <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler CMSIS-CORE"/>
             <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
-            <file category="source"     name="lib/perf_os_patch_rtx5.c"     condition="CMSIS-RTOS2-RTX5"/>
+          </files>
+        </component>
+        
+        <component Cclass="Utilities" Cgroup="Performance" Csub="RTX5 Patch" Cversion="1.7.0" condition="RTX5">
+          <description>A Patch for RTX5</description>
+          <files>
+            <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
           </files>
         </component>
     </components>

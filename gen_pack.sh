@@ -138,6 +138,9 @@ fi
 # pdsc file is mandatory in base directory:
 cp -f  ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_BUILD}
 
+cp -f ./perf_os_patch_rtx5.c ./lib
+cp -f ./perf_counter.h ./lib
+
 # directories
 echo Adding directories to pack:
 echo $PACK_DIRS
@@ -155,6 +158,8 @@ for f in $PACK_BASE_FILES
 do 
   cp -f  "$f" $PACK_BUILD/ 
 done
+
+
 
 # Run Schema Check (for Linux only):
 # sudo apt-get install libxml2-utils
@@ -200,8 +205,7 @@ if [ $errorlevel -ne 0 ]; then
 fi
 
 cp -f ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_WAREHOUSE}
-cp -f ./perf_os_patch_rtx5.c ./lib
-cp -f ./perf_counter.h ./lib
+
 
 echo "build of pack succeeded"
 # Clean up
