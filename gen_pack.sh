@@ -53,6 +53,7 @@ PACK_BASE_FILES="
   perf_counter.h
   systick_wrapper_gcc.s
   systick_wrapper_ual.s
+  perf_os_patch_rtx5.c
   LICENSE
   README.md
 "
@@ -198,7 +199,9 @@ if [ $errorlevel -ne 0 ]; then
   exit
 fi
 
-cp -f  ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_WAREHOUSE}
+cp -f ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_WAREHOUSE}
+cp -f ./perf_os_patch_rtx5.c ./lib
+cp -f ./perf_counter.h ./lib
 
 echo "build of pack succeeded"
 # Clean up

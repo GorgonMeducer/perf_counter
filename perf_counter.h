@@ -30,42 +30,41 @@
 //! @{
 
 //! \note for IAR
-#ifdef __IS_COMPILER_IAR__
-#   undef __IS_COMPILER_IAR__
-#endif
+#undef __IS_COMPILER_IAR__
 #if defined(__IAR_SYSTEMS_ICC__)
 #   define __IS_COMPILER_IAR__                  1
 #endif
 
 //! \note for arm compiler 5
-#ifdef __IS_COMPILER_ARM_COMPILER_5__
-#   undef __IS_COMPILER_ARM_COMPILER_5__
-#endif
+#undef __IS_COMPILER_ARM_COMPILER_5__
 #if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
 #   define __IS_COMPILER_ARM_COMPILER_5__       1
 #endif
 //! @}
 
 //! \note for arm compiler 6
-#ifdef __IS_COMPILER_ARM_COMPILER_6__
-#   undef __IS_COMPILER_ARM_COMPILER_6__
-#endif
+
+#undef __IS_COMPILER_ARM_COMPILER_6__
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 #   define __IS_COMPILER_ARM_COMPILER_6__       1
 #endif
 
-#ifdef __IS_COMPILER_LLVM__
-#   undef  __IS_COMPILER_LLVM__
+#undef __IS_COMPILER_ARM_COMPILER__
+#if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__   \
+||  defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__
+
+#   define __IS_COMPILER_ARM_COMPILER__         1
+
 #endif
+
+
+#undef  __IS_COMPILER_LLVM__
 #if defined(__clang__) && !__IS_COMPILER_ARM_COMPILER_6__
 #   define __IS_COMPILER_LLVM__                 1
 #else
 //! \note for gcc
-#   ifdef __IS_COMPILER_GCC__
-#       undef __IS_COMPILER_GCC__
-#   endif
-#   if defined(__GNUC__) && !(  defined(__IS_COMPILER_ARM_COMPILER_5__)         \
-                            ||  defined(__IS_COMPILER_ARM_COMPILER_6__)         \
+#   undef __IS_COMPILER_GCC__
+#   if defined(__GNUC__) && !(  defined(__IS_COMPILER_ARM_COMPILER__)           \
                             ||  defined(__IS_COMPILER_LLVM__))
 #       define __IS_COMPILER_GCC__              1
 #   endif
@@ -253,6 +252,13 @@
             })
                     
 /*============================ TYPES =========================================*/
+typedef struct {
+    uint64_t    dwStart;
+    uint64_t    dwUsedTotal;
+    uint32_t    dwUsedRecent;
+    uint32_t    wActiveCount;
+} task_cycle_info_t;
+            
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
@@ -310,6 +316,15 @@ extern int64_t clock(void);
 __attribute__((nothrow)) 
 #endif
 extern int64_t get_system_ticks(void);
+
+
+/*! \brief provide cycle information for target thread if perf_counter is used
+ *!        together with an RTOS in the support list.
+ *!        
+ *!        Support RTOS List:
+ *!           - RTX5
+ */
+extern task_cycle_info_t * get_rtos_thread_cycle_info(void);
 
 
 /*----------------------------------------------------------------------------*
