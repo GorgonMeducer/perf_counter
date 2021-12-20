@@ -16,6 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-12-20" version="1.7.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.4.pack">
+      - Add new feature for RTOS. Now you can get cycle information for the current thread.
+      - Other minor update
+    </release>
     <release date="2021-12-05" version="1.6.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.5.pack">
       - Include stddef.h in perf_counter.h to solve missing NULL definition issue.
     </release>
@@ -77,6 +81,12 @@
             <require Cclass="CMSIS" Cgroup="CORE"/>
         </condition>
         
+        <condition id="CMSIS-RTOS2-RTX5">
+            <description>Require CMSIS-RTOS2-RTX5 Support</description>
+            <require Cclass="CMSIS" Cgroup="CORE"/>
+            <require Cclass="CMSIS" Cgroup="RTOS2 (API)" Csub="Keil RTX5">
+        </condition>
+        
         <condition id="Cortex-M Arm GCC">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm GCC"/>
@@ -100,6 +110,7 @@
             <require condition="Cortex-M Processors"/>
             <require condition="CMSIS-CORE"/>
         </condition>
+        
         
     </conditions>
   <!-- apis section (optional - for Application Programming Interface descriptions) -->
@@ -133,21 +144,24 @@
   -->
 
     <components>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.6.5" isDefaultVariant="true">
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Library" Cversion="1.7.0" isDefaultVariant="true">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
             <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
             <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
+            <file category="source"     name="lib/perf_os_patch_rtx5.c"     condition="CMSIS-RTOS2-RTX5"/>
           </files>
         </component>
-        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.6.5" condition="CMSIS-CORE">
+
+        <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvariant="Source" Cversion="1.7.0" condition="CMSIS-CORE">
           <description>A dedicated performance counter for Cortex-M systick.</description>
           <files>
             <file category="header"     name="lib/perf_counter.h"/>
             <file category="source"     name="perf_counter.c" />
             <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler CMSIS-CORE"/>
             <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
+            <file category="source"     name="lib/perf_os_patch_rtx5.c"     condition="CMSIS-RTOS2-RTX5"/>
           </files>
         </component>
     </components>
