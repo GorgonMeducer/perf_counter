@@ -341,7 +341,7 @@ extern void start_task_cycle_counter(void);
  */
 extern int32_t stop_task_cycle_counter(void);
 
-#else
+#elif !defined(__IMPLEMENT_PERF_COUNTER)
 
 #   define start_task_cycle_counter         start_cycle_counter
 #   define stop_task_cycle_counter          stop_cycle_counter

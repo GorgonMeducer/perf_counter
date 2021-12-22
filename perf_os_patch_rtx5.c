@@ -52,43 +52,20 @@ struct __task_cycle_info_t {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+extern void __on_context_switch_in(uint32_t *pwStack);
+extern void __on_context_switch_out(uint32_t *pwStack);
+
 /*============================ IMPLEMENTATION ================================*/
 
 
 /*! \brief wrapper function for rtos context switching */
 void __on_context_switch (osRtxThread_t *thread)
 {
+    if (NULL != osRtxInfo.thread.run.curr) {
+        __on_context_switch_out(osRtxInfo.thread.run.curr->stack_mem);
+    }
     
-    //assert(NULL != ptThread);
-
-    do {
-        struct __task_cycle_info_t *ptFrame = NULL;
-        uint64_t dwTimeStamp;
-        osRtxThread_t *curr = osRtxInfo.thread.run.curr;
-        if (curr == thread) {
-            break;
-        }
-        
-        //! get current system ticks
-        dwTimeStamp = get_system_ticks();
-        
-        if (NULL != curr) {
-            ptFrame = (struct __task_cycle_info_t *)curr->stack_mem;
-        
-            ptFrame->tInfo.dwUsedRecent = dwTimeStamp - ptFrame->dwLastTimeStamp;
-            ptFrame->tInfo.dwUsedTotal += ptFrame->tInfo.dwUsedRecent;
-        }
-        
-        //! inital target thread
-        
-        ptFrame = (struct __task_cycle_info_t *)thread->stack_mem;
-        
-        if (0 == ptFrame->tInfo.dwStart) {
-            ptFrame->tInfo.dwStart = dwTimeStamp;
-        }
-        ptFrame->dwLastTimeStamp = dwTimeStamp;
-        ptFrame->tInfo.wActiveCount++;
-    } while(0);
+    __on_context_switch_in(thread->stack_mem);
 }
 
 __attribute__((used))
@@ -116,23 +93,4 @@ task_cycle_info_t * get_rtos_task_cycle_info(void)
     
     return &(((struct __task_cycle_info_t *)curr->stack_mem)->tInfo);
 }
-
-void start_task_cycle_counter(void)
-{
-    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
-    if (NULL != ptInfo) {
-        ptInfo->dwUsedTotal = 0;
-    }
-}
-
-int32_t stop_task_cycle_counter(void)
-{
-    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
-    if (NULL != ptInfo) {
-        return (int32_t)ptInfo->dwUsedTotal;
-    }
-    
-    return 0;
-}
-
 

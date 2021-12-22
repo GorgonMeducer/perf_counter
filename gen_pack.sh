@@ -54,6 +54,7 @@ PACK_BASE_FILES="
   systick_wrapper_gcc.s
   systick_wrapper_ual.s
   perf_os_patch_rtx5.c
+  perf_os_patch_freertos.c
   LICENSE
   README.md
 "
@@ -139,6 +140,7 @@ fi
 cp -f  ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_BUILD}
 
 cp -f ./perf_os_patch_rtx5.c ./lib
+cp -f ./perf_os_patch_freertos.c ./lib
 cp -f ./perf_counter.h ./lib
 
 # directories
