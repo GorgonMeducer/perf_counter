@@ -158,22 +158,27 @@ which static variables must be declared volatile. */
 PRIVILEGED_DATA 
 extern TCB_t * volatile pxCurrentTCB;
 
+/*! \note if you aren't using perf_counter inside KEIL with RTE, please create 
+ *!          a header file called "Pre_Include_Global.h", copy the following 
+ *!          content into the header file and and put following option
+ *!          to your command line (supposing you are using arm compiler 6):
+ *!          -include "Pre_Include_Global.h"
+ */
+
 /*
+//! \brief Enable RTOS Patch for perf_counter
+#define __PERF_CNT_USE_RTOS__
+            
 #define traceTASK_SWITCHED_OUT_DISABLE  
 #define traceTASK_SWITCHED_IN_DISABLE
 
-#if defined(MPU_WRAPPERS_INCLUDED_FROM_API_FILE)
-
-
 extern void __freertos_evr_on_task_switched_out (void *ptTCB);
-extern void __freertos_evr_on_task_switched_in(void *ptTCB, uint32_t uxTopPriority) ;
+extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPriority) ;
 
 #   define traceTASK_SWITCHED_OUT()                                             \
         __freertos_evr_on_task_switched_out(pxCurrentTCB)
 #   define traceTASK_SWITCHED_IN()                                              \
         __freertos_evr_on_task_switched_in(pxCurrentTCB, uxTopReadyPriority)
-
-#endif
 
  */
 

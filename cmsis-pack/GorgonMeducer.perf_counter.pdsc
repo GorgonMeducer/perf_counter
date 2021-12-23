@@ -16,6 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-12-23" version="1.7.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.2.pack">
+      - Add support for RT-Thread
+      - Other minor update
+    </release>
     <release date="2021-12-22" version="1.7.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.1.pack">
       - Add support for FreeRTOS
       - Other minor update
@@ -154,7 +158,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.1">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.2">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true">
@@ -182,6 +186,7 @@
                 <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
               </files>
               <Pre_Include_Global_h>
+              
 //! \brief Enable RTOS Patch for perf_counter
 #define __PERF_CNT_USE_RTOS__
               </Pre_Include_Global_h>
@@ -195,24 +200,19 @@
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
 #define __PERF_CNT_USE_RTOS__
-              </Pre_Include_Global_h>
-              <RTE_Components_h>              
+            
 #define traceTASK_SWITCHED_OUT_DISABLE  
 #define traceTASK_SWITCHED_IN_DISABLE
 
-#if defined(MPU_WRAPPERS_INCLUDED_FROM_API_FILE)
-
-
 extern void __freertos_evr_on_task_switched_out (void *ptTCB);
-extern void __freertos_evr_on_task_switched_in(void *ptTCB, uint32_t uxTopPriority) ;
+extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPriority) ;
 
 #   define traceTASK_SWITCHED_OUT()                                             \
         __freertos_evr_on_task_switched_out(pxCurrentTCB)
 #   define traceTASK_SWITCHED_IN()                                              \
         __freertos_evr_on_task_switched_in(pxCurrentTCB, uxTopReadyPriority)
 
-#endif
-              </RTE_Components_h>
+              </Pre_Include_Global_h>
             </component>
         </bundle>
     </components>
