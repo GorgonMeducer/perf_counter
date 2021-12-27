@@ -97,7 +97,7 @@
         
         <condition id="FreeRTOS Patch">
             <description>Require FreeRTOS Support</description>
-            <accept Cbundle="FreeRTOS" Cclass="RTOS" Cversion="10.3.1"/>
+            <accept Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Core"/>
             <require Cclass="Utilities" Cgroup="perf_counter" Csub="Core"/>
         </condition>
         
@@ -192,7 +192,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="FreeRTOS Patch">
+            <component Cgroup="perf_counter" Csub="FreeRTOS Patch">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_freertos.c"/>
