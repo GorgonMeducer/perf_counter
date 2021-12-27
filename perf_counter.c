@@ -213,6 +213,12 @@ void user_code_insert_to_systick_handler(void)
     s_lSystemClockCounts += wLoad;
 }
 
+__WEAK 
+void __perf_os_patch_init(void)
+{
+}
+
+
 /*! \brief   initialise cycle counter service
  *!          and don't forget to tell the function whether the systick is already
  *!          used by user applications. 
@@ -241,6 +247,8 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
 #endif
+
+    __perf_os_patch_init();
 }
 
 /*! \brief try to start the performance counter

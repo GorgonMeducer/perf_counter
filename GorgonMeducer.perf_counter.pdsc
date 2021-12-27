@@ -219,6 +219,19 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
 
               </Pre_Include_Global_h>
             </component>
+            
+            <component Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+              <description>A Patch for RT-Thread</description>
+              <files>
+                <file category="source"     name="lib/perf_os_patch_rt_thread.c"/>
+              </files>
+              <Pre_Include_Global_h>
+              
+//! \brief Enable RTOS Patch for perf_counter
+#define __PERF_CNT_USE_RTOS__
+              </Pre_Include_Global_h>
+            </component>
+            
         </bundle>
     </components>
   
