@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2021-12-23" version="1.7.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.2.pack">
+    <release date="2021-12-27" version="1.7.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.2.pack">
       - Add support for RT-Thread
       - Other minor update
     </release>
@@ -98,6 +98,11 @@
         <condition id="FreeRTOS Patch">
             <description>Require FreeRTOS Support</description>
             <accept Cbundle="FreeRTOS" Cclass="RTOS" Cgroup="Core"/>
+            <require Cclass="Utilities" Cgroup="perf_counter" Csub="Core"/>
+        </condition>
+        
+        <condition id="perf_counter">
+            <description>Require Perf_Counter Core</description>
             <require Cclass="Utilities" Cgroup="perf_counter" Csub="Core"/>
         </condition>
         
@@ -192,7 +197,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="FreeRTOS Patch">
+            <component Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_freertos.c"/>
