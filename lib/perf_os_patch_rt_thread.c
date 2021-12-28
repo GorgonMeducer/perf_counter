@@ -43,14 +43,14 @@
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    uint64_t            dwLastTimeStamp;
     task_cycle_info_t   tInfo;
+    uint64_t            dwLastTimeStamp;
 } ;
 
 
 #ifndef RT_USING_HOOK
 #error In order to use perf_counter:RT-Thread-Patch, please define RT_USING_HOOK\
- rtconfig.h. If you don't want to use this patch, please un-select it in RTE.
+ in rtconfig.h. If you don't want to use this patch, please un-select it in RTE.
 #endif
 
 /*============================ TYPES =========================================*/

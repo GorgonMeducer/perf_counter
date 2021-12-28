@@ -59,8 +59,8 @@ correct privileged Vs unprivileged linkage and placement. */
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    uint64_t            dwLastTimeStamp;
     task_cycle_info_t   tInfo;
+    uint64_t            dwLastTimeStamp;
 } ;
 
 /*============================ TYPES =========================================*/

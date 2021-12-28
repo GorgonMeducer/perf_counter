@@ -16,6 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-12-28" version="1.7.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.3.pack">
+      - Fix an issue that cycle information might lose when there is no context switching. 
+      - Other minor update
+    </release>
     <release date="2021-12-27" version="1.7.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.2.pack">
       - Add support for RT-Thread
       - Other minor update
@@ -163,7 +167,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.2">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.3">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true">

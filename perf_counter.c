@@ -156,8 +156,8 @@ typedef struct
 } SCB_Type;
 
 struct __task_cycle_info_t {
-    uint64_t            dwLastTimeStamp;
     task_cycle_info_t   tInfo;
+    uint64_t            dwLastTimeStamp;
 } ;
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -429,19 +429,33 @@ void __on_context_switch_out(uint32_t *pwStack)
 
 void start_task_cycle_counter(void)
 {
-    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
-    if (NULL != ptInfo) {
-        ptInfo->dwUsedTotal = 0;
+    struct __task_cycle_info_t * ptInfo = 
+        (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
+    if (NULL == ptInfo) {
+        return ;
+    }
+    
+    __IRQ_SAFE {
+        ptInfo->dwLastTimeStamp = get_system_ticks();
+        ptInfo->tInfo.dwUsedTotal = 0;
     }
 }
 
 int32_t stop_task_cycle_counter(void)
 {
-    task_cycle_info_t * ptInfo = get_rtos_task_cycle_info();
-    if (NULL != ptInfo) {
-        return (int32_t)ptInfo->dwUsedTotal;
+    struct __task_cycle_info_t * ptInfo = 
+        (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
+    if (NULL == ptInfo) {
+        return 0;
     }
     
-    return 0;
+    int32_t nCycles = 0;
+
+    __IRQ_SAFE {
+        nCycles = ptInfo->tInfo.dwUsedTotal    
+                + (get_system_ticks() - ptInfo->dwLastTimeStamp);
+    }
+    
+    return nCycles;
 }
 
