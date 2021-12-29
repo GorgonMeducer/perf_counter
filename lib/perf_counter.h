@@ -254,9 +254,9 @@
                     
 /*============================ TYPES =========================================*/
 typedef struct {
-    uint64_t    dwStart;
-    uint64_t    dwUsedTotal;
-    uint32_t    dwUsedRecent;
+    int64_t    lStart;
+    int64_t    lUsedTotal;
+    int32_t    nUsedRecent;
     uint32_t    wActiveCount;
 } task_cycle_info_t;
             
@@ -339,7 +339,7 @@ extern void start_task_cycle_counter(void);
  *!  
  *! \return the elapsed cycle count.
  */
-extern int32_t stop_task_cycle_counter(void);
+extern int64_t stop_task_cycle_counter(void);
 
 #elif !defined(__IMPLEMENT_PERF_COUNTER)
 

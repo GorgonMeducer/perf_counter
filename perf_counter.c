@@ -157,7 +157,7 @@ typedef struct
 
 struct __task_cycle_info_t {
     task_cycle_info_t   tInfo;
-    uint64_t            dwLastTimeStamp;
+    int64_t             lLastTimeStamp;
 } ;
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -408,10 +408,10 @@ void __on_context_switch_in(uint32_t *pwStack)
     struct __task_cycle_info_t *ptFrame = (struct __task_cycle_info_t *)pwStack;
     uint64_t dwTimeStamp = get_system_ticks();
     
-    if (0 == ptFrame->tInfo.dwStart) {
-        ptFrame->tInfo.dwStart = dwTimeStamp;
+    if (0 == ptFrame->tInfo.lStart) {
+        ptFrame->tInfo.lStart = dwTimeStamp;
     }
-    ptFrame->dwLastTimeStamp = dwTimeStamp;
+    ptFrame->lLastTimeStamp = dwTimeStamp;
     ptFrame->tInfo.wActiveCount++;
 
 }
@@ -422,8 +422,8 @@ void __on_context_switch_out(uint32_t *pwStack)
     uint64_t dwTimeStamp = get_system_ticks();
     struct __task_cycle_info_t *ptFrame = (struct __task_cycle_info_t *)pwStack;
         
-    ptFrame->tInfo.dwUsedRecent = dwTimeStamp - ptFrame->dwLastTimeStamp;
-    ptFrame->tInfo.dwUsedTotal += ptFrame->tInfo.dwUsedRecent;
+    ptFrame->tInfo.nUsedRecent = dwTimeStamp - ptFrame->lLastTimeStamp;
+    ptFrame->tInfo.lUsedTotal += ptFrame->tInfo.nUsedRecent;
     
 }
 
@@ -436,12 +436,12 @@ void start_task_cycle_counter(void)
     }
     
     __IRQ_SAFE {
-        ptInfo->dwLastTimeStamp = get_system_ticks();
-        ptInfo->tInfo.dwUsedTotal = 0;
+        ptInfo->lLastTimeStamp = get_system_ticks();
+        ptInfo->tInfo.lUsedTotal = 0;
     }
 }
 
-int32_t stop_task_cycle_counter(void)
+int64_t stop_task_cycle_counter(void)
 {
     struct __task_cycle_info_t * ptInfo = 
         (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
@@ -449,13 +449,13 @@ int32_t stop_task_cycle_counter(void)
         return 0;
     }
     
-    int32_t nCycles = 0;
+    int64_t lCycles = 0;
 
     __IRQ_SAFE {
-        nCycles = ptInfo->tInfo.dwUsedTotal    
-                + (get_system_ticks() - ptInfo->dwLastTimeStamp);
+        lCycles = ptInfo->tInfo.lUsedTotal    
+                + (get_system_ticks() - ptInfo->lLastTimeStamp);
     }
     
-    return nCycles;
+    return lCycles;
 }
 

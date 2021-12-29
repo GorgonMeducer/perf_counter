@@ -16,6 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2021-12-29" version="1.7.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.4.pack">
+      - Add support for ThreadX
+      - Other minor update
+    </release>
     <release date="2021-12-28" version="1.7.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.3.pack">
       - Fix an issue that cycle information might lose when there is no context switching. 
       - Other minor update
@@ -167,7 +171,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.3">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.4">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true">
@@ -236,6 +240,20 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
+            <component Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+              <description>A Patch for ThreadX</description>
+              <files>
+                <file category="source"     name="lib/perf_os_patch_threadx.c"/>
+              </files>
+              <Pre_Include_Global_h>
+//! \brief Enable RTOS Patch for perf_counter
+#define __PERF_CNT_USE_RTOS__
+
+#define TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+
+              </Pre_Include_Global_h>
+            </component>
+
         </bundle>
     </components>
   

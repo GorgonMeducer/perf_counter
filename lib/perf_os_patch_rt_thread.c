@@ -44,7 +44,7 @@
 
 struct __task_cycle_info_t {
     task_cycle_info_t   tInfo;
-    uint64_t            dwLastTimeStamp;
+    int64_t             lLastTimeStamp;
 } ;
 
 

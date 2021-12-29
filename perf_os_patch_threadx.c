@@ -18,11 +18,11 @@
 
 /*============================ INCLUDES ======================================*/
 
+#include "tx_api.h"
+#include "tx_thread.h"
 
-#include "rtx_os.h"
 #include "perf_counter.h"
 #include "cmsis_compiler.h"
-#include "rtx_evr.h"                    // RTX Event Recorder definitions
 
 /*============================ MACROS ========================================*/
 
@@ -43,12 +43,21 @@
 #define WRAP_FUNC(__NAME)       __WRAP_FUNC(__NAME)
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
+
+#ifndef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
+#error In order to use perf_counter:ThreadX-Patch, please define\
+ TX_ENABLE_EXECUTION_CHANGE_NOTIFY in the project configuration.\
+ If you don't want to use this patch, please un-select it in RTE\
+ or remove this patch from the compilation.
+#endif
+
+
+/*============================ TYPES =========================================*/
 struct __task_cycle_info_t {
     task_cycle_info_t   tInfo;
     int64_t             lLastTimeStamp;
 } ;
 
-/*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
@@ -57,40 +66,48 @@ extern void __on_context_switch_out(uint32_t *pwStack);
 
 /*============================ IMPLEMENTATION ================================*/
 
-
-/*! \brief wrapper function for rtos context switching */
-void __on_context_switch (osRtxThread_t *thread)
+#if defined(TX_EXECUTION_PROFILE_ENABLE)
+void WRAP_FUNC(_tx_execution_thread_enter)(void) 
+#else
+void _tx_execution_thread_enter (void) 
+#endif
 {
-    if (NULL != osRtxInfo.thread.run.curr) {
-        __on_context_switch_out(osRtxInfo.thread.run.curr->stack_mem);
-    }
+    TX_THREAD * ptThread = NULL;
+    TX_THREAD_GET_CURRENT(ptThread);
+
+    __on_context_switch_out(ptThread->tx_thread_stack_start);
+
+#if defined(TX_EXECUTION_PROFILE_ENABLE)
+    extern void ORIG_FUNC(_tx_execution_thread_enter)(void);
     
-    __on_context_switch_in(thread->stack_mem);
+    ORIG_FUNC(_tx_execution_thread_enter)();
+#endif
 }
 
-__attribute__((used))
-void EvrRtxThreadSwitched (osThreadId_t thread_id) 
-{
-    __on_context_switch((osRtxThread_t *)thread_id);
-    
-#if defined(RTE_Compiler_EventRecorder)
-#   define EvtRtxThreadSwitched     \
-        EventID(EventLevelOp,     EvtRtxThreadNo, 0x19U)    
-    
-    (void)EventRecord2(EvtRtxThreadSwitched, (uint32_t)thread_id, 0U);
+#if defined(TX_EXECUTION_PROFILE_ENABLE)
+void WRAP_FUNC(_tx_execution_thread_exit)(void) 
 #else
-    (void)thread_id;
+void _tx_execution_thread_exit(void) 
+#endif
+{
+    TX_THREAD * ptThread = NULL;
+    TX_THREAD_GET_CURRENT(ptThread);
+    
+
+    __on_context_switch_in(ptThread->tx_thread_stack_start);
+
+#if defined(TX_EXECUTION_PROFILE_ENABLE)
+    extern void ORIG_FUNC(_tx_execution_thread_exit)(void);
+    
+    ORIG_FUNC(_tx_execution_thread_exit)();
 #endif
 }
 
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
 {   
-    osRtxThread_t *curr = osRtxInfo.thread.run.curr;
-    if (NULL == curr) {
-        return NULL;
-    }
-    
-    return &(((struct __task_cycle_info_t *)curr->stack_mem)->tInfo);
-}
+    TX_THREAD * ptThread = NULL;
+    TX_THREAD_GET_CURRENT(ptThread);
 
+    return &(((struct __task_cycle_info_t *)ptThread->tx_thread_stack_start)->tInfo);
+}

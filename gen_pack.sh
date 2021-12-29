@@ -56,6 +56,7 @@ PACK_BASE_FILES="
   perf_os_patch_rtx5.c
   perf_os_patch_freertos.c
   perf_os_patch_rt_thread.c
+  perf_os_patch_threadx.c
   LICENSE
   README.md
 "
@@ -143,6 +144,7 @@ cp -f  ./$PACK_VENDOR.$PACK_NAME.pdsc ${PACK_BUILD}
 cp -f ./perf_os_patch_rtx5.c ./lib
 cp -f ./perf_os_patch_freertos.c ./lib
 cp -f ./perf_os_patch_rt_thread.c ./lib
+cp -f ./perf_os_patch_threadx.c ./lib
 cp -f ./perf_counter.h ./lib
 
 # directories
