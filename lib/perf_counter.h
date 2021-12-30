@@ -274,7 +274,7 @@
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
                                                                                 \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
-                printf("%s CPU Usage %2.3f %%", __func__,                       \
+                printf("%s CPU Usage %2.3f%%\r\n", __func__,                    \
                         (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 / \
                                 (double)__cpu_usage__.lTimeElapsed));           \
             } else {                                                            \
