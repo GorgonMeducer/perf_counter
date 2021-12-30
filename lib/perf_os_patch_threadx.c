@@ -75,7 +75,7 @@ void _tx_execution_thread_enter (void)
     TX_THREAD * ptThread = NULL;
     TX_THREAD_GET_CURRENT(ptThread);
 
-    __on_context_switch_out(ptThread->tx_thread_stack_start);
+    __on_context_switch_in(ptThread->tx_thread_stack_start);
 
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
     extern void ORIG_FUNC(_tx_execution_thread_enter)(void);
@@ -93,15 +93,29 @@ void _tx_execution_thread_exit(void)
     TX_THREAD * ptThread = NULL;
     TX_THREAD_GET_CURRENT(ptThread);
     
-
-    __on_context_switch_in(ptThread->tx_thread_stack_start);
-
+    if (NULL != ptThread) {
+        __on_context_switch_out(ptThread->tx_thread_stack_start);
+    }
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
     extern void ORIG_FUNC(_tx_execution_thread_exit)(void);
     
     ORIG_FUNC(_tx_execution_thread_exit)();
 #endif
 }
+
+#if !defined(TX_EXECUTION_PROFILE_ENABLE)
+void _tx_execution_isr_exit(void) 
+{
+
+}
+
+void _tx_execution_isr_enter(void) 
+{
+
+}
+#endif
+
+
 
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
