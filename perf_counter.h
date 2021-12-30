@@ -199,22 +199,24 @@
 #endif
 
 
+#define SAFE_NAME(__NAME)   CONNECT3(__,__NAME,__LINE__)
+
 #undef foreach2
 #undef foreach3
 #undef foreach
 
 #define foreach2(__type, __array)                                               \
             using(__type *_ = __array)                                          \
-            for (   uint_fast32_t CONNECT2(count,__LINE__) = dimof(__array);    \
-                    CONNECT2(count,__LINE__) > 0;                               \
-                    _++, CONNECT2(count,__LINE__)--                             \
+            for (   uint_fast32_t SAFE_NAME(count) = dimof(__array);            \
+                    SAFE_NAME(count) > 0;                                       \
+                    _++, SAFE_NAME(count)--                                     \
                 )
 
 #define foreach3(__type, __array, __item)                                       \
             using(__type *_ = __array, *__item = _, _ = _, _ = _ )              \
-            for (   uint_fast32_t CONNECT2(count,__LINE__) = dimof(__array);    \
-                    CONNECT2(count,__LINE__) > 0;                               \
-                    _++, __item = _, CONNECT2(count,__LINE__)--                 \
+            for (   uint_fast32_t SAFE_NAME(count) = dimof(__array);            \
+                    SAFE_NAME(count) > 0;                                       \
+                    _++, __item = _, SAFE_NAME(count)--                         \
                 )
 
 #define foreach(...)                                                            \
@@ -222,16 +224,20 @@
 
 #ifndef safe_atom_code
 #   define safe_atom_code()                                                     \
-            using(  uint32_t CONNECT2(temp,__LINE__) =                          \
-                        ({uint32_t temp=__get_PRIMASK();__disable_irq();temp;}),\
-                        __set_PRIMASK(CONNECT2(temp,__LINE__)))
+            using(  uint32_t SAFE_NAME(temp) =                                  \
+                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
+                            __disable_irq();                                    \
+                            SAFE_NAME(temp2);}),                                \
+                        __set_PRIMASK(SAFE_NAME(temp)))
 #endif
             
 #ifndef __IRQ_SAFE
 #   define __IRQ_SAFE                                                           \
-            using(  uint32_t CONNECT2(temp,__LINE__) =                          \
-                        ({uint32_t temp=__get_PRIMASK();__disable_irq();temp;}),\
-                        __set_PRIMASK(CONNECT2(temp,__LINE__)))
+            using(  uint32_t SAFE_NAME(temp) =                                  \
+                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
+                            __disable_irq();                                    \
+                            SAFE_NAME(temp2);}),                                \
+                        __set_PRIMASK(SAFE_NAME(temp)))
 #endif
             
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -251,7 +257,35 @@
                     __VA_ARGS__                                                 \
                 };                                                              \
             })
-                    
+
+
+
+#define __super_loop_monitor__(__N, ...)                                        \
+    using(                                                                      \
+        struct {                                                                \
+            int64_t lStart;                                                     \
+            int64_t lTaskUsedCycles;                                            \
+            int64_t lTimeElapsed;                                               \
+        } __cpu_usage__ = {.lStart = get_system_ticks()})                       \
+    using(int SAFE_NAME(cnt) = (__N))                                           \
+    for(start_task_cycle_counter();; ({                                         \
+        if (!(--SAFE_NAME(cnt))) {                                              \
+            __cpu_usage__.lTimeElapsed = get_system_ticks();                    \
+            __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
+                                                                                \
+            if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
+                printf("%s CPU Usage %2.3f %%", __func__,                       \
+                        (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 / \
+                                (double)__cpu_usage__.lTimeElapsed));           \
+            } else {                                                            \
+                __VA_ARGS__;                                                    \
+            }                                                                   \
+            SAFE_NAME(cnt) = (__N);                                             \
+            __cpu_usage__.lStart = get_system_ticks();                          \
+            start_task_cycle_counter();                                         \
+        };                                                                      \
+    }))
+
 /*============================ TYPES =========================================*/
 typedef struct {
     int64_t    lStart;
