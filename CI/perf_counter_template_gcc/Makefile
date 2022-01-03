@@ -36,7 +36,6 @@ BUILD_DIR = build
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/main.c \
 Core/Src/stm32f1xx_it.c \
 Core/Src/stm32f1xx_hal_msp.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c \
@@ -52,11 +51,16 @@ Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c \
 Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c \
+platform.c \
+../../example/main.c \
+../../example/stdout_USART.c \
+../../perf_counter.c \
 Core/Src/system_stm32f1xx.c  
 
 # ASM sources
 ASM_SOURCES =  \
-startup_stm32f103xe.s
+startup_stm32f103xe.s \
+../../systick_wrapper_gcc.s
 
 
 #######################################
@@ -113,6 +117,8 @@ C_INCLUDES =  \
 -IDrivers/STM32F1xx_HAL_Driver/Inc \
 -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy \
 -IDrivers/CMSIS/Device/ST/STM32F1xx/Include \
+-I../../example \
+-I../.. \
 -IDrivers/CMSIS/Include
 
 
