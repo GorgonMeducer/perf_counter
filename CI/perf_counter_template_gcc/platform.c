@@ -39,6 +39,7 @@ static volatile uint32_t s_wMSCounter = 0;
   SysTick / Timer0 IRQ Handler
  *----------------------------------------------------------------------------*/
 
+
 void SysTick_Handler (void) 
 {
     if (s_wMSCounter) {
@@ -47,6 +48,8 @@ void SysTick_Handler (void)
 
     systimer_1ms_handler();
 }
+
+#define __real_SysTick_Handler SysTick_Handler
 
 void delay_ms(uint32_t wMillisecond)
 {
