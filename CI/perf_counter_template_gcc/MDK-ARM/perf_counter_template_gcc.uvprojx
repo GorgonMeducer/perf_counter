@@ -490,11 +490,6 @@
           <GroupName>perf_counter</GroupName>
           <Files>
             <File>
-              <FileName>platform.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\platform.c</FilePath>
-            </File>
-            <File>
               <FileName>perf_counter.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\perf_counter.c</FilePath>
@@ -508,6 +503,16 @@
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\example\main.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>platform</GroupName>
+          <Files>
+            <File>
+              <FileName>platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\platform.c</FilePath>
             </File>
             <File>
               <FileName>systick_wrapper_ual.s</FileName>

@@ -45,11 +45,9 @@ void SysTick_Handler (void)
     if (s_wMSCounter) {
         s_wMSCounter--;
     }
-
+    user_code_insert_to_systick_handler();
     systimer_1ms_handler();
 }
-
-#define __real_SysTick_Handler SysTick_Handler
 
 void delay_ms(uint32_t wMillisecond)
 {
