@@ -86,11 +86,14 @@
 #endif
 
 #if defined(__clang__)
-//#   pragma clang diagnostic push
+#   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #elif defined(__IS_COMPILER_GCC__)
-//#   pragma GCC diagnostic push
+#   pragma GCC diagnostic push
 #   pragma GCC diagnostic ignored "-Wpedantic"
+#   pragma GCC diagnostic ignored "-Wunused-variable"
+#   pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#   pragma GCC diagnostic ignored "-Wformat="
 #endif
 
 
