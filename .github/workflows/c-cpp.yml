@@ -17,7 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: ryanwinter/arm-none-eabi-gcc@v2.0.2
+    - name: arm-none-eabi-gcc
+      uses: ryanwinter/arm-none-eabi-gcc@master
       with:
         # GNU Embedded Toolchain for Arm release name, in the V-YYYY-qZ format (e.g. "9-2019-q4")
         release: '10.3-2021.10'
