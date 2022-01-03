@@ -22,5 +22,5 @@ jobs:
         # GNU Embedded Toolchain for Arm release name, in the V-YYYY-qZ format (e.g. "9-2019-q4")
         release: '9-2019-q4'
  
-#     - name: make-PLOOC_template_gcc
-#       run: cd ${{github.workspace}}/CI/PLOOC_template_gcc && make
+    - name: make-perf_counter_template_gcc
+      run: cd ${{github.workspace}}/CI/perf_counter_template_gcc && make
