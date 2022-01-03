@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, developing, CMSIS-Pack ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, developing, CMSIS-Pack ]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
