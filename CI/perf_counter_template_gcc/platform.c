@@ -48,11 +48,6 @@ void SysTick_Handler (void)
     systimer_1ms_handler();
 }
 
-void __real_SysTick_Handler (void) 
-{
-    SysTick_Handler();
-}
-
 void delay_ms(uint32_t wMillisecond)
 {
     s_wMSCounter = wMillisecond;
