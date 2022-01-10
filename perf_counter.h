@@ -273,7 +273,8 @@
     using(int SAFE_NAME(cnt) = (__N))                                           \
     for(start_task_cycle_counter();; ({                                         \
         if (!(--SAFE_NAME(cnt))) {                                              \
-            __cpu_usage__.lTimeElapsed = get_system_ticks();                    \
+            __cpu_usage__.lTimeElapsed                                          \
+                = get_system_ticks() - __cpu_usage__.lStart;                    \
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
                                                                                 \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
