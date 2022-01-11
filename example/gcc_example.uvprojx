@@ -15,7 +15,7 @@
         <TargetCommonOption>
           <Device>ARMCM0</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.8.0</PackID>
+          <PackID>ARM.CMSIS.5.8.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -404,6 +404,53 @@
         </Group>
         <Group>
           <GroupName>::Utilities</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArm>
+              <Carm>
+                <arpcs>2</arpcs>
+                <stkchk>2</stkchk>
+                <reentr>2</reentr>
+                <interw>2</interw>
+                <bigend>2</bigend>
+                <Strict>0</Strict>
+                <Optim>0</Optim>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Carm>
+              <Aarm>
+                <bBE>2</bBE>
+                <interw>2</interw>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aarm>
+            </GroupArm>
+          </GroupOption>
         </Group>
       </Groups>
     </Target>
@@ -416,7 +463,7 @@
         <TargetCommonOption>
           <Device>ARMCM0</Device>
           <Vendor>ARM</Vendor>
-          <PackID>ARM.CMSIS.5.8.0</PackID>
+          <PackID>ARM.CMSIS.5.8.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0x00020000) IROM(0x00000000,0x00040000) CPUTYPE("Cortex-M0") CLOCK(12000000) ESEL ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -840,16 +887,16 @@
     <apis/>
     <components>
       <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.5.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.0"/>
+        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.1"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>
-      <component Cclass="Utilities" Cgroup="Performance" Csub="perf_counter" Cvendor="GorgonMeducer" Cversion="1.6.1">
-        <package name="perf_counter" schemaVersion="1.4" url="https://github.com/GorgonMeducer/perf_counter/blob/main/cmsis-pack/" vendor="GorgonMeducer" version="1.6.1"/>
+      <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Library" Cvendor="GorgonMeducer" Cversion="1.7.7" isTargetSpecific="1">
+        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="1.7.7"/>
         <targetInfos>
-          <targetInfo name="example"/>
+          <targetInfo excluded="1" name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>
