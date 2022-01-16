@@ -59,10 +59,12 @@ correct privileged Vs unprivileged linkage and placement. */
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    task_cycle_info_agent_t     tInfo;
-    int64_t                     lLastTimeStamp;
-    uint32_t                    wMagicWord;
+    task_cycle_info_t       tInfo;
+    int64_t                 lLastTimeStamp;
+    task_cycle_info_agent_t tList;
+    uint32_t                wMagicWord;
 } ;
+
 
 
 /*============================ TYPES =========================================*/
@@ -232,7 +234,7 @@ void __freertos_evr_on_task_switched_in(void *ptTCB, uint32_t uxTopPriority) {
 }
 
 
-task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
+task_cycle_info_t * get_rtos_task_cycle_info(void)
 {   
     return &(((struct __task_cycle_info_t *)pxCurrentTCB->pxStack)->tInfo);
 }

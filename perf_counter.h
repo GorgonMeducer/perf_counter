@@ -291,16 +291,24 @@
     }))
 
 /*============================ TYPES =========================================*/
-typedef struct task_cycle_info_agent_t task_cycle_info_agent_t; 
-    
-struct task_cycle_info_agent_t{
+typedef struct {
     int64_t             lStart;
     int64_t             lUsedTotal;
     int32_t             nUsedRecent;
     uint32_t            wActiveCount;
-    task_cycle_info_agent_t  *ptNext;
-    task_cycle_info_agent_t  *ptPrevious;
+} task_cycle_info_t;
+    
+typedef struct task_cycle_info_agent_t task_cycle_info_agent_t;
+
+struct task_cycle_info_agent_t {
+    task_cycle_info_t *ptInfo;
+    task_cycle_info_agent_t *ptNext;
+    task_cycle_info_agent_t *ptPrev;
 };
+    
+    
+
+
             
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -368,7 +376,7 @@ extern int64_t get_system_ticks(void);
  *!        Support RTOS List:
  *!           - RTX5
  */
-extern task_cycle_info_agent_t * get_rtos_task_cycle_info(void);
+extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
 /*! \brief initialize the default virtual cycle counter for the current task
  */
@@ -380,13 +388,16 @@ extern void init_task_cycle_counter(void);
  *!       variable or comes from heap or pool
  */
 extern
-task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
+task_cycle_info_agent_t *register_task_cycle_agent(
+                                            task_cycle_info_t *ptInfo,
+                                            task_cycle_info_agent_t *ptAgent);
 
 /*! \brief remove a global virtual cycle counter agent from the current task
  *! 
  */
 extern
-task_cycle_info_agent_t *unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
+task_cycle_info_agent_t *
+unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
 
 /*! \brief reset and start the virtual cycle counter for the current task
  */

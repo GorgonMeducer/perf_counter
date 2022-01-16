@@ -43,10 +43,12 @@
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    task_cycle_info_agent_t     tInfo;
-    int64_t                     lLastTimeStamp;
-    uint32_t                    wMagicWord;
+    task_cycle_info_t       tInfo;
+    int64_t                 lLastTimeStamp;
+    task_cycle_info_agent_t tList;
+    uint32_t                wMagicWord;
 } ;
+
 
 
 #ifndef RT_USING_HOOK
@@ -80,7 +82,7 @@ void __perf_os_patch_init(void)
 }
 #endif
 
-task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
+task_cycle_info_t * get_rtos_task_cycle_info(void)
 {   
     return &(((struct __task_cycle_info_t *)rt_current_thread->stack_addr)->tInfo);
 }

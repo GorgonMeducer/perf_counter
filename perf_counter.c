@@ -113,7 +113,8 @@
 #define SCB_ICSR_PENDSTSET_Msk             (1UL << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB ICSR: PENDSTSET Mask */
 
 
-#define MAGIC_DWORD_AGENT_LIST_VALID        0x8492A53C
+#define MAGIC_WORD_AGENT_LIST_VALID        0x8492A53C
+#define MAGIC_WORD_CANARY                  0xDEADBEEF
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -158,9 +159,10 @@ typedef struct
 } SCB_Type;
 
 struct __task_cycle_info_t {
-    task_cycle_info_agent_t     tInfo;
-    int64_t                     lLastTimeStamp;
-    uint32_t                    wMagicWord;
+    task_cycle_info_t       tInfo;
+    int64_t                 lLastTimeStamp;
+    task_cycle_info_agent_t tList;
+    uint32_t                wMagicWord;
 } ;
 
 
@@ -401,7 +403,7 @@ int64_t get_system_ticks(void)
 
 
 __WEAK 
-task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
+task_cycle_info_t * get_rtos_task_cycle_info(void)
 {
     return NULL;
 }
@@ -414,20 +416,19 @@ void init_task_cycle_counter(void)
         return ;
     }
     
-    memset(&(ptRootAgent->tInfo), 0, sizeof(task_cycle_info_agent_t));
+    memset(ptRootAgent, 0, sizeof(struct __task_cycle_info_t));
     
-    //! initialise agent pointers
-    //ptRootAgent->tInfo.ptNext = NULL;
-    //ptRootAgent->tInfo.ptPrevious = NULL;
+    ptRootAgent->tList.ptInfo = &(ptRootAgent->tInfo);
     ptRootAgent->tInfo.lStart = get_system_ticks();
-    ptRootAgent->wMagicWord = 0xDEADBEEF;
+    ptRootAgent->wMagicWord = MAGIC_WORD_CANARY;
 }
 
-task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
+task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
+                                             task_cycle_info_agent_t *ptAgent)
 {
     __IRQ_SAFE {
         do {
-            if (NULL == ptAgent) {
+            if (NULL == ptAgent || NULL == ptInfo) {
                 break;
             }
             
@@ -437,15 +438,23 @@ task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAg
                 break;
             }
             
-            ptRootAgent->wMagicWord = MAGIC_DWORD_AGENT_LIST_VALID;
+            ptRootAgent->wMagicWord = MAGIC_WORD_AGENT_LIST_VALID;
             
-            memset(ptAgent, 0, sizeof(task_cycle_info_agent_t));
+            memset(ptInfo, 0, sizeof(task_cycle_info_t));
+            ptAgent->ptInfo = ptInfo;
             
             //! push to the stack
-            ptAgent->ptNext = ptRootAgent->tInfo.ptNext;
-            ptRootAgent->tInfo.ptNext = ptAgent;
-            
-            ptAgent->ptPrevious = (task_cycle_info_agent_t *)ptRootAgent;
+            do {
+                //! set next-list
+                ptAgent->ptNext = ptRootAgent->tList.ptNext;
+                ptRootAgent->tList.ptNext = ptAgent;
+                
+                //! set prev-list
+                ptAgent->ptPrev = &(ptRootAgent->tList);
+                if (NULL != ptAgent->ptNext) {
+                    ptAgent->ptNext->ptPrev = ptAgent;
+                }
+            } while(0);
         
         } while(0);
     }
@@ -453,7 +462,8 @@ task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAg
     return ptAgent;
 }
 
-task_cycle_info_agent_t *unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
+task_cycle_info_agent_t *
+unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
 {
     __IRQ_SAFE {
         do {
@@ -461,21 +471,25 @@ task_cycle_info_agent_t *unregister_task_cycle_agent(task_cycle_info_agent_t *pt
                 break;
             }
             
-            task_cycle_info_agent_t *ptPrevious = ptAgent->ptPrevious;
-            if (NULL == ptPrevious) {
+            task_cycle_info_agent_t *ptPrev = ptAgent->ptPrev;
+            if (NULL == ptPrev) {
                 break;      /* this should not happen */
             }
-            if (ptPrevious->ptNext != ptAgent) {
+            if (ptPrev->ptNext != ptAgent) {
                 //! already removed
                 break;
             }
             
-            //! remove agent from a list
-            ptPrevious->ptNext = ptAgent->ptNext;
-            ptAgent->ptNext->ptPrevious = ptPrevious;
+            //! remove agent from the next-list
+            ptPrev->ptNext = ptAgent->ptNext;
+            
+            if (NULL != ptAgent->ptNext) {
+                //! remove agent from the prev-list 
+                ptAgent->ptNext->ptPrev = ptPrev;
+            }
             
             ptAgent->ptNext = NULL;
-            ptAgent->ptPrevious = NULL;
+            ptAgent->ptPrev = NULL;
             
         } while(0);
     }
@@ -492,11 +506,13 @@ void __on_context_switch_in(uint32_t *pwStack)
     ptRootAgent->lLastTimeStamp = dwTimeStamp;
     ptRootAgent->tInfo.wActiveCount++;
 
-    if (MAGIC_DWORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
+    if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
         //! update all agents
-        task_cycle_info_agent_t *ptAgent = ptRootAgent->tInfo.ptNext;
+        task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
-            ptAgent->wActiveCount++;
+            if (NULL != ptAgent->ptInfo) {
+                ptAgent->ptInfo->wActiveCount++;
+            }
             ptAgent = ptAgent->ptNext;
         }
     }
@@ -510,12 +526,14 @@ void __on_context_switch_out(uint32_t *pwStack)
     ptRootAgent->tInfo.nUsedRecent = lCycleUsed;
     ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
     
-    if (MAGIC_DWORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
+    if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
         //! update all agents
-        task_cycle_info_agent_t *ptAgent = ptRootAgent->tInfo.ptNext;
+        task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
-            ptAgent->nUsedRecent = lCycleUsed;
-            ptAgent->lUsedTotal += lCycleUsed;
+            if (NULL != ptAgent->ptInfo) {
+                ptAgent->ptInfo->nUsedRecent = lCycleUsed;
+                ptAgent->ptInfo->lUsedTotal += lCycleUsed;
+            }
             ptAgent = ptAgent->ptNext;
         }
     }
