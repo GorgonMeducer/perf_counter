@@ -113,6 +113,8 @@
 #define SCB_ICSR_PENDSTSET_Msk             (1UL << SCB_ICSR_PENDSTSET_Pos)                /*!< SCB ICSR: PENDSTSET Mask */
 
 
+#define MAGIC_DWORD_AGENT_LIST_VALID        0x8492A53C
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
@@ -156,9 +158,11 @@ typedef struct
 } SCB_Type;
 
 struct __task_cycle_info_t {
-    task_cycle_info_t   tInfo;
-    int64_t             lLastTimeStamp;
+    task_cycle_info_agent_t     tInfo;
+    int64_t                     lLastTimeStamp;
+    uint32_t                    wMagicWord;
 } ;
+
 
 /*============================ GLOBAL VARIABLES ==============================*/
 extern uint32_t SystemCoreClock;
@@ -397,63 +401,153 @@ int64_t get_system_ticks(void)
 
 
 __WEAK 
-task_cycle_info_t * get_rtos_task_cycle_info(void)
+task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
 {
     return NULL;
 }
 
+void init_task_cycle_counter(void)
+{
+    struct __task_cycle_info_t * ptRootAgent = 
+        (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
+    if (NULL == ptRootAgent) {
+        return ;
+    }
+    
+    memset(&(ptRootAgent->tInfo), 0, sizeof(task_cycle_info_agent_t));
+    
+    //! initialise agent pointers
+    //ptRootAgent->tInfo.ptNext = NULL;
+    //ptRootAgent->tInfo.ptPrevious = NULL;
+    ptRootAgent->tInfo.lStart = get_system_ticks();
+    ptRootAgent->wMagicWord = 0xDEADBEEF;
+}
+
+task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
+{
+    __IRQ_SAFE {
+        do {
+            if (NULL == ptAgent) {
+                break;
+            }
+            
+            struct __task_cycle_info_t * ptRootAgent = 
+                (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
+            if (NULL == ptRootAgent) {
+                break;
+            }
+            
+            ptRootAgent->wMagicWord = MAGIC_DWORD_AGENT_LIST_VALID;
+            
+            memset(ptAgent, 0, sizeof(task_cycle_info_agent_t));
+            
+            //! push to the stack
+            ptAgent->ptNext = ptRootAgent->tInfo.ptNext;
+            ptRootAgent->tInfo.ptNext = ptAgent;
+            
+            ptAgent->ptPrevious = (task_cycle_info_agent_t *)ptRootAgent;
+        
+        } while(0);
+    }
+    
+    return ptAgent;
+}
+
+task_cycle_info_agent_t *unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
+{
+    __IRQ_SAFE {
+        do {
+            if (NULL == ptAgent) {
+                break;
+            }
+            
+            task_cycle_info_agent_t *ptPrevious = ptAgent->ptPrevious;
+            if (NULL == ptPrevious) {
+                break;      /* this should not happen */
+            }
+            if (ptPrevious->ptNext != ptAgent) {
+                //! already removed
+                break;
+            }
+            
+            //! remove agent from a list
+            ptPrevious->ptNext = ptAgent->ptNext;
+            ptAgent->ptNext->ptPrevious = ptPrevious;
+            
+            ptAgent->ptNext = NULL;
+            ptAgent->ptPrevious = NULL;
+            
+        } while(0);
+    }
+    
+    return ptAgent;
+}
+
+
 void __on_context_switch_in(uint32_t *pwStack)
 {
-
-    struct __task_cycle_info_t *ptFrame = (struct __task_cycle_info_t *)pwStack;
+    struct __task_cycle_info_t *ptRootAgent = (struct __task_cycle_info_t *)pwStack;
     uint64_t dwTimeStamp = get_system_ticks();
     
-    if (0 == ptFrame->tInfo.lStart) {
-        ptFrame->tInfo.lStart = dwTimeStamp;
-    }
-    ptFrame->lLastTimeStamp = dwTimeStamp;
-    ptFrame->tInfo.wActiveCount++;
+    ptRootAgent->lLastTimeStamp = dwTimeStamp;
+    ptRootAgent->tInfo.wActiveCount++;
 
+    if (MAGIC_DWORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
+        //! update all agents
+        task_cycle_info_agent_t *ptAgent = ptRootAgent->tInfo.ptNext;
+        while(NULL != ptAgent) {
+            ptAgent->wActiveCount++;
+            ptAgent = ptAgent->ptNext;
+        }
+    }
 }
 
 void __on_context_switch_out(uint32_t *pwStack)
 {
+    struct __task_cycle_info_t *ptRootAgent = (struct __task_cycle_info_t *)pwStack;
+    int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
     
-    uint64_t dwTimeStamp = get_system_ticks();
-    struct __task_cycle_info_t *ptFrame = (struct __task_cycle_info_t *)pwStack;
-        
-    ptFrame->tInfo.nUsedRecent = dwTimeStamp - ptFrame->lLastTimeStamp;
-    ptFrame->tInfo.lUsedTotal += ptFrame->tInfo.nUsedRecent;
+    ptRootAgent->tInfo.nUsedRecent = lCycleUsed;
+    ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
     
+    if (MAGIC_DWORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
+        //! update all agents
+        task_cycle_info_agent_t *ptAgent = ptRootAgent->tInfo.ptNext;
+        while(NULL != ptAgent) {
+            ptAgent->nUsedRecent = lCycleUsed;
+            ptAgent->lUsedTotal += lCycleUsed;
+            ptAgent = ptAgent->ptNext;
+        }
+    }
 }
 
 void start_task_cycle_counter(void)
 {
-    struct __task_cycle_info_t * ptInfo = 
+    struct __task_cycle_info_t * ptRootAgent = 
         (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
-    if (NULL == ptInfo) {
+    if (NULL == ptRootAgent) {
         return ;
     }
     
     __IRQ_SAFE {
-        ptInfo->lLastTimeStamp = get_system_ticks();
-        ptInfo->tInfo.lUsedTotal = 0;
+        ptRootAgent->lLastTimeStamp = get_system_ticks();
+        ptRootAgent->tInfo.lUsedTotal = 0;
     }
 }
 
 int64_t stop_task_cycle_counter(void)
 {
-    struct __task_cycle_info_t * ptInfo = 
+    struct __task_cycle_info_t * ptRootAgent = 
         (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
-    if (NULL == ptInfo) {
+    if (NULL == ptRootAgent) {
         return 0;
     }
     
     int64_t lCycles = 0;
 
     __IRQ_SAFE {
-        lCycles = ptInfo->tInfo.lUsedTotal    
-                + (get_system_ticks() - ptInfo->lLastTimeStamp);
+        lCycles = ptRootAgent->tInfo.lUsedTotal    
+                + (get_system_ticks() - ptRootAgent->lLastTimeStamp);
     }
     
     return lCycles;

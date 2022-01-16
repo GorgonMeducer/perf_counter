@@ -54,8 +54,9 @@
 
 /*============================ TYPES =========================================*/
 struct __task_cycle_info_t {
-    task_cycle_info_t   tInfo;
-    int64_t             lLastTimeStamp;
+    task_cycle_info_agent_t     tInfo;
+    int64_t                     lLastTimeStamp;
+    uint32_t                    wMagicWord;
 } ;
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -115,10 +116,7 @@ void _tx_execution_isr_enter(void)
 }
 #endif
 
-
-
-
-task_cycle_info_t * get_rtos_task_cycle_info(void)
+task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
 {   
     TX_THREAD * ptThread = NULL;
     TX_THREAD_GET_CURRENT(ptThread);

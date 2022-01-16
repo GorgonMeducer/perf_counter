@@ -44,8 +44,9 @@
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    task_cycle_info_t   tInfo;
-    int64_t             lLastTimeStamp;
+    task_cycle_info_agent_t     tInfo;
+    int64_t                     lLastTimeStamp;
+    uint32_t                    wMagicWord;
 } ;
 
 /*============================ TYPES =========================================*/
@@ -84,7 +85,7 @@ void EvrRtxThreadSwitched (osThreadId_t thread_id)
 }
 
 
-task_cycle_info_t * get_rtos_task_cycle_info(void)
+task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
 {   
     osRtxThread_t *curr = osRtxInfo.thread.run.curr;
     if (NULL == curr) {

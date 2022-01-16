@@ -43,8 +43,9 @@
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 struct __task_cycle_info_t {
-    task_cycle_info_t   tInfo;
-    int64_t             lLastTimeStamp;
+    task_cycle_info_agent_t     tInfo;
+    int64_t                     lLastTimeStamp;
+    uint32_t                    wMagicWord;
 } ;
 
 
@@ -52,6 +53,7 @@ struct __task_cycle_info_t {
 #error In order to use perf_counter:RT-Thread-Patch, please define RT_USING_HOOK\
  in rtconfig.h. If you don't want to use this patch, please un-select it in RTE.
 #endif
+
 
 /*============================ TYPES =========================================*/
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -71,14 +73,14 @@ void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to)
     __on_context_switch_in(to->stack_addr);
 }
 
-#ifdef RT_USING_HOOK
+#if RTTHREAD_VERSION <= 40100
 void __perf_os_patch_init(void)
 {
     rt_scheduler_sethook(&__rt_thread_scheduler_hook);
 }
 #endif
 
-task_cycle_info_t * get_rtos_task_cycle_info(void)
+task_cycle_info_agent_t * get_rtos_task_cycle_info(void)
 {   
     return &(((struct __task_cycle_info_t *)rt_current_thread->stack_addr)->tInfo);
 }

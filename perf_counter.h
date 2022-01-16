@@ -291,12 +291,16 @@
     }))
 
 /*============================ TYPES =========================================*/
-typedef struct {
-    int64_t    lStart;
-    int64_t    lUsedTotal;
-    int32_t    nUsedRecent;
-    uint32_t    wActiveCount;
-} task_cycle_info_t;
+typedef struct task_cycle_info_agent_t task_cycle_info_agent_t; 
+    
+struct task_cycle_info_agent_t{
+    int64_t             lStart;
+    int64_t             lUsedTotal;
+    int32_t             nUsedRecent;
+    uint32_t            wActiveCount;
+    task_cycle_info_agent_t  *ptNext;
+    task_cycle_info_agent_t  *ptPrevious;
+};
             
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -364,26 +368,47 @@ extern int64_t get_system_ticks(void);
  *!        Support RTOS List:
  *!           - RTX5
  */
-extern task_cycle_info_t * get_rtos_task_cycle_info(void);
+extern task_cycle_info_agent_t * get_rtos_task_cycle_info(void);
 
-/*! \brief start cycle counter for current task
+/*! \brief initialize the default virtual cycle counter for the current task
+ */
+extern void init_task_cycle_counter(void);
+
+/*! \brief register a global virtual cycle counter agent to the current task
+ *! 
+ *! \note the ptAgent it is better to be allocated as a static variable, global
+ *!       variable or comes from heap or pool
+ */
+extern
+task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
+
+/*! \brief remove a global virtual cycle counter agent from the current task
+ *! 
+ */
+extern
+task_cycle_info_agent_t *unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
+
+/*! \brief reset and start the virtual cycle counter for the current task
  */
 extern void start_task_cycle_counter(void);
 
 /*! \brief calculate the elapsed cycle count for current task since the last 
  *!        start point
  *! 
- *! \note you can have multiple stop_cycle_counter following one start point
- *!  
+ *! \note you can call stop_cycle_counter() multiple times following one 
+ *!       start_task_cycle_counter()
+ *!
  *! \return the elapsed cycle count.
  */
 extern int64_t stop_task_cycle_counter(void);
+
+
 
 #elif !defined(__IMPLEMENT_PERF_COUNTER)
 
 #   define start_task_cycle_counter         start_cycle_counter
 #   define stop_task_cycle_counter          stop_cycle_counter
-
+#   define init_task_cycle_counter()
 #endif
 
 /*----------------------------------------------------------------------------*

@@ -16,51 +16,9 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-01-10" version="1.7.7" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.7.pack">
-      - Fix an issue found in __super_loop_monitor__()
-    </release>
-    <release date="2021-12-30" version="1.7.6" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.6.pack">
-      - Added __super_loop_monitor__()
-    </release>
-    <release date="2021-12-30" version="1.7.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.5.pack">
-      - Fixed issue found in ThreadX patch.
-    </release>
-    <release date="2021-12-29" version="1.7.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.4.pack">
-      - Add support for ThreadX
-      - Other minor update
-    </release>
-    <release date="2021-12-28" version="1.7.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.3.pack">
-      - Fix an issue that cycle information might lose when there is no context switching. 
-      - Other minor update
-    </release>
-    <release date="2021-12-27" version="1.7.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.2.pack">
-      - Add support for RT-Thread
-      - Other minor update
-    </release>
-    <release date="2021-12-22" version="1.7.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.1.pack">
-      - Add support for FreeRTOS
-      - Other minor update
-    </release>
-    <release date="2021-12-20" version="1.7.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.7.0.pack">
-      - Add new feature for RTOS. Now you can get cycle information for the current thread.
-      - Other minor update
-    </release>
-    <release date="2021-12-05" version="1.6.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.5.pack">
-      - Include stddef.h in perf_counter.h to solve missing NULL definition issue.
-    </release>
-    <release date="2021-11-13" version="1.6.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.4.pack">
-      - Improve support for IAR
-      - Fix issues found in foreach
-      - Other minor update
-    </release>
-    <release date="2021-11-05" version="1.6.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.3.pack">
-      - Add CMSIS Dependency Check
-    </release>
-    <release date="2021-11-05" version="1.6.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.2.pack">
-      - Add options for selecting between source code and library.
-    </release>
-    <release date="2021-11-04" version="1.6.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.6.1.pack">
-      - Add GCC support to CMSIS-Pack
+    <release date="2022-01-15" version="1.8.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.8.0.pack">
+      - Update RT-Thread Support
+      - Add global virtual task cycle counter agent support.
     </release>
     
   </releases>
@@ -180,7 +138,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.7.7">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.8.0">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true">
@@ -246,6 +204,12 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               
 //! \brief Enable RTOS Patch for perf_counter
 #define __PERF_CNT_USE_RTOS__
+
+struct rt_thread;
+extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to);
+
+#define __on_rt_scheduler_hook(from, to)  __rt_thread_scheduler_hook((from), (to))
+
               </Pre_Include_Global_h>
             </component>
             
