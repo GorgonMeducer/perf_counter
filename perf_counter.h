@@ -250,6 +250,7 @@
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
                 _=_, {                                                          \
                 _ = get_system_ticks() - _;                                     \
+                __cycle_count__ = _;                                            \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
                     printf("\r\n");                                             \
                     printf("-[Cycle Report]");                                  \
