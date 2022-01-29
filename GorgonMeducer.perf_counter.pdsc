@@ -148,6 +148,10 @@
                 <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
                 <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
               </files>
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER__
+              </Pre_Include_Global_h>
             </component>
 
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" condition="CMSIS-CORE">
@@ -158,6 +162,10 @@
                 <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler CMSIS-CORE"/>
                 <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
               </files>
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER__
+              </Pre_Include_Global_h>
             </component>
             
             <component Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
