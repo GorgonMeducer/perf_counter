@@ -27,6 +27,14 @@
 
 /*============================ MACROS ========================================*/
 
+#define __PERF_COUNTER_VER_MAJOR__          1
+#define __PERF_COUNTER_VER_MINOR__          8
+#define __PERF_COUNTER_VER_REVISE__         2
+
+#define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
+                               +__PERF_COUNTER_VER_MINOR__ * 100ul              \
+                               +__PERF_COUNTER_VER_REVISE__)
+                               
 //! \name The macros to identify the compiler
 //! @{
 
