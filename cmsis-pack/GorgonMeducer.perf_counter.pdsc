@@ -16,7 +16,12 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-01-29" version="1.8.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.8.2.pack">
+    <release date="2022-01-29" version="1.9.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.0.pack">
+      - Add preprocessing in perf_counter.h to detect whether GNU extension is enabled or not.
+      - Enhance RTOS support
+      - Add macro __PERF_COUNTER__ in RTE_Components.h for compile-time detection.
+    </release>
+    <release date="2022-01-29" version="1.8.2" url="https://github.com/GorgonMeducer/perf_counter/raw/1607c021f50d0305394870ca34b5412d949aaa4f/cmsis-pack/GorgonMeducer.perf_counter.1.8.2.pack">
       - Fix a bug found in __cycleof__. The __cycle_counter__ was not updated with the measure result.
       - Add macros for version info.
     </release>
@@ -138,16 +143,20 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.8.2">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.0">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
-            <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true">
+            <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
                 <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
                 <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
               </files>
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER__
+              </Pre_Include_Global_h>
             </component>
 
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" condition="CMSIS-CORE">
@@ -158,6 +167,10 @@
                 <file category="source"     name="systick_wrapper_ual.s"        condition="Cortex-M Arm Compiler CMSIS-CORE"/>
                 <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
               </files>
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER__
+              </Pre_Include_Global_h>
             </component>
             
             <component Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">

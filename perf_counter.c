@@ -423,6 +423,57 @@ void init_task_cycle_counter(void)
     ptRootAgent->wMagicWord = MAGIC_WORD_CANARY;
 }
 
+task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo)
+{
+    do {
+        if (NULL == ptInfo) {
+            break;
+        }
+
+        memset(ptInfo, 0, sizeof(task_cycle_info_t));
+
+        ptInfo->bEnabled = true;
+    } while(0);
+    
+    return ptInfo;
+}
+
+bool enable_task_cycle_info(task_cycle_info_t *ptInfo)
+{
+    if (NULL == ptInfo) {
+        return false;
+    }
+    bool bOrig;
+    __IRQ_SAFE {
+        bOrig = ptInfo->bEnabled;
+        ptInfo->bEnabled = true;
+    }
+    return bOrig;
+}
+
+bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
+{
+    if (NULL == ptInfo) {
+        return false;
+    }
+    bool bOrig;
+    __IRQ_SAFE {
+        bOrig = ptInfo->bEnabled;
+        ptInfo->bEnabled = false;
+    }
+    return bOrig;
+}
+
+void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus)
+{
+    if (NULL == ptInfo) {
+        return;
+    }
+
+    ptInfo->bEnabled = bEnabledStatus;
+}
+
+
 task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
                                              task_cycle_info_agent_t *ptAgent)
 {
@@ -440,7 +491,6 @@ task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
             
             ptRootAgent->wMagicWord = MAGIC_WORD_AGENT_LIST_VALID;
             
-            memset(ptInfo, 0, sizeof(task_cycle_info_t));
             ptAgent->ptInfo = ptInfo;
             
             //! push to the stack
@@ -504,14 +554,16 @@ void __on_context_switch_in(uint32_t *pwStack)
     uint64_t dwTimeStamp = get_system_ticks();
     
     ptRootAgent->lLastTimeStamp = dwTimeStamp;
-    ptRootAgent->tInfo.wActiveCount++;
+    ptRootAgent->tInfo.hwActiveCount++;
 
     if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
         //! update all agents
         task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
             if (NULL != ptAgent->ptInfo) {
-                ptAgent->ptInfo->wActiveCount++;
+                if (ptAgent->ptInfo->bEnabled) {
+                    ptAgent->ptInfo->hwActiveCount++;
+                }
             }
             ptAgent = ptAgent->ptNext;
         }
@@ -531,8 +583,10 @@ void __on_context_switch_out(uint32_t *pwStack)
         task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
             if (NULL != ptAgent->ptInfo) {
-                ptAgent->ptInfo->nUsedRecent = lCycleUsed;
-                ptAgent->ptInfo->lUsedTotal += lCycleUsed;
+                if (ptAgent->ptInfo->bEnabled) {
+                    ptAgent->ptInfo->nUsedRecent = lCycleUsed;
+                    ptAgent->ptInfo->lUsedTotal += lCycleUsed;
+                }
             }
             ptAgent = ptAgent->ptNext;
         }

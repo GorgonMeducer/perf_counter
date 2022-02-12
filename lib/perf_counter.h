@@ -24,12 +24,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
+#include "cmsis_compiler.h"
 
 /*============================ MACROS ========================================*/
 
 #define __PERF_COUNTER_VER_MAJOR__          1
-#define __PERF_COUNTER_VER_MINOR__          8
-#define __PERF_COUNTER_VER_REVISE__         2
+#define __PERF_COUNTER_VER_MINOR__          9
+#define __PERF_COUNTER_VER_REVISE__         0
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -250,7 +251,13 @@
                             SAFE_NAME(temp2);}),                                \
                         __set_PRIMASK(SAFE_NAME(temp)))
 #endif
-            
+
+
+#if __PLOOC_VA_NUM_ARGS() != 0
+#warning Please enable GNC extensions, it is required by __cycleof__() and \
+__super_loop_monitor__()
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
             
@@ -304,7 +311,9 @@ typedef struct {
     int64_t             lStart;
     int64_t             lUsedTotal;
     int32_t             nUsedRecent;
-    uint32_t            wActiveCount;
+    uint16_t            hwActiveCount;
+    uint16_t                        : 15;
+    uint16_t            bEnabled    : 1;
 } task_cycle_info_t;
     
 typedef struct task_cycle_info_agent_t task_cycle_info_agent_t;
@@ -314,11 +323,8 @@ struct task_cycle_info_agent_t {
     task_cycle_info_agent_t *ptNext;
     task_cycle_info_agent_t *ptPrev;
 };
-    
-    
 
 
-            
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
@@ -379,6 +385,11 @@ extern int64_t get_system_ticks(void);
 
 
 #if defined(__PERF_CNT_USE_RTOS__)
+
+/*! \brief initialize the default virtual cycle counter for the current task
+ */
+extern void init_task_cycle_counter(void);
+
 /*! \brief provide cycle information for target task if perf_counter is used
  *!        together with an RTOS in the support list.
  *!        
@@ -387,9 +398,33 @@ extern int64_t get_system_ticks(void);
  */
 extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
-/*! \brief initialize the default virtual cycle counter for the current task
+
+/*! \brief intialize a given task_cycle_info_t object and enable it before 
+ *!        registering it.
  */
-extern void init_task_cycle_counter(void);
+extern task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo);
+
+/*! \brief enable a given task_cycle_info_t object
+ *! 
+ *! \param ptInfo the address of target task_cycle_info_t object
+ *! \return previous status
+ */
+extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo)
+
+/*! \brief disable a given task_cycle_info_t object
+ *! 
+ *! \param ptInfo the address of target task_cycle_info_t object
+ *! \return previous status
+ */
+extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
+
+/*! \brief resume the enabled status of a given task_cycle_info_t object
+ *!
+ *! \param ptInfo the address of target task_cycle_info_t object
+ *! \param bEnabledStatus the previous status
+ */
+extern 
+void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus)
 
 /*! \brief register a global virtual cycle counter agent to the current task
  *! 
