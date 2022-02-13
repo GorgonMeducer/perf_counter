@@ -409,14 +409,14 @@ extern task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo);
  *! \param ptInfo the address of target task_cycle_info_t object
  *! \return previous status
  */
-extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo)
+extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief disable a given task_cycle_info_t object
  *! 
  *! \param ptInfo the address of target task_cycle_info_t object
  *! \return previous status
  */
-extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
+extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief resume the enabled status of a given task_cycle_info_t object
  *!
@@ -424,7 +424,7 @@ extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
  *! \param bEnabledStatus the previous status
  */
 extern 
-void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus)
+void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus);
 
 /*! \brief register a global virtual cycle counter agent to the current task
  *! 
