@@ -593,7 +593,7 @@ void __on_context_switch_out(uint32_t *pwStack)
     }
 }
 
-void start_task_cycle_counter(void)
+void __start_task_cycle_counter(task_cycle_info_t *ptInfo)
 {
     struct __task_cycle_info_t * ptRootAgent = 
         (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
@@ -604,10 +604,16 @@ void start_task_cycle_counter(void)
     __IRQ_SAFE {
         ptRootAgent->lLastTimeStamp = get_system_ticks();
         ptRootAgent->tInfo.lUsedTotal = 0;
+        
+        if (NULL != ptInfo) {
+            ptInfo->lUsedTotal = 0;
+            ptInfo->bEnabled = true;
+        }
     }
 }
 
-int64_t stop_task_cycle_counter(void)
+
+int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo)
 {
     struct __task_cycle_info_t * ptRootAgent = 
         (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
@@ -616,10 +622,20 @@ int64_t stop_task_cycle_counter(void)
     }
     
     int64_t lCycles = 0;
-
+    int64_t lCycleUsed;
     __IRQ_SAFE {
-        lCycles = ptRootAgent->tInfo.lUsedTotal    
-                + (get_system_ticks() - ptRootAgent->lLastTimeStamp);
+        lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
+        lCycles = ptRootAgent->tInfo.lUsedTotal + lCycleUsed;
+    }
+    
+    if (NULL != ptInfo) {
+        if (ptInfo->bEnabled) {
+            ptInfo->nUsedRecent = lCycleUsed;
+            ptInfo->lUsedTotal += lCycleUsed;
+            ptInfo->bEnabled = false;
+        }
+        
+        return ptInfo->lUsedTotal;
     }
     
     return lCycles;

@@ -30,7 +30,7 @@
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         0
+#define __PERF_COUNTER_VER_REVISE__         1
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -409,14 +409,14 @@ extern task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo);
  *! \param ptInfo the address of target task_cycle_info_t object
  *! \return previous status
  */
-extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo)
+extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief disable a given task_cycle_info_t object
  *! 
  *! \param ptInfo the address of target task_cycle_info_t object
  *! \return previous status
  */
-extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
+extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief resume the enabled status of a given task_cycle_info_t object
  *!
@@ -424,7 +424,7 @@ extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
  *! \param bEnabledStatus the previous status
  */
 extern 
-void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus)
+void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus);
 
 /*! \brief register a global virtual cycle counter agent to the current task
  *! 
@@ -444,8 +444,10 @@ task_cycle_info_agent_t *
 unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
 
 /*! \brief reset and start the virtual cycle counter for the current task
+ *!
+ *! \param ptInfo the target task_cycle_info_t object
  */
-extern void start_task_cycle_counter(void);
+extern void __start_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 /*! \brief calculate the elapsed cycle count for current task since the last 
  *!        start point
@@ -453,17 +455,33 @@ extern void start_task_cycle_counter(void);
  *! \note you can call stop_cycle_counter() multiple times following one 
  *!       start_task_cycle_counter()
  *!
+ *! \param ptInfo the target task_cycle_info_t object
+ *!
+ *! \note  When ptInfo is NULL, it returns current task cycle info, when ptInfo
+ *!        is non-NULL, it returns the total used cycles of the specified 
+ *!        task_cycle_info_t object.
+ *!
  *! \return the elapsed cycle count.
  */
-extern int64_t stop_task_cycle_counter(void);
+extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 
+#define start_task_cycle_counter(...)                                           \
+            __start_task_cycle_counter((NULL,##__VA_ARGS__))
+
+#define stop_task_cycle_counter(...)                                            \
+            __stop_task_cycle_counter((NULL,##__VA_ARGS__))
 
 #elif !defined(__IMPLEMENT_PERF_COUNTER)
-
-#   define start_task_cycle_counter         start_cycle_counter
-#   define stop_task_cycle_counter          stop_cycle_counter
+#   define start_task_cycle_counter(...)    start_cycle_counter()
+#   define stop_task_cycle_counter(...)     stop_cycle_counter()
 #   define init_task_cycle_counter()
+#   define register_task_cycle_agent(...)
+#   define unregister_task_cycle_agent(...)
+#   define init_task_cycle_info(...)        (NULL)
+#   define enable_task_cycle_info(...)      (false)
+#   define disable_task_cycle_info(...)     (false)
+#   define resume_task_cycle_info(...)
 #endif
 
 /*----------------------------------------------------------------------------*
