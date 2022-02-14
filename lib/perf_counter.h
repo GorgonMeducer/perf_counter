@@ -30,7 +30,7 @@
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         1
+#define __PERF_COUNTER_VER_REVISE__         2
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -350,6 +350,10 @@ extern int32_t stop_cycle_counter(void);
  */
 extern void delay_us(int32_t iUs);
 
+/* Function : delay specified ms with the help from systick
+ */
+extern void delay_ms(int32_t nMs);
+
 /*! \note the prototype of this clock() is different from the one defined in
  *!           time.h. As clock_t is usually defined as unsigned int, it is
  *!           not big enough in Cortex-M system to hold a time-stamp. clock()
@@ -378,10 +382,9 @@ __attribute__((nothrow))
 extern int64_t clock(void);
 #endif
 
-#if !defined(__IS_COMPILER_IAR__)
-__attribute__((nothrow)) 
-#endif
 extern int64_t get_system_ticks(void);
+
+extern int32_t get_system_ms(void);
 
 
 #if defined(__PERF_CNT_USE_RTOS__)

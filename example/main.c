@@ -126,6 +126,6 @@ int main (void)
     
     while (1) {
         printf("\r\nhello world\r\n");
-        delay_us(1000000);
+        delay_ms(1000);
     }
 }

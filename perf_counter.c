@@ -172,8 +172,13 @@ extern uint32_t SystemCoreClock;
 /*============================ LOCAL VARIABLES ===============================*/
 volatile static int32_t s_nCycleCounts = 0;
 volatile static int32_t s_nOffset = 0;
-volatile static int32_t s_nUnit = 1;
+volatile static int32_t s_nUSUnit = 1;
+volatile static int32_t s_nMSUnit = 1;
+volatile static int32_t s_nMSResidule = 0;
+volatile static int32_t s_nSystemMS = 0;
+
 volatile static int64_t s_lSystemClockCounts = 0; 
+
 
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
@@ -217,6 +222,13 @@ void user_code_insert_to_systick_handler(void)
     uint32_t wLoad = SysTick->LOAD + 1;
     s_nCycleCounts += wLoad;
     s_lSystemClockCounts += wLoad;
+    
+    //! update system ms counter
+    s_nMSResidule += wLoad;
+    int32_t nMS = s_nMSResidule / s_nMSUnit;
+    s_nMSResidule -= nMS * s_nMSUnit;
+    s_nSystemMS += nMS;
+
 }
 
 __WEAK 
@@ -246,7 +258,9 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     //s_nSystemClockCounts = s_nCycleCounts;
     s_nOffset = stop_cycle_counter();
     
-    s_nUnit = SystemCoreClock / 1000000ul;
+    s_nUSUnit = SystemCoreClock / 1000000ul;
+    s_nMSUnit = SystemCoreClock / 1000ul;
+    
 #if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
     ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
     ||  defined(__IS_COMPILER_GCC__)
@@ -339,7 +353,21 @@ void __perf_counter_init(void)
 
 void delay_us(int32_t nUs)
 {
-    int64_t lUs = nUs * s_nUnit;
+    int64_t lUs = nUs * s_nUSUnit;
+    
+    if (lUs <= PERF_CNT_DELAY_US_COMPENSATION) {
+        return ;
+    } 
+    
+    lUs -= PERF_CNT_DELAY_US_COMPENSATION;
+    
+    lUs += get_system_ticks();
+    while(get_system_ticks() < lUs);
+}
+
+void delay_ms(int32_t nMs)
+{
+    int64_t lUs = nMs * s_nMSUnit;
     
     if (lUs <= PERF_CNT_DELAY_US_COMPENSATION) {
         return ;
@@ -386,10 +414,6 @@ int64_t clock(void)
     return lTemp;
 }
 
-
-#if !defined(__IS_COMPILER_IAR__)
-__attribute__((nothrow)) 
-#endif
 int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
@@ -399,6 +423,17 @@ int64_t get_system_ticks(void)
     }
 
     return lTemp;
+}
+
+int32_t get_system_ms(void)
+{
+    int32_t nTemp = 0;
+    
+    __IRQ_SAFE {
+        nTemp = s_nSystemMS + (check_systick() + s_nMSResidule) / s_nMSUnit;
+    }
+    
+    return nTemp;
 }
 
 
