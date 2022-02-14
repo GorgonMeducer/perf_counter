@@ -16,7 +16,11 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-01-29" version="1.9.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.1.pack">
+    <release date="2022-02-14" version="1.9.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.2.pack">
+      - Add API get_system_ms() to avoid int64_t divide operation.
+      - Add API delay_ms()
+    </release>
+    <release date="2022-02-13" version="1.9.1" url="https://github.com/GorgonMeducer/perf_counter/raw/1f4bf7fcab579d5a3018798ec0f072d8588b2886/cmsis-pack/GorgonMeducer.perf_counter.1.9.1.pack">
       - Add preprocessing in perf_counter.h to detect whether GNU extension is enabled or not.
       - Enhance RTOS support
       - Add macro __PERF_COUNTER__ in RTE_Components.h for compile-time detection.
@@ -143,7 +147,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.1">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.2">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
