@@ -47,13 +47,6 @@ void SysTick_Handler (void)
     systimer_1ms_handler();
 }
 
-void delay_ms(uint32_t wMillisecond)
-{
-    s_wMSCounter = wMillisecond;
-    while( s_wMSCounter > 0 );
-}
-
-
 /*! \brief initialise platform before main()
  */
 __attribute__((constructor(101)))
