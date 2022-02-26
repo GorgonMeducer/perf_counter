@@ -33,6 +33,8 @@
 typedef int64_t clock_t ;
 #endif
 
+extern void systimer_1ms_handler(void);
+
 void systimer_1ms_handler(void)
 {
     //printf("Running original Systick_Handler...\r\n");
@@ -42,6 +44,7 @@ typedef struct example_lv1_t {
     uint32_t wLV1A;
     uint16_t hwLV1B;
     uint8_t  chLV1C;
+    uint8_t  chLV1D;
 }example_lv1_t;
 
 
@@ -54,7 +57,8 @@ typedef struct example_lv0_t {
     example_lv1_t tLV1;
 } example_lv0_t;
 
-example_lv0_t s_tItem[8] = {
+
+static example_lv0_t s_tItem[8] = {
     {.chID = 0},
     {.chID = 1},
     {.chID = 2},
@@ -78,7 +82,6 @@ int main (void)
     }    
 
     __cycleof__("Calibration") {}
-
 
     printf("\r\n\r\n\r\n\r\n");
 

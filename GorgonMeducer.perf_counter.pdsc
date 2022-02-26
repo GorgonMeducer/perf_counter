@@ -16,7 +16,13 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-02-14" version="1.9.2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.2.pack">
+    <release date="2022-02-26" version="1.9.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.3.pack">
+      - Fix CONNECT macro cannot connect two parameters issue.
+      - Add UNUSED_PARAM
+      - Add support for C++ env
+      - Other minor updates
+    </release>
+    <release date="2022-02-14" version="1.9.2" url="https://github.com/GorgonMeducer/perf_counter/raw/46b3f8bde2a42e253951a395370d6bed965bb2b1/cmsis-pack/GorgonMeducer.perf_counter.1.9.2.pack">
       - Add API get_system_ms() to avoid int64_t divide operation.
       - Add API delay_ms()
     </release>
@@ -147,7 +153,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.2">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.3">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc></doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">

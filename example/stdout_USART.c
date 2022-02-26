@@ -109,7 +109,9 @@ typedef struct
 #define CMSDK_UART_BAUDDIV_Pos            0                                                  /* CMSDK_UART BAUDDIV: BAUDDIV Position */
 #define CMSDK_UART_BAUDDIV_Msk           (0xFFFFFUL /*<< CMSDK_UART_BAUDDIV_Pos*/)           /* CMSDK_UART BAUDDIV: BAUDDIV Mask */
 
-
+#ifndef UNUSED_PARAM
+#   define UNUSED_PARAM(__VAR)     (__VAR) = (__VAR)
+#endif
 /* ================================================================================ */
 /* ================             Peripheral declaration             ================ */
 /* ================================================================================ */
@@ -181,6 +183,7 @@ void ttywrch (int ch)
 __NO_RETURN
 void _sys_exit(int n)
 {
+    UNUSED_PARAM(n);
 	log_str("\r\n");
 	log_str("_[TEST COMPLETE]_________________________________________________\r\n");
 	log_str("\r\n\r\n");

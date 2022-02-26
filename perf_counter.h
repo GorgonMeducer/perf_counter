@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -15,8 +15,6 @@
 *                                                                           *
 ****************************************************************************/
 
-
-
 #ifndef __PERFORMANCE_COUNTER_H__
 #define __PERFORMANCE_COUNTER_H__
 
@@ -26,11 +24,14 @@
 #include <stddef.h>
 #include "cmsis_compiler.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*============================ MACROS ========================================*/
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         2
+#define __PERF_COUNTER_VER_REVISE__         3
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -83,6 +84,25 @@
 //! @}
 
 
+#if defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wunknown-warning-option"
+#   pragma clang diagnostic ignored "-Wreserved-identifier"
+#   pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#   pragma clang diagnostic ignored "-Wgnu-statement-expression"
+#   pragma clang diagnostic ignored "-Wunused-but-set-variable"
+#   pragma clang diagnostic ignored "-Wshadow"
+#   pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#elif defined(__IS_COMPILER_ARM_COMPILER_5__)
+#   pragma diag_suppress 550
+#elif defined(__IS_COMPILER_GCC__)
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wpedantic"
+#   pragma GCC diagnostic ignored "-Wunused-variable"
+#   pragma GCC diagnostic ignored "-Wunused-but-set-variable"
+#   pragma GCC diagnostic ignored "-Wformat="
+#endif
+
 #ifndef __PLOOC_VA_NUM_ARGS_IMPL
 #   define __PLOOC_VA_NUM_ARGS_IMPL(   _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,   \
                                     _12,_13,_14,_15,_16,__N,...)      __N
@@ -94,17 +114,9 @@
                                       8,7,6,5,4,3,2,1,0)
 #endif
 
-#if defined(__clang__)
-#   pragma clang diagnostic push
-#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
-#elif defined(__IS_COMPILER_GCC__)
-#   pragma GCC diagnostic push
-#   pragma GCC diagnostic ignored "-Wpedantic"
-#   pragma GCC diagnostic ignored "-Wunused-variable"
-#   pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-#   pragma GCC diagnostic ignored "-Wformat="
+#ifndef UNUSED_PARAM
+#   define UNUSED_PARAM(__VAR)     (__VAR) = (__VAR)
 #endif
-
 
 #undef __CONNECT2
 #undef __CONNECT3
@@ -126,6 +138,9 @@
 
 #undef CONNECT
 
+#undef __MACRO_EXPANDING
+#define __MACRO_EXPANDING(...)                      __VA_ARGS__
+
 #define __CONNECT2(__A, __B)                        __A##__B
 #define __CONNECT3(__A, __B, __C)                   __A##__B##__C
 #define __CONNECT4(__A, __B, __C, __D)              __A##__B##__C##__D
@@ -138,6 +153,7 @@
 #define __CONNECT9(__A, __B, __C, __D, __E, __F, __G, __H, __I)                 \
                                                     __A##__B##__C##__D##__E##__F##__G##__H##__I
                                                     
+#define ALT_CONNECT2(__A, __B)              __CONNECT2(__A, __B)
 #define CONNECT2(__A, __B)                  __CONNECT2(__A, __B)
 #define CONNECT3(__A, __B, __C)             __CONNECT3(__A, __B, __C)
 #define CONNECT4(__A, __B, __C, __D)        __CONNECT4(__A, __B, __C, __D)
@@ -152,9 +168,9 @@
                                             __CONNECT9(__A, __B, __C, __D, __E, __F, __G, __H, __I)
        
 #define CONNECT(...)                                                            \
-            CONNECT2(CONNECT, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
-            
-            
+            ALT_CONNECT2(CONNECT, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
+
+
 
 
 #undef __using1
@@ -189,7 +205,7 @@
                 )
                
 #define using(...)                                                              \
-            CONNECT2(__using, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
+                CONNECT2(__using, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
 
 #undef __with2
@@ -260,7 +276,6 @@ __super_loop_monitor__()
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
-            
 #define __cycleof__(__STR, ...)                                                 \
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
                 _=_, {                                                          \
@@ -542,5 +557,9 @@ extern void user_code_insert_to_systick_handler(void);
 //#elif defined(__IS_COMPILER_GCC__)
 //#   pragma GCC diagnostic pop
 //#endif
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
