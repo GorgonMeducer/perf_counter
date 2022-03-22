@@ -31,7 +31,7 @@ extern "C" {
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         3
+#define __PERF_COUNTER_VER_REVISE__         4
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -83,7 +83,6 @@ extern "C" {
 #endif
 //! @}
 
-
 #if defined(__clang__)
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wunknown-warning-option"
@@ -93,6 +92,7 @@ extern "C" {
 #   pragma clang diagnostic ignored "-Wunused-but-set-variable"
 #   pragma clang diagnostic ignored "-Wshadow"
 #   pragma clang diagnostic ignored "-Wshorten-64-to-32"
+#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
 #elif defined(__IS_COMPILER_ARM_COMPILER_5__)
 #   pragma diag_suppress 550
 #elif defined(__IS_COMPILER_GCC__)
