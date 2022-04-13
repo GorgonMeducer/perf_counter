@@ -104,7 +104,7 @@ extern "C" {
 #endif
 
 #ifndef __PLOOC_VA_NUM_ARGS_IMPL
-#   define __PLOOC_VA_NUM_ARGS_IMPL(   _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,   \
+#   define __PLOOC_VA_NUM_ARGS_IMPL( _0,_1,_2,_3,_4,_5,_6,_7,_8,_9,_10,_11,     \
                                     _12,_13,_14,_15,_16,__N,...)      __N
 #endif
 
@@ -115,7 +115,7 @@ extern "C" {
 #endif
 
 #ifndef UNUSED_PARAM
-#   define UNUSED_PARAM(__VAR)     (__VAR) = (__VAR)
+#   define UNUSED_PARAM(__VAR)     (void)(__VAR)
 #endif
 
 #undef __CONNECT2
@@ -169,9 +169,6 @@ extern "C" {
        
 #define CONNECT(...)                                                            \
             ALT_CONNECT2(CONNECT, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
-
-
-
 
 #undef __using1
 #undef __using2

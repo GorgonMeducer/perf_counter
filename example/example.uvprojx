@@ -10,7 +10,7 @@
       <TargetName>example_arm_compiler_6</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6170000::V6.17::.\Arm Compiler 6.17</pCCUsed>
+      <pCCUsed>6180000::V6.18::.\Arm Compiler 6.18</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -337,7 +337,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>-Wno-missing-prototypes -Wno-reserved-identifier -Wno-sign-conversion -Wno-c11-extensions -Wno-implicit-int-conversion</MiscControls>
-              <Define>__PERF_CNT_USE_LONG_CLOCK__</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath>..</IncludePath>
             </VariousControls>
@@ -529,7 +529,7 @@
       <TargetName>library</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6170000::V6.17::.\Arm Compiler 6.17</pCCUsed>
+      <pCCUsed>6180000::V6.18::.\Arm Compiler 6.18</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>

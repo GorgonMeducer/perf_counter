@@ -61,14 +61,12 @@
 #define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
 
 /* Memory mapping of Core Hardware */
-#define SCS_BASE            (0xE000E000UL)                             /*!< System Control Space Base Address */
-#define SysTick_BASE        (SCS_BASE +  0x0010UL)                     /*!< SysTick Base Address */
-#define SCB_BASE            (SCS_BASE +  0x0D00UL)                    /*!< System Control Block Base Address */
+#define SCS_BASE            (0xE000E000UL)                                      /*!< System Control Space Base Address */
+#define SysTick_BASE        (SCS_BASE +  0x0010UL)                              /*!< SysTick Base Address */
+#define SCB_BASE            (SCS_BASE +  0x0D00UL)                              /*!< System Control Block Base Address */
 
-#define SysTick             ((SysTick_Type   *)     SysTick_BASE     ) /*!< SysTick configuration struct */
-#define SCB                 ((SCB_Type       *)     SCB_BASE      )   /*!< SCB configuration struct */
-
-
+#define SysTick             ((SysTick_Type   *)     SysTick_BASE     )          /*!< SysTick configuration struct */
+#define SCB                 ((SCB_Type       *)     SCB_BASE      )             /*!< SCB configuration struct */
 
 /* SysTick Control / Status Register Definitions */
 #define SysTick_CTRL_COUNTFLAG_Pos         16U                                            /*!< SysTick CTRL: COUNTFLAG Position */
@@ -102,9 +100,6 @@
 #define SysTick_CALIB_TENMS_Msk            (0xFFFFFFUL /*<< SysTick_CALIB_TENMS_Pos*/)    /*!< SysTick CALIB: TENMS Mask */
 
 /*@} end of group CMSIS_SysTick */
-
-
-
 
 #define SCB_ICSR_PENDSTCLR_Pos             25U                                            /*!< SCB ICSR: PENDSTCLR Position */
 #define SCB_ICSR_PENDSTCLR_Msk             (1UL << SCB_ICSR_PENDSTCLR_Pos)                /*!< SCB ICSR: PENDSTCLR Mask */
@@ -200,21 +195,21 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 {
     if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
     {
-        return (1UL);                                                   /* Reload value impossible */
+        return (1UL);                                                           /* Reload value impossible */
     }
   
     //__IRQ_SAFE {
         SysTick->CTRL  = 0;
         
-        SysTick->LOAD  = (uint32_t)(ticks - 1UL);                         /* set reload register */
-        //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL); /* set Priority for Systick Interrupt */
-        SysTick->VAL   = 0UL;                                             /* Load the SysTick Counter Value */
+        SysTick->LOAD  = (uint32_t)(ticks - 1UL);                               /* set reload register */
+        //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);     /* set Priority for Systick Interrupt */
+        SysTick->VAL   = 0UL;                                                   /* Load the SysTick Counter Value */
         SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
                            SysTick_CTRL_TICKINT_Msk   |
-                           SysTick_CTRL_ENABLE_Msk;                     /* Enable SysTick IRQ and SysTick Timer */
+                           SysTick_CTRL_ENABLE_Msk;                             /* Enable SysTick IRQ and SysTick Timer */
         //SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
     //}
-    return (0UL);                                                     /* Function successful */
+    return (0UL);                                                               /* Function successful */
 }
 
 void user_code_insert_to_systick_handler(void)
@@ -263,7 +258,8 @@ void init_cycle_counter(bool bSysTickIsOccupied)
     
 #if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
     ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
-    ||  defined(__IS_COMPILER_GCC__)
+    ||  defined(__IS_COMPILER_GCC__)                                            \
+    ||  defined(__IS_COMPILER_LLVM__)
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
 #endif
@@ -657,20 +653,22 @@ int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo)
     }
     
     int64_t lCycles = 0;
-    int64_t lCycleUsed;
-    __IRQ_SAFE {
-        lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
-        lCycles = ptRootAgent->tInfo.lUsedTotal + lCycleUsed;
-    }
     
-    if (NULL != ptInfo) {
-        if (ptInfo->bEnabled) {
-            ptInfo->nUsedRecent = lCycleUsed;
-            ptInfo->lUsedTotal += lCycleUsed;
-            ptInfo->bEnabled = false;
+    __IRQ_SAFE {
+        int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
+        ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
+
+        if (NULL != ptInfo) {
+            if (ptInfo->bEnabled) {
+                ptInfo->nUsedRecent = lCycleUsed;
+                ptInfo->lUsedTotal += lCycleUsed;
+                ptInfo->bEnabled = false;
+            }
+            
+            lCycles = ptInfo->lUsedTotal;
+        } else {
+            lCycles = ptRootAgent->tInfo.lUsedTotal;
         }
-        
-        return ptInfo->lUsedTotal;
     }
     
     return lCycles;

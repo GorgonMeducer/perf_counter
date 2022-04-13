@@ -20,12 +20,6 @@
 #include <cmsis_compiler.h>
 #include "perf_counter.h"
 
-#if defined(__clang__)
-#   pragma clang diagnostic ignored "-Wcompound-token-split-by-macro"
-#elif defined(__IS_COMPILER_GCC__)
-#   pragma GCC diagnostic ignored "-Wpedantic"
-#endif
-
 
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
@@ -74,6 +68,7 @@ static example_lv0_t s_tItem[8] = {
  *----------------------------------------------------------------------------*/
 int main (void) 
 {
+    int32_t iCycleResult = 0;
     
     /*! demo of using() block */
     using(int a = 0,printf("========= On Enter =======\r\n"), 
@@ -91,9 +86,7 @@ int main (void)
             printf("Processing item with ID = %d\r\n", _->chID);
         }
     }
-    
-    int32_t iCycleResult = 0;
-    
+
     /* measure cycles and store it in a dedicated variable without printf */
     __cycleof__("delay_us(1000ul)", 
         /* insert code to __cycleof__ body, "{}" can be omitted  */
