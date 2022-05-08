@@ -237,13 +237,13 @@ void __perf_os_patch_init(void)
  *!          used by user applications. 
  *!          Don't worry, this cycle counter service won't affect your existing
  *!          systick service.
- *! \param bSysTickIsOccupied  A boolean value which indicates whether SysTick
+ *! \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
  *!          is already used by user application.
  */
-void init_cycle_counter(bool bSysTickIsOccupied)
+void init_cycle_counter(bool bIsSysTickOccupied)
 {
     __IRQ_SAFE {
-        if (!bSysTickIsOccupied) {
+        if (!bIsSysTickOccupied) {
             SysTick_Config(0x01000000);             //!< use the longest period
         }
         SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
