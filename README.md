@@ -184,7 +184,7 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 
 2. Add including path for `perf_counter` folder
 3. Add `perf_counter.c` to your compilation 
-4. Include perf_counter.h in corresponding c source file:
+4. Include `perf_counter.h` in corresponding c source file:
 
 ```c
 #include "perf_counter.h"
