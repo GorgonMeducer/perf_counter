@@ -202,6 +202,15 @@ void SysTick_Handler(void)
     ...
 }
 ```
+Implement an empty funciton `__ensure_systick_wrapper()` as there is no wrapper actually used in this deployment method:
+
+```c
+void __ensure_systick_wrapper(void)
+{
+}
+```
+
+
 
 7. Make sure the `SystemCoreClock` is updated with the same value as CPU frequency. 
 8. **IMPORTANT**: Make sure the `SysTick_CTRL_CLKSOURCE_Msk` bit ( bit 2) of `SysTick->CTRL` register is `1` that means SysTick runs with the same clock source as the target Cortex-M processor. 
@@ -260,7 +269,7 @@ __super_loop_monitor__()
    ![](./documents/pictures/pack_installer)
    In the future, you can pull the latest version of perf_counter from the menu `Packs->Check For Updates` as shown below:
 
-   ![image-20220509011327392](E:\SVN\projects\MCU\perf_counter_library\documents\pictures\check_for_updates) 
+   ![image-20220509011327392](./documents/pictures/check_for_updates) 
 
    
 
@@ -335,6 +344,22 @@ __super_loop_monitor__()
 
 
 
-## 3. License
+## 3. FAQ
+
+### 3.1 Why I see `Undefined symbol $Super$$SysTick_Handler` 
+
+This error usually pop-up in **Arm Compiler 5** and **Arm Compiler 6**, it is because you haven't implement any non-weak `Systick_Handler()`.  Simple provide an EMPTY one in any c source file will solve this problem:
+
+```c
+void SysTick_Handler(void)
+{
+}
+```
+
+**NOTE**: If you deploy perf_counter using cmsis-pack and encounter this issue, please **DO NOT** call function `user_code_insert_to_systick_handler()` in this **should-be-empty** `SysTick_Handler()`. 
+
+
+
+## 4.  License
 
 **Performance Counter for Cortex-M**, a.k.a. ***perf_counter*** is under Apache 2.0 license. 
