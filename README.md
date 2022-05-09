@@ -348,7 +348,7 @@ __super_loop_monitor__()
 
 ### 3.1 Why I see `Undefined symbol $Super$$SysTick_Handler` 
 
-This error usually pop-up in **Arm Compiler 5** and **Arm Compiler 6**, it is because you haven't implement any non-weak `Systick_Handler()`.  Simple provide an EMPTY one in any c source file will solve this problem:
+This error usually pops-up in **Arm Compiler 5** and **Arm Compiler 6**, it is because you haven't implement any non-weak `Systick_Handler()`.  Please provide an EMPTY one in any c source file to solve this problem:
 
 ```c
 void SysTick_Handler(void)
