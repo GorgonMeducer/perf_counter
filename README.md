@@ -1,4 +1,4 @@
-# perf_counter (v1.9.5-dev)
+# perf_counter (v1.9.5)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 
@@ -14,6 +14,8 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - Helper functions: `start_cycle_counter()`, `stop_cycle_counter()` etc.
 
 - **Support ALL Cortex-M processors**
+  - Including **Cortex-M85** and Star-MC1
+
 - **Provide Free Services**
   - Do **NOT** interfering with existing SysTick based applications
 

@@ -18,10 +18,10 @@
 #
 if [ `uname -s` = "Linux" ]
   then
-  CMSIS_PACK_PATH="/home/$USER/.arm/Packs/ARM/CMSIS/5.7.0/"
+  CMSIS_PACK_PATH="/home/$USER/.arm/Packs/ARM/CMSIS/5.9.0/"
   PATH_TO_ADD="$CMSIS_PACK_PATH/CMSIS/Utilities/Linux64/"
 else
-  CMSIS_PACK_PATH="/C/Users/gabriel/AppData/Local/Arm/Packs/ARM/CMSIS/5.7.0"
+  CMSIS_PACK_PATH="/C/Users/gabriel/AppData/Local/Arm/Packs/ARM/CMSIS/5.9.0"
   PATH_TO_ADD="/C/Program Files (x86)/7-Zip/:$CMSIS_PACK_PATH/CMSIS/Utilities/Win32/:/C/xmllint/"
 fi
 [[ ":$PATH:" != *":$PATH_TO_ADD}:"* ]] && PATH="${PATH}:${PATH_TO_ADD}"

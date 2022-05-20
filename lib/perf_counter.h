@@ -31,7 +31,9 @@ extern "C" {
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         4
+#define __PERF_COUNTER_VER_REVISE__         5
+
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -76,7 +78,8 @@ extern "C" {
 //! \note for gcc
 #   undef __IS_COMPILER_GCC__
 #   if defined(__GNUC__) && !(  defined(__IS_COMPILER_ARM_COMPILER__)           \
-                            ||  defined(__IS_COMPILER_LLVM__))
+                            ||  defined(__IS_COMPILER_LLVM__)                   \
+                            ||  defined(__IS_COMPILER_IAR__))
 #       define __IS_COMPILER_GCC__              1
 #   endif
 //! @}
@@ -87,6 +90,7 @@ extern "C" {
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wunknown-warning-option"
 #   pragma clang diagnostic ignored "-Wreserved-identifier"
+#   pragma clang diagnostic ignored "-Wdeclaration-after-statement"
 #   pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 #   pragma clang diagnostic ignored "-Wgnu-statement-expression"
 #   pragma clang diagnostic ignored "-Wunused-but-set-variable"
@@ -529,10 +533,10 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  *!          c. And call function init_cycle_counter(false) if you doesn't 
  *!             use SysTick in your project at all.
  *!
- *! \param bSysTickIsOccupied  A boolean value which indicates whether SysTick
+ *! \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
  *!          is already used by user application.
  */
-extern void init_cycle_counter(bool bSysTickIsOccupied);
+extern void init_cycle_counter(bool bIsSysTickOccupied);
 
 
 /*! \note  if you are using a compiler other than armcc or armclang, e.g. iar,

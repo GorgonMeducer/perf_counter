@@ -16,7 +16,11 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-04-13" version="1.9.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.4.pack">
+    <release date="2022-05-20" version="1.9.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.5.pack">
+      - Add support for Cortex-M85, Star-MC1 and all other Armv8.1-M processors
+      - Update Readme
+    </release>
+    <release date="2022-04-13" version="1.9.4" url="https://github.com/GorgonMeducer/perf_counter/raw/37dd7f759b6a7d03011ecd6804dc9f702d7ce03f/cmsis-pack/GorgonMeducer.perf_counter.1.9.4.pack">
       - Mitigate some clang warnings
       - Minor update for RTOS support
     </release>
@@ -72,10 +76,13 @@
             <accept  Dcore="Cortex-M33"/>
             <accept  Dcore="Cortex-M35P"/>
             <accept  Dcore="Cortex-M55"/>
+            <accept  Dcore="Cortex-M85"/>
+            <accept  Dcore="Star-MC1"/>
             <accept  Dcore="SC000"/>
             <accept  Dcore="SC300"/>
             <accept  Dcore="ARMV8MBL"/>
             <accept  Dcore="ARMV8MML"/>
+            <accept  Dcore="ARMV81MML"/>
         </condition>
         
         <condition id="CMSIS-CORE">
