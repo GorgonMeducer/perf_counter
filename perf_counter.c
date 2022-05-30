@@ -40,7 +40,7 @@
 
 
 /* IO definitions (access restrictions to peripheral registers) */
-/**
+/*!
     \defgroup CMSIS_glob_defs CMSIS Global Defines
 
     <strong>IO Type Qualifiers</strong> are used
@@ -114,7 +114,7 @@
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
-/*
+/*!
   \brief  Structure type to access the System Timer (SysTick).
  */
 typedef struct
@@ -125,7 +125,7 @@ typedef struct
   __IM  uint32_t CALIB;                  /*!< Offset: 0x00C (R/ )  SysTick Calibration Register */
 } SysTick_Type;
 
-/*
+/*!
   \brief  Structure type to access the System Control Block (SCB).
  */
 typedef struct
@@ -153,12 +153,18 @@ typedef struct
   __IOM uint32_t CPACR;                  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register */
 } SCB_Type;
 
+/*!
+ * \name __task_cycle_info_t 
+ * 
+ */
+//! @{
 struct __task_cycle_info_t {
-    task_cycle_info_t       tInfo;
-    int64_t                 lLastTimeStamp;
-    task_cycle_info_agent_t tList;
-    uint32_t                wMagicWord;
+    task_cycle_info_t       tInfo;             //!< cycle information
+    int64_t                 lLastTimeStamp;    //!< previous timestamp
+    task_cycle_info_agent_t tList;             //!< the root of the agent list
+    uint32_t                wMagicWord;        //!< an magic word for validation
 } ;
+//! @}
 
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -180,7 +186,7 @@ volatile static int64_t s_lSystemClockCounts = 0;
 /*============================ INCLUDES ======================================*/
 
 
-/**
+/*!
   \brief   System Tick Configuration
   \details Initializes the System Timer and its interrupt, and starts the System Tick Timer.
            Counter is in free running mode to generate periodic interrupts.
@@ -212,6 +218,10 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
     return (0UL);                                                               /* Function successful */
 }
 
+/*!
+ * \brief the handler code that user has to insert to SysTick_Handler
+ * \note  If you deploy perf_counter using .lib with arm compiler 5 and arm copmiler 6, please do **NOT** call this function in SysTick_Handler
+ */
 void user_code_insert_to_systick_handler(void)
 {
     uint32_t wLoad = SysTick->LOAD + 1;
@@ -232,19 +242,16 @@ void __perf_os_patch_init(void)
 }
 
 
-/*! \brief   initialise cycle counter service
- *!          and don't forget to tell the function whether the systick is already
- *!          used by user applications. 
- *!          Don't worry, this cycle counter service won't affect your existing
- *!          systick service.
- *! \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
- *!          is already used by user application.
+/*! 
+  \brief initialise cycle counter service
+  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick is already used by user application.
+  \note  don't forget to tell the function whether the systick is already used by user applications. Don't worry, this cycle counter service won't affect your existing systick service.
  */
 void init_cycle_counter(bool bIsSysTickOccupied)
 {
     __IRQ_SAFE {
         if (!bIsSysTickOccupied) {
-            SysTick_Config(0x01000000);             //!< use the longest period
+            SysTick_Config(0x01000000);             //! use the longest period
         }
         SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
     }
@@ -255,6 +262,8 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     
     s_nUSUnit = SystemCoreClock / 1000000ul;
     s_nMSUnit = SystemCoreClock / 1000ul;
+    s_lSystemClockCounts = 0;                       //! reset system cycle counter
+    s_nSystemMS = 0;                                //! reset system millisecond counter
     
 #if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
     ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
@@ -320,12 +329,13 @@ __STATIC_INLINE int32_t check_systick(void)
     return nTemp;
 }
 
-/*! \brief calculate the elapsed cycle count since the last start point
- *! 
- *! \note you can have multiple stop_cycle_counter following one start point
- *!  
- *! \return the elapsed cycle count.
- */ 
+/**
+ * @brief calculate the elapsed cycle count since the last start point
+ *
+ * @note  you can have multiple stop_cycle_counter following one start point
+ *
+ * @return int32_t the elapsed cycle count
+ */
 int32_t stop_cycle_counter(void)
 {
     int32_t nTemp = 0;
@@ -347,6 +357,11 @@ void __perf_counter_init(void)
     init_cycle_counter(true);
 }
 
+/*!
+ * \brief delay specified time in microseconds
+ * 
+ * \param nUs time in microseconds
+ */
 void delay_us(int32_t nUs)
 {
     int64_t lUs = nUs * s_nUSUnit;
@@ -361,6 +376,11 @@ void delay_us(int32_t nUs)
     while(get_system_ticks() < lUs);
 }
 
+/*!
+ *! \brief delay specified time in milliseconds
+ *!
+ *! \param nMs time in milliseconds
+ */
 void delay_ms(int32_t nMs)
 {
     int64_t lUs = nMs * s_nMSUnit;
@@ -399,6 +419,7 @@ void delay_ms(int32_t nMs)
 #if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow)) 
 #endif
+
 int64_t clock(void)
 {
     int64_t lTemp = 0;
@@ -410,6 +431,11 @@ int64_t clock(void)
     return lTemp;
 }
 
+/*!
+ * \brief get the elapsed cycles since perf_counter is initialised
+ * 
+ * \return int64_t the elpased cycles
+ */
 int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
@@ -421,6 +447,11 @@ int64_t get_system_ticks(void)
     return lTemp;
 }
 
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * 
+ * \return int32_t the elapsed milliseconds
+ */
 int32_t get_system_ms(void)
 {
     int32_t nTemp = 0;
