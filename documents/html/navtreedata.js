@@ -27,7 +27,7 @@ var NAVTREE =
   [ "perf_counter", "index.html", [
     [ "perf_counter (v1.9.5)", "md__r_e_a_d_m_e.html", [
       [ "1. How To Use", "md__r_e_a_d_m_e.html#autotoc_md2", [
-        [ "<strong>Features:</strong>", "md__r_e_a_d_m_e.html#autotoc_md1", null ],
+        [ "Features:", "md__r_e_a_d_m_e.html#autotoc_md1", null ],
         [ "1.1 Measure CPU cycles for specified code segment", "md__r_e_a_d_m_e.html#autotoc_md3", [
           [ "<strong>Example 1:</strong> Simple measurement with printf", "md__r_e_a_d_m_e.html#autotoc_md4", null ],
           [ "<strong>Example 2:</strong> Read measured result via <tt>__cycle_counter__</tt>", "md__r_e_a_d_m_e.html#autotoc_md5", null ]
