@@ -346,31 +346,35 @@ struct task_cycle_info_agent_t {
 /*============================ PROTOTYPES ====================================*/
 
 
-/*! \brief try to set a start pointer for the performance counter
- *! \retval false the LOAD register is too small
- *! \retval true performance counter starts
+/*! 
+ * \brief try to set a start pointer for the performance counter
+ *
+ * \retval false the LOAD register is too small
+ *
+ * \retval true performance counter starts
  */
 extern bool start_cycle_counter(void);
 
-/*! \brief calculate the elapsed cycle count since the last start point
- *! 
- *! \note you can have multiple stop_cycle_counter following one start point
- *!  
- *! \return int32_t the elapsed cycle count.
- */ 
+/*!
+ * \brief calculate the elapsed cycle count since the last start point
+ *
+ * \note  you can have multiple stop_cycle_counter following one start point
+ *
+ * \return int32_t the elapsed cycle count
+ */
 extern int32_t stop_cycle_counter(void);
 
 /*!
  * \brief delay specified time in microsecond
  * 
- * \param iUs time in microsecond
+ * \param nUs time in microsecond
  */
-extern void delay_us(int32_t iUs);
+extern void delay_us(int32_t nUs);
 
 /*!
  * \brief delay specified time in millisecond
  * 
- * \param iUs time in millisecond
+ * \param nUs time in millisecond
  */
 extern void delay_ms(int32_t nMs);
 
@@ -402,8 +406,18 @@ __attribute__((nothrow))
 extern int64_t clock(void);
 #endif
 
+/*!
+ * \brief get the elapsed cycles since perf_counter is initialised
+ * 
+ * \return int64_t the elpased cycles
+ */
 extern int64_t get_system_ticks(void);
 
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * 
+ * \return int32_t the elapsed milliseconds
+ */
 extern int32_t get_system_ms(void);
 
 
@@ -525,27 +539,27 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  
 
 /*! \brief   initialise cycle counter service
- *  \details don't forget to tell the function whether the systick is already
+ *  \note    - don't forget to tell the function whether the systick is already
  *           used by user applications. 
  *           Don't worry, this cycle counter service won't affect your existing
  *           systick service.
  * 
- *  \note    Usually the perf_counter can initialise itself with the help of
+ *  \note    - Usually the perf_counter can initialise itself with the help of
  *           __attribute__((constructor(255))), this works fine in Arm Compiler
  *           5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn't
  *           work for IAR. So, when you are using IAR, please call this function
  *           manually to initialise the perf_counter service.
  * 
- *  \note    Perf_counter library assumes that:
- *           a. Your project has already using SysTick
- *           b. It assumes that you have already implemented the SysTick_Handler
- *           c. It assumes that you have enabled the exception handling for 
+ *  \note    - Perf_counter library assumes that:
+ *           1. Your project has already using SysTick
+ *           2. It assumes that you have already implemented the SysTick_Handler
+ *           3. It assumes that you have enabled the exception handling for 
  *              SysTick.
  *           If these are not the case, please:
- *           a. Add an empty SysTick_Handler to your project if you don't have 
+ *               1. Add an empty SysTick_Handler to your project if you don't have 
  *              one
- *           b. Make sure you have the SysTick Exception handling enabled
- *           c. And call function init_cycle_counter(false) if you doesn't 
+ *               2. Make sure you have the SysTick Exception handling enabled
+ *               3. And call function init_cycle_counter(false) if you doesn't 
  *              use SysTick in your project at all.
  * 
  *  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
@@ -554,16 +568,17 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 extern void init_cycle_counter(bool bIsSysTickOccupied);
 
 
-/*! \note  if you are using a compiler other than armcc or armclang, e.g. iar,
- *!        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
- *!        of your target toolchain as it use the $Super$$ which is only supported
- *!        by armlink. For this condition, you have to manually put this function
- *!        into your existing SysTick_Handler to make the perf_counter library
- *!        work.
- *! 
- *! \note  if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
- *!        you do NOT have to insert this function into your SysTick_Handler,
- *!        the systick_wrapper_ual.s will do the work for you.
+/*!
+ * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
+ *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
+ *        of your target toolchain as it use the $Super$$ which is only supported
+ *        by armlink. For this condition, you have to manually put this function
+ *        into your existing SysTick_Handler to make the perf_counter library
+ *        work.
+ * 
+ * \note  - if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
+ *        you do NOT have to insert this function into your SysTick_Handler,
+ *        the systick_wrapper_ual.s will do the work for you.
  */
 extern void user_code_insert_to_systick_handler(void);
 

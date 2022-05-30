@@ -1,0 +1,435 @@
+\hypertarget{perf__counter_8h_source}{}\doxysection{perf\+\_\+counter.\+h}
+\mbox{\hyperlink{perf__counter_8h}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00002}00002 \textcolor{comment}{*  Copyright 2022 Gorgon Meducer (Email:embedded\_zhuoran@hotmail.com)       *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00003}00003 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00004}00004 \textcolor{comment}{*  Licensed under the Apache License, Version 2.0 (the "{}License"{});          *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00005}00005 \textcolor{comment}{*  you may not use this file except in compliance with the License.         *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00006}00006 \textcolor{comment}{*  You may obtain a copy of the License at                                  *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00007}00007 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00008}00008 \textcolor{comment}{*     http://www.apache.org/licenses/LICENSE-\/2.0                            *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00009}00009 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00010}00010 \textcolor{comment}{*  Unless required by applicable law or agreed to in writing, software      *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00011}00011 \textcolor{comment}{*  distributed under the License is distributed on an "{}AS IS"{} BASIS,        *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00012}00012 \textcolor{comment}{*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00013}00013 \textcolor{comment}{*  See the License for the specific language governing permissions and      *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00014}00014 \textcolor{comment}{*  limitations under the License.                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00015}00015 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00016}00016 \textcolor{comment}{****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00018}00018 \textcolor{preprocessor}{\#ifndef \_\_PERFORMANCE\_COUNTER\_H\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00019}00019 \textcolor{preprocessor}{\#define \_\_PERFORMANCE\_COUNTER\_H\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00021}00021 \textcolor{comment}{/*============================ INCLUDES ======================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00022}00022 \textcolor{preprocessor}{\#include <stdbool.h>}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00023}00023 \textcolor{preprocessor}{\#include <stdint.h>}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00024}00024 \textcolor{preprocessor}{\#include <stddef.h>}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00025}00025 \textcolor{preprocessor}{\#include "{}cmsis\_compiler.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00027}00027 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00028}00028 \textcolor{keyword}{extern} \textcolor{stringliteral}{"{}C"{}} \{}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00029}00029 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00030}00030 \textcolor{comment}{/*============================ MACROS ========================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00031}00031 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00032}\mbox{\hyperlink{perf__counter_8h_a2e49e3ac701e3e087719d74f2a4ef840}{00032}} \textcolor{preprocessor}{\#define \_\_PERF\_COUNTER\_VER\_MAJOR\_\_          1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00033}\mbox{\hyperlink{perf__counter_8h_adb870e7ae89ad2c5c7aeb70ba16eeaf6}{00033}} \textcolor{preprocessor}{\#define \_\_PERF\_COUNTER\_VER\_MINOR\_\_          9}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00034}\mbox{\hyperlink{perf__counter_8h_a62d05224187a7f224d1803a64951cf3f}{00034}} \textcolor{preprocessor}{\#define \_\_PERF\_COUNTER\_VER\_REVISE\_\_         5}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00035}00035 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00036}\mbox{\hyperlink{perf__counter_8h_afc04dcb2bf83faaf5b14559d632c6b19}{00036}} \textcolor{preprocessor}{\#define \_\_PERF\_COUNTER\_VER\_STR\_\_            "{}dev"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00037}00037 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00038}\mbox{\hyperlink{perf__counter_8h_a41124119fd6c23775692729a2ec26d71}{00038}} \textcolor{preprocessor}{\#define \_\_PER\_COUNTER\_VER\_\_    (\_\_PERF\_COUNTER\_VER\_MAJOR\_\_ * 10000ul            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00039}00039 \textcolor{preprocessor}{                               +\_\_PERF\_COUNTER\_VER\_MINOR\_\_ * 100ul              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00040}00040 \textcolor{preprocessor}{                               +\_\_PERF\_COUNTER\_VER\_REVISE\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00041}00041                                }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00044}00044 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00046}00046 \textcolor{preprocessor}{\#undef \_\_IS\_COMPILER\_IAR\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00047}00047 \textcolor{preprocessor}{\#if defined(\_\_IAR\_SYSTEMS\_ICC\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00048}00048 \textcolor{preprocessor}{\#   define \_\_IS\_COMPILER\_IAR\_\_                  1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00049}00049 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00052}00052 \textcolor{preprocessor}{\#undef \_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00053}00053 \textcolor{preprocessor}{\#if ((\_\_ARMCC\_VERSION >= 5000000) \&\& (\_\_ARMCC\_VERSION < 6000000))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00054}00054 \textcolor{preprocessor}{\#   define \_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_       1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00055}00055 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00057}00057 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00059}00059 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00060}00060 \textcolor{preprocessor}{\#undef \_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00061}00061 \textcolor{preprocessor}{\#if defined(\_\_ARMCC\_VERSION) \&\& (\_\_ARMCC\_VERSION >= 6010050)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00062}00062 \textcolor{preprocessor}{\#   define \_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_       1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00063}00063 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00064}00064 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00065}00065 \textcolor{preprocessor}{\#undef \_\_IS\_COMPILER\_ARM\_COMPILER\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00066}00066 \textcolor{preprocessor}{\#if defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_) \&\& \_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00067}00067 \textcolor{preprocessor}{||  defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_) \&\& \_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00069}00069 \textcolor{preprocessor}{\#   define \_\_IS\_COMPILER\_ARM\_COMPILER\_\_         1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00070}00070 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00071}00071 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00072}00072 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00073}00073 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00074}00074 \textcolor{preprocessor}{\#undef  \_\_IS\_COMPILER\_LLVM\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00075}00075 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_) \&\& !\_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00076}00076 \textcolor{preprocessor}{\#   define \_\_IS\_COMPILER\_LLVM\_\_                 1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00077}00077 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00079}00079 \textcolor{preprocessor}{\#   undef \_\_IS\_COMPILER\_GCC\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00080}00080 \textcolor{preprocessor}{\#   if defined(\_\_GNUC\_\_) \&\& !(  defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_\_)           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00081}00081 \textcolor{preprocessor}{                            ||  defined(\_\_IS\_COMPILER\_LLVM\_\_)                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00082}00082 \textcolor{preprocessor}{                            ||  defined(\_\_IS\_COMPILER\_IAR\_\_))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00083}00083 \textcolor{preprocessor}{\#       define \_\_IS\_COMPILER\_GCC\_\_              1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00084}00084 \textcolor{preprocessor}{\#   endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00086}00086 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00088}00088 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00089}00089 \textcolor{preprocessor}{\#if defined(\_\_clang\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00090}00090 \textcolor{preprocessor}{\#   pragma clang diagnostic push}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00091}00091 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wunknown-\/warning-\/option"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00092}00092 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wreserved-\/identifier"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00093}00093 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wdeclaration-\/after-\/statement"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00094}00094 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wgnu-\/zero-\/variadic-\/macro-\/arguments"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00095}00095 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wgnu-\/statement-\/expression"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00096}00096 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wunused-\/but-\/set-\/variable"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00097}00097 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wshadow"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00098}00098 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wshorten-\/64-\/to-\/32"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00099}00099 \textcolor{preprocessor}{\#   pragma clang diagnostic ignored "{}-\/Wcompound-\/token-\/split-\/by-\/macro"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00100}00100 \textcolor{preprocessor}{\#elif defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00101}00101 \textcolor{preprocessor}{\#   pragma diag\_suppress 550}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00102}00102 \textcolor{preprocessor}{\#elif defined(\_\_IS\_COMPILER\_GCC\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00103}00103 \textcolor{preprocessor}{\#   pragma GCC diagnostic push}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00104}00104 \textcolor{preprocessor}{\#   pragma GCC diagnostic ignored "{}-\/Wpedantic"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00105}00105 \textcolor{preprocessor}{\#   pragma GCC diagnostic ignored "{}-\/Wunused-\/variable"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00106}00106 \textcolor{preprocessor}{\#   pragma GCC diagnostic ignored "{}-\/Wunused-\/but-\/set-\/variable"{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00107}00107 \textcolor{preprocessor}{\#   pragma GCC diagnostic ignored "{}-\/Wformat="{}}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00108}00108 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00109}00109 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00110}00110 \textcolor{preprocessor}{\#ifndef \_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00111}\mbox{\hyperlink{perf__counter_8h_adb244281cf7a9410d7dc12823e105d02}{00111}} \textcolor{preprocessor}{\#   define \_\_PLOOC\_VA\_NUM\_ARGS\_IMPL( \_0,\_1,\_2,\_3,\_4,\_5,\_6,\_7,\_8,\_9,\_10,\_11,     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00112}00112 \textcolor{preprocessor}{                                    \_12,\_13,\_14,\_15,\_16,\_\_N,...)      \_\_N}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00113}00113 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00114}00114 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00115}00115 \textcolor{preprocessor}{\#ifndef \_\_PLOOC\_VA\_NUM\_ARGS}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00116}\mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{00116}} \textcolor{preprocessor}{\#define \_\_PLOOC\_VA\_NUM\_ARGS(...)                                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00117}00117 \textcolor{preprocessor}{            \_\_PLOOC\_VA\_NUM\_ARGS\_IMPL( 0,\#\#\_\_VA\_ARGS\_\_,16,15,14,13,12,11,10,9,   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00118}00118 \textcolor{preprocessor}{                                      8,7,6,5,4,3,2,1,0)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00119}00119 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00121}00121 \textcolor{preprocessor}{\#ifndef UNUSED\_PARAM}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00122}\mbox{\hyperlink{perf__counter_8h_a4e95e8dc0d6a7f273a26c9e4bc239f83}{00122}} \textcolor{preprocessor}{\#   define UNUSED\_PARAM(\_\_VAR)     (void)(\_\_VAR)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00123}00123 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00124}00124 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00125}00125 \textcolor{preprocessor}{\#undef \_\_CONNECT2}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00126}00126 \textcolor{preprocessor}{\#undef \_\_CONNECT3}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00127}00127 \textcolor{preprocessor}{\#undef \_\_CONNECT4}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00128}00128 \textcolor{preprocessor}{\#undef \_\_CONNECT5}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00129}00129 \textcolor{preprocessor}{\#undef \_\_CONNECT6}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00130}00130 \textcolor{preprocessor}{\#undef \_\_CONNECT7}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00131}00131 \textcolor{preprocessor}{\#undef \_\_CONNECT8}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00132}00132 \textcolor{preprocessor}{\#undef \_\_CONNECT9}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00133}00133 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00134}00134 \textcolor{preprocessor}{\#undef CONNECT2}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00135}00135 \textcolor{preprocessor}{\#undef CONNECT3}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00136}00136 \textcolor{preprocessor}{\#undef CONNECT4}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00137}00137 \textcolor{preprocessor}{\#undef CONNECT5}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00138}00138 \textcolor{preprocessor}{\#undef CONNECT6}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00139}00139 \textcolor{preprocessor}{\#undef CONNECT7}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00140}00140 \textcolor{preprocessor}{\#undef CONNECT8}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00141}00141 \textcolor{preprocessor}{\#undef CONNECT9}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00142}00142 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00143}00143 \textcolor{preprocessor}{\#undef CONNECT}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00144}00144 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00145}00145 \textcolor{preprocessor}{\#undef \_\_MACRO\_EXPANDING}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00146}\mbox{\hyperlink{perf__counter_8h_a39273cdd59b6f17525f429d61f242a73}{00146}} \textcolor{preprocessor}{\#define \_\_MACRO\_EXPANDING(...)                      \_\_VA\_ARGS\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00147}00147 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00148}\mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{00148}} \textcolor{preprocessor}{\#define \_\_CONNECT2(\_\_A, \_\_B)                        \_\_A\#\#\_\_B}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00149}\mbox{\hyperlink{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}{00149}} \textcolor{preprocessor}{\#define \_\_CONNECT3(\_\_A, \_\_B, \_\_C)                   \_\_A\#\#\_\_B\#\#\_\_C}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00150}\mbox{\hyperlink{perf__counter_8h_ade59615465df27344e32b05c3629ef03}{00150}} \textcolor{preprocessor}{\#define \_\_CONNECT4(\_\_A, \_\_B, \_\_C, \_\_D)              \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00151}\mbox{\hyperlink{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}{00151}} \textcolor{preprocessor}{\#define \_\_CONNECT5(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E)         \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D\#\#\_\_E}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00152}\mbox{\hyperlink{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}{00152}} \textcolor{preprocessor}{\#define \_\_CONNECT6(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F)    \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D\#\#\_\_E\#\#\_\_F}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00153}\mbox{\hyperlink{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}{00153}} \textcolor{preprocessor}{\#define \_\_CONNECT7(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G)                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00154}00154 \textcolor{preprocessor}{                                                    \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D\#\#\_\_E\#\#\_\_F\#\#\_\_G}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00155}\mbox{\hyperlink{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}{00155}} \textcolor{preprocessor}{\#define \_\_CONNECT8(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H)                      \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00156}00156 \textcolor{preprocessor}{                                                    \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D\#\#\_\_E\#\#\_\_F\#\#\_\_G\#\#\_\_H}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00157}\mbox{\hyperlink{perf__counter_8h_a78dee228d830879c65edae8392fbf159}{00157}} \textcolor{preprocessor}{\#define \_\_CONNECT9(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H, \_\_I)                 \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00158}00158 \textcolor{preprocessor}{                                                    \_\_A\#\#\_\_B\#\#\_\_C\#\#\_\_D\#\#\_\_E\#\#\_\_F\#\#\_\_G\#\#\_\_H\#\#\_\_I}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00159}00159                                                     }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00160}\mbox{\hyperlink{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}{00160}} \textcolor{preprocessor}{\#define ALT\_CONNECT2(\_\_A, \_\_B)              \_\_CONNECT2(\_\_A, \_\_B)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00161}\mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{00161}} \textcolor{preprocessor}{\#define CONNECT2(\_\_A, \_\_B)                  \_\_CONNECT2(\_\_A, \_\_B)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00162}\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{00162}} \textcolor{preprocessor}{\#define CONNECT3(\_\_A, \_\_B, \_\_C)             \_\_CONNECT3(\_\_A, \_\_B, \_\_C)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00163}\mbox{\hyperlink{perf__counter_8h_a4be8346e8c8e544e3dc4da819f03d636}{00163}} \textcolor{preprocessor}{\#define CONNECT4(\_\_A, \_\_B, \_\_C, \_\_D)        \_\_CONNECT4(\_\_A, \_\_B, \_\_C, \_\_D)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00164}\mbox{\hyperlink{perf__counter_8h_a397bd70fecd355461d99b228d02d01f8}{00164}} \textcolor{preprocessor}{\#define CONNECT5(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E)   \_\_CONNECT5(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E)       }}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00165}\mbox{\hyperlink{perf__counter_8h_a3bbbfb88c43244289b9a4e4521caf7cb}{00165}} \textcolor{preprocessor}{\#define CONNECT6(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F)                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00166}00166 \textcolor{preprocessor}{                                            \_\_CONNECT6(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F) }}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00167}\mbox{\hyperlink{perf__counter_8h_a8deb36935d07c69646a26993ab15328a}{00167}} \textcolor{preprocessor}{\#define CONNECT7(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G)                             \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00168}00168 \textcolor{preprocessor}{                                            \_\_CONNECT7(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G) }}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00169}\mbox{\hyperlink{perf__counter_8h_a9ce80b30ee8f4bb424c23f785b3481b8}{00169}} \textcolor{preprocessor}{\#define CONNECT8(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H)                        \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00170}00170 \textcolor{preprocessor}{                                            \_\_CONNECT8(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H) }}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00171}\mbox{\hyperlink{perf__counter_8h_a67d6d69c5ea260de9bdf81edf9672af3}{00171}} \textcolor{preprocessor}{\#define CONNECT9(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H, \_\_I)                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00172}00172 \textcolor{preprocessor}{                                            \_\_CONNECT9(\_\_A, \_\_B, \_\_C, \_\_D, \_\_E, \_\_F, \_\_G, \_\_H, \_\_I)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00173}00173        }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00174}\mbox{\hyperlink{perf__counter_8h_a1409defa6d3e973b7efee74d2de7386d}{00174}} \textcolor{preprocessor}{\#define CONNECT(...)                                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00175}00175 \textcolor{preprocessor}{            ALT\_CONNECT2(CONNECT, \_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_))(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00176}00176 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00177}00177 \textcolor{preprocessor}{\#undef \_\_using1}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00178}00178 \textcolor{preprocessor}{\#undef \_\_using2}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00179}00179 \textcolor{preprocessor}{\#undef \_\_using3}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00180}00180 \textcolor{preprocessor}{\#undef \_\_using4}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00181}00181 \textcolor{preprocessor}{\#undef using}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00182}00182 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00183}\mbox{\hyperlink{perf__counter_8h_ac489b777985cc6133a3658d95dd424e1}{00183}} \textcolor{preprocessor}{\#define \_\_using1(\_\_declare)                                                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00184}00184 \textcolor{preprocessor}{            for (\_\_declare, *CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00185}00185 \textcolor{preprocessor}{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL;                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00186}00186 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00187}00187 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00188}\mbox{\hyperlink{perf__counter_8h_af2456eddcc03ba108e670a583367342e}{00188}} \textcolor{preprocessor}{\#define \_\_using2(\_\_declare, \_\_on\_leave\_expr)                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00189}00189 \textcolor{preprocessor}{            for (\_\_declare, *CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00190}00190 \textcolor{preprocessor}{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL;                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00191}00191 \textcolor{preprocessor}{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00192}00192 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00193}00193 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00194}\mbox{\hyperlink{perf__counter_8h_a3447ab4da15b7a4e81830839202ee0be}{00194}} \textcolor{preprocessor}{\#define \_\_using3(\_\_declare, \_\_on\_enter\_expr, \_\_on\_leave\_expr)                   \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00195}00195 \textcolor{preprocessor}{            for (\_\_declare, *CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00196}00196 \textcolor{preprocessor}{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL ?                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00197}00197 \textcolor{preprocessor}{                    ((\_\_on\_enter\_expr),1) : 0;                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00198}00198 \textcolor{preprocessor}{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00199}00199 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00200}00200                 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00201}\mbox{\hyperlink{perf__counter_8h_a1a10811d7e12a6be9be6ccdf1ef824e8}{00201}} \textcolor{preprocessor}{\#define \_\_using4(\_\_dcl1, \_\_dcl2, \_\_on\_enter\_expr, \_\_on\_leave\_expr)              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00202}00202 \textcolor{preprocessor}{            for (\_\_dcl1, \_\_dcl2, *CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00203}00203 \textcolor{preprocessor}{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL ?                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00204}00204 \textcolor{preprocessor}{                    ((\_\_on\_enter\_expr),1) : 0;                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00205}00205 \textcolor{preprocessor}{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00206}00206 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00207}00207                }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00208}\mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{00208}} \textcolor{preprocessor}{\#define using(...)                                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00209}00209 \textcolor{preprocessor}{                CONNECT2(\_\_using, \_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_))(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00210}00210 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00211}00211 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00212}00212 \textcolor{preprocessor}{\#undef \_\_with2}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00213}00213 \textcolor{preprocessor}{\#undef \_\_with3}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00214}00214 \textcolor{preprocessor}{\#undef with}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00215}00215 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00216}\mbox{\hyperlink{perf__counter_8h_a7e7af9eb2708d17ce5ec5ea01cb914f1}{00216}} \textcolor{preprocessor}{\#define \_\_with2(\_\_type, \_\_addr)                                                 \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00217}00217 \textcolor{preprocessor}{            using(\_\_type *\_=(\_\_addr))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00218}\mbox{\hyperlink{perf__counter_8h_aafef7ac0d7697d31814ff152d9eae0cc}{00218}} \textcolor{preprocessor}{\#define \_\_with3(\_\_type, \_\_addr, \_\_item)                                         \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00219}00219 \textcolor{preprocessor}{            using(\_\_type *\_=(\_\_addr), *\_\_item = \_, \_=\_,\_=\_ )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00220}00220 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00221}\mbox{\hyperlink{perf__counter_8h_afc5b077f9764ca6f11075ce72357dd65}{00221}} \textcolor{preprocessor}{\#define with(...)                                                               \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00222}00222 \textcolor{preprocessor}{            CONNECT2(\_\_with, \_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_))(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00223}00223 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00224}00224 \textcolor{preprocessor}{\#undef \_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00225}00225 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00226}00226 \textcolor{preprocessor}{\#ifndef dimof}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00227}\mbox{\hyperlink{perf__counter_8h_a7b6c484887a402bba1af11b457264553}{00227}} \textcolor{preprocessor}{\#   define dimof(\_\_array)          (sizeof(\_\_array)/sizeof(\_\_array[0]))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00228}00228 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00229}00229 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00230}00230 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00231}\mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{00231}} \textcolor{preprocessor}{\#define SAFE\_NAME(\_\_NAME)   CONNECT3(\_\_,\_\_NAME,\_\_LINE\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00232}00232 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00233}00233 \textcolor{preprocessor}{\#undef foreach2}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00234}00234 \textcolor{preprocessor}{\#undef foreach3}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00235}00235 \textcolor{preprocessor}{\#undef foreach}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00236}00236 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00237}\mbox{\hyperlink{perf__counter_8h_ac4e7ceea5fc047d059b6b1898a697cb4}{00237}} \textcolor{preprocessor}{\#define foreach2(\_\_type, \_\_array)                                               \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00238}00238 \textcolor{preprocessor}{            using(\_\_type *\_ = \_\_array)                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00239}00239 \textcolor{preprocessor}{            for (   uint\_fast32\_t SAFE\_NAME(count) = dimof(\_\_array);            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00240}00240 \textcolor{preprocessor}{                    SAFE\_NAME(count) > 0;                                       \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00241}00241 \textcolor{preprocessor}{                    \_++, SAFE\_NAME(count)-\/-\/                                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00242}00242 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00243}00243 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00244}\mbox{\hyperlink{perf__counter_8h_a2c93a7704596f19ff84cbfec513c3a5a}{00244}} \textcolor{preprocessor}{\#define foreach3(\_\_type, \_\_array, \_\_item)                                       \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00245}00245 \textcolor{preprocessor}{            using(\_\_type *\_ = \_\_array, *\_\_item = \_, \_ = \_, \_ = \_ )              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00246}00246 \textcolor{preprocessor}{            for (   uint\_fast32\_t SAFE\_NAME(count) = dimof(\_\_array);            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00247}00247 \textcolor{preprocessor}{                    SAFE\_NAME(count) > 0;                                       \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00248}00248 \textcolor{preprocessor}{                    \_++, \_\_item = \_, SAFE\_NAME(count)-\/-\/                         \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00249}00249 \textcolor{preprocessor}{                )}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00250}00250 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00251}\mbox{\hyperlink{perf__counter_8h_a623a729e6571efedb0c5528689d6120d}{00251}} \textcolor{preprocessor}{\#define foreach(...)                                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00252}00252 \textcolor{preprocessor}{            CONNECT2(foreach, \_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_))(\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00253}00253 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00254}00254 \textcolor{preprocessor}{\#ifndef safe\_atom\_code}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00255}\mbox{\hyperlink{perf__counter_8h_a1616b4eef4bbd94969a9010c4114b488}{00255}} \textcolor{preprocessor}{\#   define safe\_atom\_code()                                                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00256}00256 \textcolor{preprocessor}{            using(  uint32\_t SAFE\_NAME(temp) =                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00257}00257 \textcolor{preprocessor}{                        (\{  uint32\_t SAFE\_NAME(temp2)=\_\_get\_PRIMASK();          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00258}00258 \textcolor{preprocessor}{                            \_\_disable\_irq();                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00259}00259 \textcolor{preprocessor}{                            SAFE\_NAME(temp2);\}),                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00260}00260 \textcolor{preprocessor}{                        \_\_set\_PRIMASK(SAFE\_NAME(temp)))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00261}00261 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00262}00262             }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00263}00263 \textcolor{preprocessor}{\#ifndef \_\_IRQ\_SAFE}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00264}\mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{00264}} \textcolor{preprocessor}{\#   define \_\_IRQ\_SAFE                                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00265}00265 \textcolor{preprocessor}{            using(  uint32\_t SAFE\_NAME(temp) =                                  \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00266}00266 \textcolor{preprocessor}{                        (\{  uint32\_t SAFE\_NAME(temp2)=\_\_get\_PRIMASK();          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00267}00267 \textcolor{preprocessor}{                            \_\_disable\_irq();                                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00268}00268 \textcolor{preprocessor}{                            SAFE\_NAME(temp2);\}),                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00269}00269 \textcolor{preprocessor}{                        \_\_set\_PRIMASK(SAFE\_NAME(temp)))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00270}00270 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00271}00271 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00272}00272 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00273}00273 \textcolor{preprocessor}{\#if \_\_PLOOC\_VA\_NUM\_ARGS() != 0}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00274}00274 \textcolor{preprocessor}{\#warning Please enable GNC extensions, it is required by \_\_cycleof\_\_() and \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00275}00275 \textcolor{preprocessor}{\_\_super\_loop\_monitor\_\_()}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00276}00276 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00277}00277 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00278}00278 \textcolor{comment}{/*============================ MACROFIED FUNCTIONS ===========================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00279}00279 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00280}\mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{00280}} \textcolor{preprocessor}{\#define \_\_cycleof\_\_(\_\_STR, ...)                                                 \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00281}00281 \textcolor{preprocessor}{            using(int64\_t \_ = get\_system\_ticks(), \_\_cycle\_count\_\_ = \_,          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00282}00282 \textcolor{preprocessor}{                \_=\_, \{                                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00283}00283 \textcolor{preprocessor}{                \_ = get\_system\_ticks() -\/ \_;                                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00284}00284 \textcolor{preprocessor}{                \_\_cycle\_count\_\_ = \_;                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00285}00285 \textcolor{preprocessor}{                if (\_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_) == 0) \{                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00286}00286 \textcolor{preprocessor}{                    printf("{}\(\backslash\)r\(\backslash\)n"{}});                                             \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00287}00287                     printf("{}-\/[Cycle Report]"{});                                  \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00288}00288                     printf("{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)r\(\backslash\)n"{}); \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00289}00289                     printf(\_\_STR "{} total cycle count: \%d [\%08x]\(\backslash\)r\(\backslash\)n"{},           \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00290}00290                             (int)\_, (int)\_);                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00291}00291                 \} else \{                                                        \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00292}00292                     \_\_VA\_ARGS\_\_                                                 \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00293}00293                 \};                                                              \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00294}00294             \})}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00295}00295 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00296}00296 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00297}00297 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00298}\mbox{\hyperlink{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}{00298}} \textcolor{preprocessor}{\#define \_\_super\_loop\_monitor\_\_(\_\_N, ...)                                        \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00299}00299 \textcolor{preprocessor}{    using(                                                                      \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00300}00300 \textcolor{preprocessor}{        struct \{                                                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00301}00301 \textcolor{preprocessor}{            int64\_t lStart;                                                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00302}00302 \textcolor{preprocessor}{            int64\_t lTaskUsedCycles;                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00303}00303 \textcolor{preprocessor}{            int64\_t lTimeElapsed;                                               \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00304}00304 \textcolor{preprocessor}{        \} \_\_cpu\_usage\_\_ = \{.lStart = get\_system\_ticks()\})                       \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00305}00305 \textcolor{preprocessor}{    using(int SAFE\_NAME(cnt) = (\_\_N))                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00306}00306 \textcolor{preprocessor}{    for(start\_task\_cycle\_counter();; (\{                                         \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00307}00307 \textcolor{preprocessor}{        if (!(-\/-\/SAFE\_NAME(cnt))) \{                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00308}00308 \textcolor{preprocessor}{            \_\_cpu\_usage\_\_.lTimeElapsed                                          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00309}00309 \textcolor{preprocessor}{                = get\_system\_ticks() -\/ \_\_cpu\_usage\_\_.lStart;                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00310}00310 \textcolor{preprocessor}{            \_\_cpu\_usage\_\_.lTaskUsedCycles = stop\_task\_cycle\_counter();          \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00311}00311 \textcolor{preprocessor}{                                                                                \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00312}00312 \textcolor{preprocessor}{            if (\_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_) == 0) \{                        \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00313}00313 \textcolor{preprocessor}{                printf("{}\%s CPU Usage \%2.3f\%\%\(\backslash\)r\(\backslash\)n"{}}, \_\_func\_\_,                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00314}00314                         (float)((double)\_\_cpu\_usage\_\_.lTaskUsedCycles * 100.0 / \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00315}00315                                 (double)\_\_cpu\_usage\_\_.lTimeElapsed));           \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00316}00316             \} else \{                                                            \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00317}00317                 \_\_VA\_ARGS\_\_;                                                    \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00318}00318             \}                                                                   \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00319}00319             SAFE\_NAME(cnt) = (\_\_N);                                             \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00320}00320             \_\_cpu\_usage\_\_.lStart = get\_system\_ticks();                          \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00321}00321             start\_task\_cycle\_counter();                                         \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00322}00322         \};                                                                      \(\backslash\)}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00323}00323     \}))}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00324}00324 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00325}00325 \textcolor{comment}{/*============================ TYPES =========================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00326}\mbox{\hyperlink{structtask__cycle__info__t}{00326}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\{}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00327}\mbox{\hyperlink{structtask__cycle__info__t_a3b941eea48497afb204462c694bc2d12}{00327}}     int64\_t             \mbox{\hyperlink{structtask__cycle__info__t_a3b941eea48497afb204462c694bc2d12}{lStart}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00328}\mbox{\hyperlink{structtask__cycle__info__t_a19a46cbd05039f568b01e326d65d6b80}{00328}}     int64\_t             \mbox{\hyperlink{structtask__cycle__info__t_a19a46cbd05039f568b01e326d65d6b80}{lUsedTotal}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00329}\mbox{\hyperlink{structtask__cycle__info__t_a0250b43cfb57ddf17f7f40c4cc587249}{00329}}     int32\_t             \mbox{\hyperlink{structtask__cycle__info__t_a0250b43cfb57ddf17f7f40c4cc587249}{nUsedRecent}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00330}\mbox{\hyperlink{structtask__cycle__info__t_a84d3729a2d49dd2e43ef8727fcd6f9b0}{00330}}     uint16\_t            \mbox{\hyperlink{structtask__cycle__info__t_a84d3729a2d49dd2e43ef8727fcd6f9b0}{hwActiveCount}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00331}\mbox{\hyperlink{structtask__cycle__info__t_a77132c2c26a75f5b8751b235cda23828}{00331}}     uint16\_t                        : 15;}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00332}\mbox{\hyperlink{structtask__cycle__info__t_a8a4c67264f8440bb83dec68c4312ff09}{00332}}     uint16\_t            \mbox{\hyperlink{structtask__cycle__info__t_a8a4c67264f8440bb83dec68c4312ff09}{bEnabled}}    : 1;}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00333}00333 \} \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00334}00334     }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00335}\mbox{\hyperlink{perf__counter_8h_ac118677bc3eb6a806eb1381d656b6c25}{00335}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00336}00336 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00337}\mbox{\hyperlink{structtask__cycle__info__agent__t}{00337}} \textcolor{keyword}{struct }\mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} \{}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00338}\mbox{\hyperlink{structtask__cycle__info__agent__t_a26adda6b75d3722f450eb169546bd7e7}{00338}}     \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *\mbox{\hyperlink{structtask__cycle__info__agent__t_a26adda6b75d3722f450eb169546bd7e7}{ptInfo}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00339}\mbox{\hyperlink{structtask__cycle__info__agent__t_a3f049d289ce99f316894417016d60ca6}{00339}}     \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *\mbox{\hyperlink{structtask__cycle__info__agent__t_a3f049d289ce99f316894417016d60ca6}{ptNext}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00340}\mbox{\hyperlink{structtask__cycle__info__agent__t_a0ab0ef208ec46b60dce3d05a76754931}{00340}}     \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *\mbox{\hyperlink{structtask__cycle__info__agent__t_a0ab0ef208ec46b60dce3d05a76754931}{ptPrev}};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00341}00341 \};}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00342}00342 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00343}00343 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00344}00344 \textcolor{comment}{/*============================ GLOBAL VARIABLES ==============================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00345}00345 \textcolor{comment}{/*============================ LOCAL VARIABLES ===============================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00346}00346 \textcolor{comment}{/*============================ PROTOTYPES ====================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00347}00347 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00348}00348 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00356}00356 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}{start\_cycle\_counter}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00357}00357 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00365}00365 \textcolor{keyword}{extern} int32\_t \mbox{\hyperlink{perf__counter_8h_a014af75d3945894c4740773e8a28d723}{stop\_cycle\_counter}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00366}00366 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00372}00372 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a9776dfed871d0e0775c876f16e7618f7}{delay\_us}}(int32\_t nUs);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00373}00373 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00379}00379 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a2add8ab5b23b568bba6d46f9c977dbce}{delay\_ms}}(int32\_t nMs);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00380}00380 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00381}00381 \textcolor{preprocessor}{\#ifdef \_\_PERF\_CNT\_USE\_LONG\_CLOCK\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00403}00403 \textcolor{preprocessor}{\#if !defined(\_\_IS\_COMPILER\_IAR\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00404}00404 \_\_attribute\_\_((nothrow)) }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00405}00405 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00406}00406 \textcolor{keyword}{extern} int64\_t clock(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00407}00407 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00408}00408 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00414}00414 \textcolor{keyword}{extern} int64\_t \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00415}00415 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00421}00421 \textcolor{keyword}{extern} int32\_t \mbox{\hyperlink{perf__counter_8h_a98c51d83fdb448a2733d0a309366149c}{get\_system\_ms}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00422}00422 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00423}00423 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00424}00424 \textcolor{preprocessor}{\#if defined(\_\_PERF\_CNT\_USE\_RTOS\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00425}00425 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00428}00428 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a00278751616ee5d95ce4bea4ffb59ce7}{init\_task\_cycle\_counter}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00429}00429 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00440}00440 \textcolor{keyword}{extern} \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} * \mbox{\hyperlink{perf__counter_8c_a87abe08a2093c8c69e5f813f565a1d31}{get\_rtos\_task\_cycle\_info}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00441}00441 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00442}00442 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00449}00449 \textcolor{keyword}{extern} \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *\mbox{\hyperlink{perf__counter_8h_a607df0241b0f85868159e1e15f44acdc}{init\_task\_cycle\_info}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00450}00450 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00456}00456 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{perf__counter_8h_a96f0ed25511e535714003ec4ca738415}{enable\_task\_cycle\_info}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00457}00457 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00463}00463 \textcolor{keyword}{extern} \textcolor{keywordtype}{bool} \mbox{\hyperlink{perf__counter_8h_af3fceb4da6cc89dd20a874bd147c2414}{disable\_task\_cycle\_info}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00464}00464 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00470}00470 \textcolor{keyword}{extern} }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00471}00471 \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a06e00a5b710c5144aa756c1905c12fcf}{resume\_task\_cycle\_info}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo, \textcolor{keywordtype}{bool} bEnabledStatus);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00472}00472 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00480}00480 \textcolor{keyword}{extern}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00481}00481 \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *\mbox{\hyperlink{perf__counter_8h_a11d20291b945175264a568c4c9dcd9bd}{register\_task\_cycle\_agent}}(}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00482}00482                                             \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo,}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00483}00483                                             \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *ptAgent);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00484}00484 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00490}00490 \textcolor{keyword}{extern}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00491}00491 \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00492}00492 \mbox{\hyperlink{perf__counter_8h_afdd7c2e511c981ad62525076f53a762e}{unregister\_task\_cycle\_agent}}(\mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} *ptAgent);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00493}00493 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00498}00498 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8c_ad17c3ab8fb4c68ebc676562ab00770a1}{\_\_start\_task\_cycle\_counter}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00499}00499 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00514}00514 \textcolor{keyword}{extern} int64\_t \mbox{\hyperlink{perf__counter_8c_a81a5dabf3ca19922587390de6c9f0ff5}{\_\_stop\_task\_cycle\_counter}}(\mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} *ptInfo);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00515}00515 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00516}00516 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00517}00517 \textcolor{preprocessor}{\#define start\_task\_cycle\_counter(...)                                           \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00518}00518 \textcolor{preprocessor}{            \_\_start\_task\_cycle\_counter((NULL,\#\#\_\_VA\_ARGS\_\_))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00519}00519 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00520}00520 \textcolor{preprocessor}{\#define stop\_task\_cycle\_counter(...)                                            \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00521}00521 \textcolor{preprocessor}{            \_\_stop\_task\_cycle\_counter((NULL,\#\#\_\_VA\_ARGS\_\_))}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00522}00522 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00523}00523 \textcolor{preprocessor}{\#elif !defined(\_\_IMPLEMENT\_PERF\_COUNTER)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00524}\mbox{\hyperlink{perf__counter_8h_ab84fa299db0fc4c0a897eb0a3aab6233}{00524}} \textcolor{preprocessor}{\#   define start\_task\_cycle\_counter(...)    start\_cycle\_counter()}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00525}\mbox{\hyperlink{perf__counter_8h_ad9e3470ff82262ac6daca041607c31da}{00525}} \textcolor{preprocessor}{\#   define stop\_task\_cycle\_counter(...)     stop\_cycle\_counter()}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00526}\mbox{\hyperlink{perf__counter_8h_a00278751616ee5d95ce4bea4ffb59ce7}{00526}} \textcolor{preprocessor}{\#   define init\_task\_cycle\_counter()}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00527}\mbox{\hyperlink{perf__counter_8h_a11d20291b945175264a568c4c9dcd9bd}{00527}} \textcolor{preprocessor}{\#   define register\_task\_cycle\_agent(...)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00528}\mbox{\hyperlink{perf__counter_8h_afdd7c2e511c981ad62525076f53a762e}{00528}} \textcolor{preprocessor}{\#   define unregister\_task\_cycle\_agent(...)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00529}\mbox{\hyperlink{perf__counter_8h_a607df0241b0f85868159e1e15f44acdc}{00529}} \textcolor{preprocessor}{\#   define init\_task\_cycle\_info(...)        (NULL)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00530}\mbox{\hyperlink{perf__counter_8h_a96f0ed25511e535714003ec4ca738415}{00530}} \textcolor{preprocessor}{\#   define enable\_task\_cycle\_info(...)      (false)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00531}\mbox{\hyperlink{perf__counter_8h_af3fceb4da6cc89dd20a874bd147c2414}{00531}} \textcolor{preprocessor}{\#   define disable\_task\_cycle\_info(...)     (false)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00532}\mbox{\hyperlink{perf__counter_8h_a06e00a5b710c5144aa756c1905c12fcf}{00532}} \textcolor{preprocessor}{\#   define resume\_task\_cycle\_info(...)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00533}00533 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00534}00534 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00535}00535 \textcolor{comment}{/*-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00536}00536 \textcolor{comment}{ * Please ignore the following APIs unless you have encountered some known    *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00537}00537 \textcolor{comment}{ * special conditions                                                         *}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00538}00538 \textcolor{comment}{ *-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/*/} }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00539}00539  }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00540}00540 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00568}00568 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a9097d62a30ad2b4f75462c78d7200fa8}{init\_cycle\_counter}}(\textcolor{keywordtype}{bool} bIsSysTickOccupied);}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00569}00569 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00570}00570 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00583}00583 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__counter_8h_a0a6e5160f19f152b0b9a502e5e24adb7}{user\_code\_insert\_to\_systick\_handler}}(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00584}00584 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00585}00585 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00586}00586 \textcolor{comment}{//\#if defined(\_\_clang\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00587}00587 \textcolor{comment}{//\#   pragma clang diagnostic pop}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00588}00588 \textcolor{comment}{//\#elif defined(\_\_IS\_COMPILER\_GCC\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00589}00589 \textcolor{comment}{//\#   pragma GCC diagnostic pop}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00590}00590 \textcolor{comment}{//\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00591}00591 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00592}00592 \textcolor{preprocessor}{\#ifdef \_\_cplusplus}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00593}00593 \}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00594}00594 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00595}00595 }
+\DoxyCodeLine{\Hypertarget{perf__counter_8h_source_l00596}00596 \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

@@ -1,0 +1,1160 @@
+\hypertarget{perf__counter_8h}{}\doxysection{perf\+\_\+counter.\+h File Reference}
+\label{perf__counter_8h}\index{perf\_counter.h@{perf\_counter.h}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdint.\+h$>$}\newline
+{\ttfamily \#include $<$stddef.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}cmsis\+\_\+compiler.\+h\char`\"{}}\newline
+\doxysubsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \mbox{\hyperlink{structtask__cycle__info__t}{task\+\_\+cycle\+\_\+info\+\_\+t}}
+\item 
+struct \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\+\_\+cycle\+\_\+info\+\_\+agent\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a2e49e3ac701e3e087719d74f2a4ef840}{\+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+MAJOR\+\_\+\+\_\+}}~1
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_adb870e7ae89ad2c5c7aeb70ba16eeaf6}{\+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+MINOR\+\_\+\+\_\+}}~9
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a62d05224187a7f224d1803a64951cf3f}{\+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+REVISE\+\_\+\+\_\+}}~5
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_afc04dcb2bf83faaf5b14559d632c6b19}{\+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+STR\+\_\+\+\_\+}}~\char`\"{}dev\char`\"{}
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a41124119fd6c23775692729a2ec26d71}{\+\_\+\+\_\+\+PER\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+\_\+}}
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_adb244281cf7a9410d7dc12823e105d02}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS\+\_\+\+IMPL}}(\+\_\+0,  \+\_\+1,  \+\_\+2,  \+\_\+3,  \+\_\+4,  \+\_\+5,  \+\_\+6,  \+\_\+7,  \+\_\+8,  \+\_\+9,  \+\_\+10,  \+\_\+11,  \+\_\+12,  \+\_\+13,  \+\_\+14,  \+\_\+15,  \+\_\+16,  \+\_\+\+\_\+N, ...)~\+\_\+\+\_\+N
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(...)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a4e95e8dc0d6a7f273a26c9e4bc239f83}{UNUSED\+\_\+\+PARAM}}(\+\_\+\+\_\+\+VAR)~(void)(\+\_\+\+\_\+\+VAR)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a39273cdd59b6f17525f429d61f242a73}{\+\_\+\+\_\+\+MACRO\+\_\+\+EXPANDING}}(...)~\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{\+\_\+\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B)~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}{\+\_\+\+\_\+\+CONNECT3}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C)~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ade59615465df27344e32b05c3629ef03}{\+\_\+\+\_\+\+CONNECT4}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D)~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}{\+\_\+\+\_\+\+CONNECT5}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E)~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}{\+\_\+\+\_\+\+CONNECT6}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F)~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}{\+\_\+\+\_\+\+CONNECT7}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G)~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}{\+\_\+\+\_\+\+CONNECT8}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G,  \+\_\+\+\_\+H)~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G\#\#\+\_\+\+\_\+H
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a78dee228d830879c65edae8392fbf159}{\+\_\+\+\_\+\+CONNECT9}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G,  \+\_\+\+\_\+H,  \mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}})~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G\#\#\+\_\+\+\_\+H\#\#\mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}}
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}{ALT\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B)~\mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{\+\_\+\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B)~\mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{\+\_\+\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C)~\mbox{\hyperlink{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}{\+\_\+\+\_\+\+CONNECT3}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a4be8346e8c8e544e3dc4da819f03d636}{CONNECT4}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D)~\mbox{\hyperlink{perf__counter_8h_ade59615465df27344e32b05c3629ef03}{\+\_\+\+\_\+\+CONNECT4}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a397bd70fecd355461d99b228d02d01f8}{CONNECT5}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E)~\mbox{\hyperlink{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}{\+\_\+\+\_\+\+CONNECT5}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a3bbbfb88c43244289b9a4e4521caf7cb}{CONNECT6}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F)~                                            \mbox{\hyperlink{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}{\+\_\+\+\_\+\+CONNECT6}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a8deb36935d07c69646a26993ab15328a}{CONNECT7}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G)~                                            \mbox{\hyperlink{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}{\+\_\+\+\_\+\+CONNECT7}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a9ce80b30ee8f4bb424c23f785b3481b8}{CONNECT8}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G,  \+\_\+\+\_\+H)~                                            \mbox{\hyperlink{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}{\+\_\+\+\_\+\+CONNECT8}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G, \+\_\+\+\_\+H)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a67d6d69c5ea260de9bdf81edf9672af3}{CONNECT9}}(\+\_\+\+\_\+A,  \+\_\+\+\_\+B,  \+\_\+\+\_\+C,  \+\_\+\+\_\+D,  \+\_\+\+\_\+E,  \+\_\+\+\_\+F,  \+\_\+\+\_\+G,  \+\_\+\+\_\+H,  \mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}})~                                            \mbox{\hyperlink{perf__counter_8h_a78dee228d830879c65edae8392fbf159}{\+\_\+\+\_\+\+CONNECT9}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G, \+\_\+\+\_\+H, \mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}})
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a1409defa6d3e973b7efee74d2de7386d}{CONNECT}}(...)~            \mbox{\hyperlink{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}{ALT\+\_\+\+CONNECT2}}(CONNECT, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ac489b777985cc6133a3658d95dd424e1}{\+\_\+\+\_\+using1}}(\+\_\+\+\_\+declare)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_af2456eddcc03ba108e670a583367342e}{\+\_\+\+\_\+using2}}(\+\_\+\+\_\+declare,  \+\_\+\+\_\+on\+\_\+leave\+\_\+expr)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a3447ab4da15b7a4e81830839202ee0be}{\+\_\+\+\_\+using3}}(\+\_\+\+\_\+declare,  \+\_\+\+\_\+on\+\_\+enter\+\_\+expr,  \+\_\+\+\_\+on\+\_\+leave\+\_\+expr)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a1a10811d7e12a6be9be6ccdf1ef824e8}{\+\_\+\+\_\+using4}}(\+\_\+\+\_\+dcl1,  \+\_\+\+\_\+dcl2,  \+\_\+\+\_\+on\+\_\+enter\+\_\+expr,  \+\_\+\+\_\+on\+\_\+leave\+\_\+expr)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using}}(...)~                \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(\+\_\+\+\_\+using, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a7e7af9eb2708d17ce5ec5ea01cb914f1}{\+\_\+\+\_\+with2}}(\+\_\+\+\_\+type,  \+\_\+\+\_\+addr)~            \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using}}(\+\_\+\+\_\+type $\ast$\+\_\+=(\+\_\+\+\_\+addr))
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_aafef7ac0d7697d31814ff152d9eae0cc}{\+\_\+\+\_\+with3}}(\+\_\+\+\_\+type,  \+\_\+\+\_\+addr,  \+\_\+\+\_\+item)~            \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using}}(\+\_\+\+\_\+type $\ast$\+\_\+=(\+\_\+\+\_\+addr), $\ast$\+\_\+\+\_\+item = \+\_\+, \+\_\+=\+\_\+,\+\_\+=\+\_\+ )
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_afc5b077f9764ca6f11075ce72357dd65}{with}}(...)~            \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(\+\_\+\+\_\+with, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a7b6c484887a402bba1af11b457264553}{dimof}}(\+\_\+\+\_\+array)~(sizeof(\+\_\+\+\_\+array)/sizeof(\+\_\+\+\_\+array\mbox{[}0\mbox{]}))
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\+\_\+\+NAME}}(\+\_\+\+\_\+\+NAME)~\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\+\_\+\+\_\+,\+\_\+\+\_\+\+NAME,\+\_\+\+\_\+\+LINE\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ac4e7ceea5fc047d059b6b1898a697cb4}{foreach2}}(\+\_\+\+\_\+type,  \+\_\+\+\_\+array)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a2c93a7704596f19ff84cbfec513c3a5a}{foreach3}}(\+\_\+\+\_\+type,  \+\_\+\+\_\+array,  \+\_\+\+\_\+item)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a623a729e6571efedb0c5528689d6120d}{foreach}}(...)~            \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(foreach, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a1616b4eef4bbd94969a9010c4114b488}{safe\+\_\+atom\+\_\+code}}()
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+}}(\+\_\+\+\_\+\+STR, ...)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}{\+\_\+\+\_\+super\+\_\+loop\+\_\+monitor\+\_\+\+\_\+}}(\+\_\+\+\_\+N, ...)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ab84fa299db0fc4c0a897eb0a3aab6233}{start\+\_\+task\+\_\+cycle\+\_\+counter}}(...)~\mbox{\hyperlink{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}{start\+\_\+cycle\+\_\+counter}}()
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_ad9e3470ff82262ac6daca041607c31da}{stop\+\_\+task\+\_\+cycle\+\_\+counter}}(...)~\mbox{\hyperlink{perf__counter_8h_a014af75d3945894c4740773e8a28d723}{stop\+\_\+cycle\+\_\+counter}}()
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a00278751616ee5d95ce4bea4ffb59ce7}{init\+\_\+task\+\_\+cycle\+\_\+counter}}()
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a11d20291b945175264a568c4c9dcd9bd}{register\+\_\+task\+\_\+cycle\+\_\+agent}}(...)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_afdd7c2e511c981ad62525076f53a762e}{unregister\+\_\+task\+\_\+cycle\+\_\+agent}}(...)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a607df0241b0f85868159e1e15f44acdc}{init\+\_\+task\+\_\+cycle\+\_\+info}}(...)~(NULL)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a96f0ed25511e535714003ec4ca738415}{enable\+\_\+task\+\_\+cycle\+\_\+info}}(...)~(false)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_af3fceb4da6cc89dd20a874bd147c2414}{disable\+\_\+task\+\_\+cycle\+\_\+info}}(...)~(false)
+\item 
+\#define \mbox{\hyperlink{perf__counter_8h_a06e00a5b710c5144aa756c1905c12fcf}{resume\+\_\+task\+\_\+cycle\+\_\+info}}(...)
+\end{DoxyCompactItemize}
+\doxysubsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\+\_\+cycle\+\_\+info\+\_\+agent\+\_\+t}} \mbox{\hyperlink{perf__counter_8h_ac118677bc3eb6a806eb1381d656b6c25}{task\+\_\+cycle\+\_\+info\+\_\+agent\+\_\+t}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \mbox{\hyperlink{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}{start\+\_\+cycle\+\_\+counter}} (void)
+\begin{DoxyCompactList}\small\item\em try to set a start pointer for the performance counter \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{perf__counter_8h_a014af75d3945894c4740773e8a28d723}{stop\+\_\+cycle\+\_\+counter}} (void)
+\begin{DoxyCompactList}\small\item\em calculate the elapsed cycle count since the last start point \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{perf__counter_8h_a9776dfed871d0e0775c876f16e7618f7}{delay\+\_\+us}} (int32\+\_\+t n\+Us)
+\begin{DoxyCompactList}\small\item\em delay specified time in microsecond \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{perf__counter_8h_a2add8ab5b23b568bba6d46f9c977dbce}{delay\+\_\+ms}} (int32\+\_\+t n\+Ms)
+\begin{DoxyCompactList}\small\item\em delay specified time in millisecond \end{DoxyCompactList}\item 
+int64\+\_\+t \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks}} (void)
+\begin{DoxyCompactList}\small\item\em get the elapsed cycles since perf\+\_\+counter is initialised \end{DoxyCompactList}\item 
+int32\+\_\+t \mbox{\hyperlink{perf__counter_8h_a98c51d83fdb448a2733d0a309366149c}{get\+\_\+system\+\_\+ms}} (void)
+\begin{DoxyCompactList}\small\item\em get the elapsed milliseconds since perf\+\_\+counter is initialised \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{perf__counter_8h_a9097d62a30ad2b4f75462c78d7200fa8}{init\+\_\+cycle\+\_\+counter}} (bool b\+Is\+Sys\+Tick\+Occupied)
+\begin{DoxyCompactList}\small\item\em initialise cycle counter service \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{perf__counter_8h_a0a6e5160f19f152b0b9a502e5e24adb7}{user\+\_\+code\+\_\+insert\+\_\+to\+\_\+systick\+\_\+handler}} (void)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Macro Definition Documentation}
+\mbox{\Hypertarget{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}\label{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT2@{\_\_CONNECT2}}
+\index{\_\_CONNECT2@{\_\_CONNECT2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT2}{\_\_CONNECT2}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B }\end{DoxyParamCaption})~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00148}{148}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}\label{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT3@{\_\_CONNECT3}}
+\index{\_\_CONNECT3@{\_\_CONNECT3}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT3}{\_\_CONNECT3}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT3(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C }\end{DoxyParamCaption})~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00149}{149}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ade59615465df27344e32b05c3629ef03}\label{perf__counter_8h_ade59615465df27344e32b05c3629ef03}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT4@{\_\_CONNECT4}}
+\index{\_\_CONNECT4@{\_\_CONNECT4}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT4}{\_\_CONNECT4}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT4(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D }\end{DoxyParamCaption})~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00150}{150}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}\label{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT5@{\_\_CONNECT5}}
+\index{\_\_CONNECT5@{\_\_CONNECT5}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT5}{\_\_CONNECT5}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT5(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E }\end{DoxyParamCaption})~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00151}{151}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}\label{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT6@{\_\_CONNECT6}}
+\index{\_\_CONNECT6@{\_\_CONNECT6}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT6}{\_\_CONNECT6}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT6(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F }\end{DoxyParamCaption})~\+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00152}{152}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}\label{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT7@{\_\_CONNECT7}}
+\index{\_\_CONNECT7@{\_\_CONNECT7}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT7}{\_\_CONNECT7}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT7(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G }\end{DoxyParamCaption})~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00153}{153}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}\label{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT8@{\_\_CONNECT8}}
+\index{\_\_CONNECT8@{\_\_CONNECT8}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT8}{\_\_CONNECT8}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT8(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G,  }\item[{}]{\+\_\+\+\_\+H }\end{DoxyParamCaption})~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G\#\#\+\_\+\+\_\+H}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00155}{155}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a78dee228d830879c65edae8392fbf159}\label{perf__counter_8h_a78dee228d830879c65edae8392fbf159}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_CONNECT9@{\_\_CONNECT9}}
+\index{\_\_CONNECT9@{\_\_CONNECT9}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_CONNECT9}{\_\_CONNECT9}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+CONNECT9(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G,  }\item[{}]{\+\_\+\+\_\+H,  }\item[{}]{\mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}} }\end{DoxyParamCaption})~                                                    \+\_\+\+\_\+A\#\#\+\_\+\+\_\+B\#\#\+\_\+\+\_\+C\#\#\+\_\+\+\_\+D\#\#\+\_\+\+\_\+E\#\#\+\_\+\+\_\+F\#\#\+\_\+\+\_\+G\#\#\+\_\+\+\_\+H\#\#\mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}}}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00157}{157}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}\label{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_cycleof\_\_@{\_\_cycleof\_\_}}
+\index{\_\_cycleof\_\_@{\_\_cycleof\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_cycleof\_\_}{\_\_cycleof\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+cycleof\+\_\+\+\_\+(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+STR,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keyword}{using}(int64\_t \_ = \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}(), \_\_cycle\_count\_\_ = \_,          \(\backslash\)}
+\DoxyCodeLine{                \_=\_, \{                                                          \(\backslash\)}
+\DoxyCodeLine{                \_ = \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}() -\/ \_;                                     \(\backslash\)}
+\DoxyCodeLine{                \_\_cycle\_count\_\_ = \_;                                            \(\backslash\)}
+\DoxyCodeLine{                if (\mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\_\_PLOOC\_VA\_NUM\_ARGS}}(\_\_VA\_ARGS\_\_) == 0) \{                    \(\backslash\)}
+\DoxyCodeLine{                    printf(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n"{}});                                             \(\backslash\)}
+\DoxyCodeLine{                    printf(\textcolor{stringliteral}{"{}-\/[Cycle Report]"{}});                                  \(\backslash\)}
+\DoxyCodeLine{                    printf(\textcolor{stringliteral}{"{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)r\(\backslash\)n"{}}); \(\backslash\)}
+\DoxyCodeLine{                    printf(\_\_STR \textcolor{stringliteral}{"{} total cycle count: \%d [\%08x]\(\backslash\)r\(\backslash\)n"{}},           \(\backslash\)}
+\DoxyCodeLine{                            (\textcolor{keywordtype}{int})\_, (\textcolor{keywordtype}{int})\_);                                    \(\backslash\)}
+\DoxyCodeLine{                \} \textcolor{keywordflow}{else} \{                                                        \(\backslash\)}
+\DoxyCodeLine{                    \_\_VA\_ARGS\_\_                                                 \(\backslash\)}
+\DoxyCodeLine{                \};                                                              \(\backslash\)}
+\DoxyCodeLine{            \})}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00280}{280}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}\label{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_IRQ\_SAFE@{\_\_IRQ\_SAFE}}
+\index{\_\_IRQ\_SAFE@{\_\_IRQ\_SAFE}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_IRQ\_SAFE}{\_\_IRQ\_SAFE}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keyword}{using}(  uint32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp) =                                  \(\backslash\)}
+\DoxyCodeLine{                        (\{  uint32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp2)=\_\_get\_PRIMASK();          \(\backslash\)}
+\DoxyCodeLine{                            \_\_disable\_irq();                                    \(\backslash\)}
+\DoxyCodeLine{                            SAFE\_NAME(temp2);\}),                                \(\backslash\)}
+\DoxyCodeLine{                        \_\_set\_PRIMASK(\mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp)))}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00264}{264}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a39273cdd59b6f17525f429d61f242a73}\label{perf__counter_8h_a39273cdd59b6f17525f429d61f242a73}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_MACRO\_EXPANDING@{\_\_MACRO\_EXPANDING}}
+\index{\_\_MACRO\_EXPANDING@{\_\_MACRO\_EXPANDING}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_MACRO\_EXPANDING}{\_\_MACRO\_EXPANDING}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+MACRO\+\_\+\+EXPANDING(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00146}{146}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a41124119fd6c23775692729a2ec26d71}\label{perf__counter_8h_a41124119fd6c23775692729a2ec26d71}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PER\_COUNTER\_VER\_\_@{\_\_PER\_COUNTER\_VER\_\_}}
+\index{\_\_PER\_COUNTER\_VER\_\_@{\_\_PER\_COUNTER\_VER\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PER\_COUNTER\_VER\_\_}{\_\_PER\_COUNTER\_VER\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PER\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+\_\+}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{                               (\mbox{\hyperlink{perf__counter_8h_a2e49e3ac701e3e087719d74f2a4ef840}{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_}} * 10000ul            \(\backslash\)}
+\DoxyCodeLine{                               +\mbox{\hyperlink{perf__counter_8h_adb870e7ae89ad2c5c7aeb70ba16eeaf6}{\_\_PERF\_COUNTER\_VER\_MINOR\_\_}} * 100ul              \(\backslash\)}
+\DoxyCodeLine{                               +\mbox{\hyperlink{perf__counter_8h_a62d05224187a7f224d1803a64951cf3f}{\_\_PERF\_COUNTER\_VER\_REVISE\_\_}})}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00038}{38}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a2e49e3ac701e3e087719d74f2a4ef840}\label{perf__counter_8h_a2e49e3ac701e3e087719d74f2a4ef840}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PERF\_COUNTER\_VER\_MAJOR\_\_@{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_}}
+\index{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_@{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_}{\_\_PERF\_COUNTER\_VER\_MAJOR\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+MAJOR\+\_\+\+\_\+~1}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00032}{32}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_adb870e7ae89ad2c5c7aeb70ba16eeaf6}\label{perf__counter_8h_adb870e7ae89ad2c5c7aeb70ba16eeaf6}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PERF\_COUNTER\_VER\_MINOR\_\_@{\_\_PERF\_COUNTER\_VER\_MINOR\_\_}}
+\index{\_\_PERF\_COUNTER\_VER\_MINOR\_\_@{\_\_PERF\_COUNTER\_VER\_MINOR\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PERF\_COUNTER\_VER\_MINOR\_\_}{\_\_PERF\_COUNTER\_VER\_MINOR\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+MINOR\+\_\+\+\_\+~9}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00033}{33}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a62d05224187a7f224d1803a64951cf3f}\label{perf__counter_8h_a62d05224187a7f224d1803a64951cf3f}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PERF\_COUNTER\_VER\_REVISE\_\_@{\_\_PERF\_COUNTER\_VER\_REVISE\_\_}}
+\index{\_\_PERF\_COUNTER\_VER\_REVISE\_\_@{\_\_PERF\_COUNTER\_VER\_REVISE\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PERF\_COUNTER\_VER\_REVISE\_\_}{\_\_PERF\_COUNTER\_VER\_REVISE\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+REVISE\+\_\+\+\_\+~5}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00034}{34}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_afc04dcb2bf83faaf5b14559d632c6b19}\label{perf__counter_8h_afc04dcb2bf83faaf5b14559d632c6b19}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PERF\_COUNTER\_VER\_STR\_\_@{\_\_PERF\_COUNTER\_VER\_STR\_\_}}
+\index{\_\_PERF\_COUNTER\_VER\_STR\_\_@{\_\_PERF\_COUNTER\_VER\_STR\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PERF\_COUNTER\_VER\_STR\_\_}{\_\_PERF\_COUNTER\_VER\_STR\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+VER\+\_\+\+STR\+\_\+\+\_\+~\char`\"{}dev\char`\"{}}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00036}{36}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}\label{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PLOOC\_VA\_NUM\_ARGS@{\_\_PLOOC\_VA\_NUM\_ARGS}}
+\index{\_\_PLOOC\_VA\_NUM\_ARGS@{\_\_PLOOC\_VA\_NUM\_ARGS}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PLOOC\_VA\_NUM\_ARGS}{\_\_PLOOC\_VA\_NUM\_ARGS}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \mbox{\hyperlink{perf__counter_8h_adb244281cf7a9410d7dc12823e105d02}{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}}( 0,\#\#\_\_VA\_ARGS\_\_,16,15,14,13,12,11,10,9,   \(\backslash\)}
+\DoxyCodeLine{                                      8,7,6,5,4,3,2,1,0)}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00116}{116}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_adb244281cf7a9410d7dc12823e105d02}\label{perf__counter_8h_adb244281cf7a9410d7dc12823e105d02}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL@{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}}
+\index{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL@{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}{\_\_PLOOC\_VA\_NUM\_ARGS\_IMPL}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS\+\_\+\+IMPL(\begin{DoxyParamCaption}\item[{}]{\+\_\+0,  }\item[{}]{\+\_\+1,  }\item[{}]{\+\_\+2,  }\item[{}]{\+\_\+3,  }\item[{}]{\+\_\+4,  }\item[{}]{\+\_\+5,  }\item[{}]{\+\_\+6,  }\item[{}]{\+\_\+7,  }\item[{}]{\+\_\+8,  }\item[{}]{\+\_\+9,  }\item[{}]{\+\_\+10,  }\item[{}]{\+\_\+11,  }\item[{}]{\+\_\+12,  }\item[{}]{\+\_\+13,  }\item[{}]{\+\_\+14,  }\item[{}]{\+\_\+15,  }\item[{}]{\+\_\+16,  }\item[{}]{\+\_\+\+\_\+N,  }\item[{}]{... }\end{DoxyParamCaption})~\+\_\+\+\_\+N}
+
+\begin{DoxyNote}{Note}
+for IAR
+
+for arm compiler 5
+
+for arm compiler 6
+
+for gcc 
+\end{DoxyNote}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00111}{111}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}\label{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_super\_loop\_monitor\_\_@{\_\_super\_loop\_monitor\_\_}}
+\index{\_\_super\_loop\_monitor\_\_@{\_\_super\_loop\_monitor\_\_}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_super\_loop\_monitor\_\_}{\_\_super\_loop\_monitor\_\_}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+super\+\_\+loop\+\_\+monitor\+\_\+\+\_\+(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+N,  }\item[{}]{... }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{    \textcolor{keyword}{using}(                                                                      \(\backslash\)}
+\DoxyCodeLine{        struct \{                                                                \(\backslash\)}
+\DoxyCodeLine{            int64\_t lStart;                                                     \(\backslash\)}
+\DoxyCodeLine{            int64\_t lTaskUsedCycles;                                            \(\backslash\)}
+\DoxyCodeLine{            int64\_t lTimeElapsed;                                               \(\backslash\)}
+\DoxyCodeLine{        \} \_\_cpu\_usage\_\_ = \{.lStart = \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}()\})                       \(\backslash\)}
+\DoxyCodeLine{    \textcolor{keyword}{using}(\textcolor{keywordtype}{int} \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(cnt) = (\_\_N))                                           \(\backslash\)}
+\DoxyCodeLine{    for(\mbox{\hyperlink{perf__counter_8h_ab84fa299db0fc4c0a897eb0a3aab6233}{start\_task\_cycle\_counter}}();; (\{                                         \(\backslash\)}
+\DoxyCodeLine{        if (!(-\/-\/\mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(cnt))) \{                                              \(\backslash\)}
+\DoxyCodeLine{            \_\_cpu\_usage\_\_.lTimeElapsed                                          \(\backslash\)}
+\DoxyCodeLine{                = \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}() -\/ \_\_cpu\_usage\_\_.lStart;                    \(\backslash\)}
+\DoxyCodeLine{            \_\_cpu\_usage\_\_.lTaskUsedCycles = \mbox{\hyperlink{perf__counter_8h_ad9e3470ff82262ac6daca041607c31da}{stop\_task\_cycle\_counter}}();          \(\backslash\)}
+\DoxyCodeLine{                                                                                \(\backslash\)}
+\DoxyCodeLine{            if (\mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\_\_PLOOC\_VA\_NUM\_ARGS}}(\_\_VA\_ARGS\_\_) == 0) \{                        \(\backslash\)}
+\DoxyCodeLine{                printf(\textcolor{stringliteral}{"{}\%s CPU Usage \%2.3f\%\%\(\backslash\)r\(\backslash\)n"{}}, \_\_func\_\_,                    \(\backslash\)}
+\DoxyCodeLine{                        (\textcolor{keywordtype}{float})((\textcolor{keywordtype}{double})\_\_cpu\_usage\_\_.lTaskUsedCycles * 100.0 / \(\backslash\)}
+\DoxyCodeLine{                                (\textcolor{keywordtype}{double})\_\_cpu\_usage\_\_.lTimeElapsed));           \(\backslash\)}
+\DoxyCodeLine{            \} \textcolor{keywordflow}{else} \{                                                            \(\backslash\)}
+\DoxyCodeLine{                \_\_VA\_ARGS\_\_;                                                    \(\backslash\)}
+\DoxyCodeLine{            \}                                                                   \(\backslash\)}
+\DoxyCodeLine{            SAFE\_NAME(cnt) = (\_\_N);                                             \(\backslash\)}
+\DoxyCodeLine{            \_\_cpu\_usage\_\_.lStart = \mbox{\hyperlink{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}();                          \(\backslash\)}
+\DoxyCodeLine{            start\_task\_cycle\_counter();                                         \(\backslash\)}
+\DoxyCodeLine{        \};                                                                      \(\backslash\)}
+\DoxyCodeLine{    \}))}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00298}{298}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ac489b777985cc6133a3658d95dd424e1}\label{perf__counter_8h_ac489b777985cc6133a3658d95dd424e1}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_using1@{\_\_using1}}
+\index{\_\_using1@{\_\_using1}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_using1}{\_\_using1}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+using1(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+declare }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\_\_declare, *\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}
+\DoxyCodeLine{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL;                   \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00183}{183}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_af2456eddcc03ba108e670a583367342e}\label{perf__counter_8h_af2456eddcc03ba108e670a583367342e}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_using2@{\_\_using2}}
+\index{\_\_using2@{\_\_using2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_using2}{\_\_using2}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+using2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+declare,  }\item[{}]{\+\_\+\+\_\+on\+\_\+leave\+\_\+expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\_\_declare, *\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}
+\DoxyCodeLine{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL;                   \(\backslash\)}
+\DoxyCodeLine{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00188}{188}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a3447ab4da15b7a4e81830839202ee0be}\label{perf__counter_8h_a3447ab4da15b7a4e81830839202ee0be}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_using3@{\_\_using3}}
+\index{\_\_using3@{\_\_using3}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_using3}{\_\_using3}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+using3(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+declare,  }\item[{}]{\+\_\+\+\_\+on\+\_\+enter\+\_\+expr,  }\item[{}]{\+\_\+\+\_\+on\+\_\+leave\+\_\+expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\_\_declare, *\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;          \(\backslash\)}
+\DoxyCodeLine{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL ?                  \(\backslash\)}
+\DoxyCodeLine{                    ((\_\_on\_enter\_expr),1) : 0;                                  \(\backslash\)}
+\DoxyCodeLine{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00194}{194}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a1a10811d7e12a6be9be6ccdf1ef824e8}\label{perf__counter_8h_a1a10811d7e12a6be9be6ccdf1ef824e8}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_using4@{\_\_using4}}
+\index{\_\_using4@{\_\_using4}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_using4}{\_\_using4}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+using4(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+dcl1,  }\item[{}]{\+\_\+\+\_\+dcl2,  }\item[{}]{\+\_\+\+\_\+on\+\_\+enter\+\_\+expr,  }\item[{}]{\+\_\+\+\_\+on\+\_\+leave\+\_\+expr }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (\_\_dcl1, \_\_dcl2, *\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\_\_using\_, \_\_LINE\_\_,\_ptr) = NULL;     \(\backslash\)}
+\DoxyCodeLine{                 CONNECT3(\_\_using\_, \_\_LINE\_\_,\_ptr)++ == NULL ?                  \(\backslash\)}
+\DoxyCodeLine{                    ((\_\_on\_enter\_expr),1) : 0;                                  \(\backslash\)}
+\DoxyCodeLine{                 (\_\_on\_leave\_expr)                                              \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00201}{201}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a7e7af9eb2708d17ce5ec5ea01cb914f1}\label{perf__counter_8h_a7e7af9eb2708d17ce5ec5ea01cb914f1}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_with2@{\_\_with2}}
+\index{\_\_with2@{\_\_with2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_with2}{\_\_with2}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+with2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+type,  }\item[{}]{\+\_\+\+\_\+addr }\end{DoxyParamCaption})~            \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using}}(\+\_\+\+\_\+type $\ast$\+\_\+=(\+\_\+\+\_\+addr))}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00216}{216}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_aafef7ac0d7697d31814ff152d9eae0cc}\label{perf__counter_8h_aafef7ac0d7697d31814ff152d9eae0cc}} 
+\index{perf\_counter.h@{perf\_counter.h}!\_\_with3@{\_\_with3}}
+\index{\_\_with3@{\_\_with3}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{\_\_with3}{\_\_with3}}
+{\footnotesize\ttfamily \#define \+\_\+\+\_\+with3(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+type,  }\item[{}]{\+\_\+\+\_\+addr,  }\item[{}]{\+\_\+\+\_\+item }\end{DoxyParamCaption})~            \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using}}(\+\_\+\+\_\+type $\ast$\+\_\+=(\+\_\+\+\_\+addr), $\ast$\+\_\+\+\_\+item = \+\_\+, \+\_\+=\+\_\+,\+\_\+=\+\_\+ )}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00218}{218}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}\label{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}} 
+\index{perf\_counter.h@{perf\_counter.h}!ALT\_CONNECT2@{ALT\_CONNECT2}}
+\index{ALT\_CONNECT2@{ALT\_CONNECT2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{ALT\_CONNECT2}{ALT\_CONNECT2}}
+{\footnotesize\ttfamily \#define ALT\+\_\+\+CONNECT2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{\+\_\+\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00160}{160}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a1409defa6d3e973b7efee74d2de7386d}\label{perf__counter_8h_a1409defa6d3e973b7efee74d2de7386d}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT@{CONNECT}}
+\index{CONNECT@{CONNECT}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT}{CONNECT}}
+{\footnotesize\ttfamily \#define CONNECT(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~            \mbox{\hyperlink{perf__counter_8h_ac8f325950e08c3662d3c94233cf40e13}{ALT\+\_\+\+CONNECT2}}(CONNECT, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00174}{174}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}\label{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT2@{CONNECT2}}
+\index{CONNECT2@{CONNECT2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT2}{CONNECT2}}
+{\footnotesize\ttfamily \#define CONNECT2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_ae490fc8ce9ed8d7853ab956e76ebf1b8}{\+\_\+\+\_\+\+CONNECT2}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00161}{161}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a3994906c1038cf4f04e9578079429555}\label{perf__counter_8h_a3994906c1038cf4f04e9578079429555}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT3@{CONNECT3}}
+\index{CONNECT3@{CONNECT3}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT3}{CONNECT3}}
+{\footnotesize\ttfamily \#define CONNECT3(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_af40f44eb68f59549a3e5d6c91429c3c9}{\+\_\+\+\_\+\+CONNECT3}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00162}{162}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a4be8346e8c8e544e3dc4da819f03d636}\label{perf__counter_8h_a4be8346e8c8e544e3dc4da819f03d636}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT4@{CONNECT4}}
+\index{CONNECT4@{CONNECT4}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT4}{CONNECT4}}
+{\footnotesize\ttfamily \#define CONNECT4(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_ade59615465df27344e32b05c3629ef03}{\+\_\+\+\_\+\+CONNECT4}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00163}{163}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a397bd70fecd355461d99b228d02d01f8}\label{perf__counter_8h_a397bd70fecd355461d99b228d02d01f8}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT5@{CONNECT5}}
+\index{CONNECT5@{CONNECT5}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT5}{CONNECT5}}
+{\footnotesize\ttfamily \#define CONNECT5(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_ab6fd44a39b7fdd5c8c3b7309992e1a00}{\+\_\+\+\_\+\+CONNECT5}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00164}{164}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a3bbbfb88c43244289b9a4e4521caf7cb}\label{perf__counter_8h_a3bbbfb88c43244289b9a4e4521caf7cb}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT6@{CONNECT6}}
+\index{CONNECT6@{CONNECT6}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT6}{CONNECT6}}
+{\footnotesize\ttfamily \#define CONNECT6(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F }\end{DoxyParamCaption})~                                            \mbox{\hyperlink{perf__counter_8h_ae2d17b539ab98e8b0435fce5d8aff2b4}{\+\_\+\+\_\+\+CONNECT6}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00165}{165}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a8deb36935d07c69646a26993ab15328a}\label{perf__counter_8h_a8deb36935d07c69646a26993ab15328a}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT7@{CONNECT7}}
+\index{CONNECT7@{CONNECT7}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT7}{CONNECT7}}
+{\footnotesize\ttfamily \#define CONNECT7(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G }\end{DoxyParamCaption})~                                            \mbox{\hyperlink{perf__counter_8h_a2b3247f9df3a6702c90468722994bf49}{\+\_\+\+\_\+\+CONNECT7}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00167}{167}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a9ce80b30ee8f4bb424c23f785b3481b8}\label{perf__counter_8h_a9ce80b30ee8f4bb424c23f785b3481b8}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT8@{CONNECT8}}
+\index{CONNECT8@{CONNECT8}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT8}{CONNECT8}}
+{\footnotesize\ttfamily \#define CONNECT8(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G,  }\item[{}]{\+\_\+\+\_\+H }\end{DoxyParamCaption})~                                            \mbox{\hyperlink{perf__counter_8h_a798b1c8c5d91763e99d63fc7c326dead}{\+\_\+\+\_\+\+CONNECT8}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G, \+\_\+\+\_\+H)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00169}{169}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a67d6d69c5ea260de9bdf81edf9672af3}\label{perf__counter_8h_a67d6d69c5ea260de9bdf81edf9672af3}} 
+\index{perf\_counter.h@{perf\_counter.h}!CONNECT9@{CONNECT9}}
+\index{CONNECT9@{CONNECT9}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{CONNECT9}{CONNECT9}}
+{\footnotesize\ttfamily \#define CONNECT9(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+A,  }\item[{}]{\+\_\+\+\_\+B,  }\item[{}]{\+\_\+\+\_\+C,  }\item[{}]{\+\_\+\+\_\+D,  }\item[{}]{\+\_\+\+\_\+E,  }\item[{}]{\+\_\+\+\_\+F,  }\item[{}]{\+\_\+\+\_\+G,  }\item[{}]{\+\_\+\+\_\+H,  }\item[{}]{\mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}} }\end{DoxyParamCaption})~                                            \mbox{\hyperlink{perf__counter_8h_a78dee228d830879c65edae8392fbf159}{\+\_\+\+\_\+\+CONNECT9}}(\+\_\+\+\_\+A, \+\_\+\+\_\+B, \+\_\+\+\_\+C, \+\_\+\+\_\+D, \+\_\+\+\_\+E, \+\_\+\+\_\+F, \+\_\+\+\_\+G, \+\_\+\+\_\+H, \mbox{\hyperlink{perf__counter_8c_af63697ed9952cc71e1225efe205f6cd3}{\+\_\+\+\_\+I}})}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00171}{171}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a7b6c484887a402bba1af11b457264553}\label{perf__counter_8h_a7b6c484887a402bba1af11b457264553}} 
+\index{perf\_counter.h@{perf\_counter.h}!dimof@{dimof}}
+\index{dimof@{dimof}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{dimof}{dimof}}
+{\footnotesize\ttfamily \#define dimof(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+array }\end{DoxyParamCaption})~(sizeof(\+\_\+\+\_\+array)/sizeof(\+\_\+\+\_\+array\mbox{[}0\mbox{]}))}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00227}{227}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_af3fceb4da6cc89dd20a874bd147c2414}\label{perf__counter_8h_af3fceb4da6cc89dd20a874bd147c2414}} 
+\index{perf\_counter.h@{perf\_counter.h}!disable\_task\_cycle\_info@{disable\_task\_cycle\_info}}
+\index{disable\_task\_cycle\_info@{disable\_task\_cycle\_info}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{disable\_task\_cycle\_info}{disable\_task\_cycle\_info}}
+{\footnotesize\ttfamily \#define disable\+\_\+task\+\_\+cycle\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~(false)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00531}{531}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a96f0ed25511e535714003ec4ca738415}\label{perf__counter_8h_a96f0ed25511e535714003ec4ca738415}} 
+\index{perf\_counter.h@{perf\_counter.h}!enable\_task\_cycle\_info@{enable\_task\_cycle\_info}}
+\index{enable\_task\_cycle\_info@{enable\_task\_cycle\_info}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{enable\_task\_cycle\_info}{enable\_task\_cycle\_info}}
+{\footnotesize\ttfamily \#define enable\+\_\+task\+\_\+cycle\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~(false)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00530}{530}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a623a729e6571efedb0c5528689d6120d}\label{perf__counter_8h_a623a729e6571efedb0c5528689d6120d}} 
+\index{perf\_counter.h@{perf\_counter.h}!foreach@{foreach}}
+\index{foreach@{foreach}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{foreach}{foreach}}
+{\footnotesize\ttfamily \#define foreach(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~            \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(foreach, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00251}{251}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ac4e7ceea5fc047d059b6b1898a697cb4}\label{perf__counter_8h_ac4e7ceea5fc047d059b6b1898a697cb4}} 
+\index{perf\_counter.h@{perf\_counter.h}!foreach2@{foreach2}}
+\index{foreach2@{foreach2}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{foreach2}{foreach2}}
+{\footnotesize\ttfamily \#define foreach2(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+type,  }\item[{}]{\+\_\+\+\_\+array }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keyword}{using}(\_\_type *\_ = \_\_array)                                          \(\backslash\)}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (   uint\_fast32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(count) = \mbox{\hyperlink{perf__counter_8h_a7b6c484887a402bba1af11b457264553}{dimof}}(\_\_array);            \(\backslash\)}
+\DoxyCodeLine{                    SAFE\_NAME(count) > 0;                                       \(\backslash\)}
+\DoxyCodeLine{                    \_++, \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(count)-\/-\/                                     \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00237}{237}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a2c93a7704596f19ff84cbfec513c3a5a}\label{perf__counter_8h_a2c93a7704596f19ff84cbfec513c3a5a}} 
+\index{perf\_counter.h@{perf\_counter.h}!foreach3@{foreach3}}
+\index{foreach3@{foreach3}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{foreach3}{foreach3}}
+{\footnotesize\ttfamily \#define foreach3(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+type,  }\item[{}]{\+\_\+\+\_\+array,  }\item[{}]{\+\_\+\+\_\+item }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keyword}{using}(\_\_type *\_ = \_\_array, *\_\_item = \_, \_ = \_, \_ = \_ )              \(\backslash\)}
+\DoxyCodeLine{            \textcolor{keywordflow}{for} (   uint\_fast32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(count) = \mbox{\hyperlink{perf__counter_8h_a7b6c484887a402bba1af11b457264553}{dimof}}(\_\_array);            \(\backslash\)}
+\DoxyCodeLine{                    SAFE\_NAME(count) > 0;                                       \(\backslash\)}
+\DoxyCodeLine{                    \_++, \_\_item = \_, \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(count)-\/-\/                         \(\backslash\)}
+\DoxyCodeLine{                )}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00244}{244}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a00278751616ee5d95ce4bea4ffb59ce7}\label{perf__counter_8h_a00278751616ee5d95ce4bea4ffb59ce7}} 
+\index{perf\_counter.h@{perf\_counter.h}!init\_task\_cycle\_counter@{init\_task\_cycle\_counter}}
+\index{init\_task\_cycle\_counter@{init\_task\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{init\_task\_cycle\_counter}{init\_task\_cycle\_counter}}
+{\footnotesize\ttfamily \#define init\+\_\+task\+\_\+cycle\+\_\+counter(\begin{DoxyParamCaption}\item[{}]{void }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00526}{526}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a607df0241b0f85868159e1e15f44acdc}\label{perf__counter_8h_a607df0241b0f85868159e1e15f44acdc}} 
+\index{perf\_counter.h@{perf\_counter.h}!init\_task\_cycle\_info@{init\_task\_cycle\_info}}
+\index{init\_task\_cycle\_info@{init\_task\_cycle\_info}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{init\_task\_cycle\_info}{init\_task\_cycle\_info}}
+{\footnotesize\ttfamily \#define init\+\_\+task\+\_\+cycle\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~(NULL)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00529}{529}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a11d20291b945175264a568c4c9dcd9bd}\label{perf__counter_8h_a11d20291b945175264a568c4c9dcd9bd}} 
+\index{perf\_counter.h@{perf\_counter.h}!register\_task\_cycle\_agent@{register\_task\_cycle\_agent}}
+\index{register\_task\_cycle\_agent@{register\_task\_cycle\_agent}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{register\_task\_cycle\_agent}{register\_task\_cycle\_agent}}
+{\footnotesize\ttfamily \#define register\+\_\+task\+\_\+cycle\+\_\+agent(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00527}{527}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a06e00a5b710c5144aa756c1905c12fcf}\label{perf__counter_8h_a06e00a5b710c5144aa756c1905c12fcf}} 
+\index{perf\_counter.h@{perf\_counter.h}!resume\_task\_cycle\_info@{resume\_task\_cycle\_info}}
+\index{resume\_task\_cycle\_info@{resume\_task\_cycle\_info}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{resume\_task\_cycle\_info}{resume\_task\_cycle\_info}}
+{\footnotesize\ttfamily \#define resume\+\_\+task\+\_\+cycle\+\_\+info(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00532}{532}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a1616b4eef4bbd94969a9010c4114b488}\label{perf__counter_8h_a1616b4eef4bbd94969a9010c4114b488}} 
+\index{perf\_counter.h@{perf\_counter.h}!safe\_atom\_code@{safe\_atom\_code}}
+\index{safe\_atom\_code@{safe\_atom\_code}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{safe\_atom\_code}{safe\_atom\_code}}
+{\footnotesize\ttfamily \#define safe\+\_\+atom\+\_\+code(\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+{\bfseries Value\+:}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{            \textcolor{keyword}{using}(  uint32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp) =                                  \(\backslash\)}
+\DoxyCodeLine{                        (\{  uint32\_t \mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp2)=\_\_get\_PRIMASK();          \(\backslash\)}
+\DoxyCodeLine{                            \_\_disable\_irq();                                    \(\backslash\)}
+\DoxyCodeLine{                            SAFE\_NAME(temp2);\}),                                \(\backslash\)}
+\DoxyCodeLine{                        \_\_set\_PRIMASK(\mbox{\hyperlink{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}{SAFE\_NAME}}(temp)))}
+
+\end{DoxyCode}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00255}{255}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}\label{perf__counter_8h_af2d5b85528ace8bbe8954d1ece9a3c51}} 
+\index{perf\_counter.h@{perf\_counter.h}!SAFE\_NAME@{SAFE\_NAME}}
+\index{SAFE\_NAME@{SAFE\_NAME}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{SAFE\_NAME}{SAFE\_NAME}}
+{\footnotesize\ttfamily \#define SAFE\+\_\+\+NAME(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+NAME }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_a3994906c1038cf4f04e9578079429555}{CONNECT3}}(\+\_\+\+\_\+,\+\_\+\+\_\+\+NAME,\+\_\+\+\_\+\+LINE\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00231}{231}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ab84fa299db0fc4c0a897eb0a3aab6233}\label{perf__counter_8h_ab84fa299db0fc4c0a897eb0a3aab6233}} 
+\index{perf\_counter.h@{perf\_counter.h}!start\_task\_cycle\_counter@{start\_task\_cycle\_counter}}
+\index{start\_task\_cycle\_counter@{start\_task\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{start\_task\_cycle\_counter}{start\_task\_cycle\_counter}}
+{\footnotesize\ttfamily \#define start\+\_\+task\+\_\+cycle\+\_\+counter(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}{start\+\_\+cycle\+\_\+counter}}()}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00524}{524}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ad9e3470ff82262ac6daca041607c31da}\label{perf__counter_8h_ad9e3470ff82262ac6daca041607c31da}} 
+\index{perf\_counter.h@{perf\_counter.h}!stop\_task\_cycle\_counter@{stop\_task\_cycle\_counter}}
+\index{stop\_task\_cycle\_counter@{stop\_task\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{stop\_task\_cycle\_counter}{stop\_task\_cycle\_counter}}
+{\footnotesize\ttfamily \#define stop\+\_\+task\+\_\+cycle\+\_\+counter(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~\mbox{\hyperlink{perf__counter_8h_a014af75d3945894c4740773e8a28d723}{stop\+\_\+cycle\+\_\+counter}}()}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00525}{525}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_afdd7c2e511c981ad62525076f53a762e}\label{perf__counter_8h_afdd7c2e511c981ad62525076f53a762e}} 
+\index{perf\_counter.h@{perf\_counter.h}!unregister\_task\_cycle\_agent@{unregister\_task\_cycle\_agent}}
+\index{unregister\_task\_cycle\_agent@{unregister\_task\_cycle\_agent}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{unregister\_task\_cycle\_agent}{unregister\_task\_cycle\_agent}}
+{\footnotesize\ttfamily \#define unregister\+\_\+task\+\_\+cycle\+\_\+agent(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00528}{528}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a4e95e8dc0d6a7f273a26c9e4bc239f83}\label{perf__counter_8h_a4e95e8dc0d6a7f273a26c9e4bc239f83}} 
+\index{perf\_counter.h@{perf\_counter.h}!UNUSED\_PARAM@{UNUSED\_PARAM}}
+\index{UNUSED\_PARAM@{UNUSED\_PARAM}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{UNUSED\_PARAM}{UNUSED\_PARAM}}
+{\footnotesize\ttfamily \#define UNUSED\+\_\+\+PARAM(\begin{DoxyParamCaption}\item[{}]{\+\_\+\+\_\+\+VAR }\end{DoxyParamCaption})~(void)(\+\_\+\+\_\+\+VAR)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00122}{122}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}\label{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}} 
+\index{perf\_counter.h@{perf\_counter.h}!using@{using}}
+\index{using@{using}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{using}{using}}
+{\footnotesize\ttfamily \#define using(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~                \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(\+\_\+\+\_\+using, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00208}{208}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+\mbox{\Hypertarget{perf__counter_8h_afc5b077f9764ca6f11075ce72357dd65}\label{perf__counter_8h_afc5b077f9764ca6f11075ce72357dd65}} 
+\index{perf\_counter.h@{perf\_counter.h}!with@{with}}
+\index{with@{with}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{with}{with}}
+{\footnotesize\ttfamily \#define with(\begin{DoxyParamCaption}\item[{}]{... }\end{DoxyParamCaption})~            \mbox{\hyperlink{perf__counter_8h_ae0db1f91522f0c020e1068d8bb2034cb}{CONNECT2}}(\+\_\+\+\_\+with, \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS}}(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+))(\+\_\+\+\_\+\+VA\+\_\+\+ARGS\+\_\+\+\_\+)}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00221}{221}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+
+
+\doxysubsection{Typedef Documentation}
+\mbox{\Hypertarget{perf__counter_8h_ac118677bc3eb6a806eb1381d656b6c25}\label{perf__counter_8h_ac118677bc3eb6a806eb1381d656b6c25}} 
+\index{perf\_counter.h@{perf\_counter.h}!task\_cycle\_info\_agent\_t@{task\_cycle\_info\_agent\_t}}
+\index{task\_cycle\_info\_agent\_t@{task\_cycle\_info\_agent\_t}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{task\_cycle\_info\_agent\_t}{task\_cycle\_info\_agent\_t}}
+{\footnotesize\ttfamily typedef struct \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\+\_\+cycle\+\_\+info\+\_\+agent\+\_\+t}} \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\+\_\+cycle\+\_\+info\+\_\+agent\+\_\+t}}}
+
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8h_source_l00335}{335}} of file \mbox{\hyperlink{perf__counter_8h_source}{perf\+\_\+counter.\+h}}.
+
+
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{perf__counter_8h_a2add8ab5b23b568bba6d46f9c977dbce}\label{perf__counter_8h_a2add8ab5b23b568bba6d46f9c977dbce}} 
+\index{perf\_counter.h@{perf\_counter.h}!delay\_ms@{delay\_ms}}
+\index{delay\_ms@{delay\_ms}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{delay\_ms()}{delay\_ms()}}
+{\footnotesize\ttfamily void delay\+\_\+ms (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{n\+Ms }\end{DoxyParamCaption})}
+
+
+
+delay specified time in millisecond 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Us} & time in millisecond \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00417}{417}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00418 \{}
+\DoxyCodeLine{00419     int64\_t lUs = nMs * s\_nMSUnit;}
+\DoxyCodeLine{00420     }
+\DoxyCodeLine{00421     \textcolor{keywordflow}{if} (lUs <= \mbox{\hyperlink{perf__counter_8c_ad7332da0831148c773a7c5211d5bfa1e}{PERF\_CNT\_DELAY\_US\_COMPENSATION}}) \{}
+\DoxyCodeLine{00422         return ;}
+\DoxyCodeLine{00423     \} }
+\DoxyCodeLine{00424     }
+\DoxyCodeLine{00425     lUs -\/= \mbox{\hyperlink{perf__counter_8c_ad7332da0831148c773a7c5211d5bfa1e}{PERF\_CNT\_DELAY\_US\_COMPENSATION}};}
+\DoxyCodeLine{00426     }
+\DoxyCodeLine{00427     lUs += \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}();}
+\DoxyCodeLine{00428     \textcolor{keywordflow}{while}(\mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}() < lUs);}
+\DoxyCodeLine{00429 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{perf__counter_8h_a9776dfed871d0e0775c876f16e7618f7}\label{perf__counter_8h_a9776dfed871d0e0775c876f16e7618f7}} 
+\index{perf\_counter.h@{perf\_counter.h}!delay\_us@{delay\_us}}
+\index{delay\_us@{delay\_us}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{delay\_us()}{delay\_us()}}
+{\footnotesize\ttfamily void delay\+\_\+us (\begin{DoxyParamCaption}\item[{int32\+\_\+t}]{n\+Us }\end{DoxyParamCaption})}
+
+
+
+delay specified time in microsecond 
+
+
+\begin{DoxyParams}{Parameters}
+{\em n\+Us} & time in microsecond \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00398}{398}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00399 \{}
+\DoxyCodeLine{00400     int64\_t lUs = nUs * s\_nUSUnit;}
+\DoxyCodeLine{00401     }
+\DoxyCodeLine{00402     \textcolor{keywordflow}{if} (lUs <= \mbox{\hyperlink{perf__counter_8c_ad7332da0831148c773a7c5211d5bfa1e}{PERF\_CNT\_DELAY\_US\_COMPENSATION}}) \{}
+\DoxyCodeLine{00403         return ;}
+\DoxyCodeLine{00404     \} }
+\DoxyCodeLine{00405     }
+\DoxyCodeLine{00406     lUs -\/= \mbox{\hyperlink{perf__counter_8c_ad7332da0831148c773a7c5211d5bfa1e}{PERF\_CNT\_DELAY\_US\_COMPENSATION}};}
+\DoxyCodeLine{00407     }
+\DoxyCodeLine{00408     lUs += \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}();}
+\DoxyCodeLine{00409     \textcolor{keywordflow}{while}(\mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}() < lUs);}
+\DoxyCodeLine{00410 \}}
+
+\end{DoxyCode}
+\mbox{\Hypertarget{perf__counter_8h_a98c51d83fdb448a2733d0a309366149c}\label{perf__counter_8h_a98c51d83fdb448a2733d0a309366149c}} 
+\index{perf\_counter.h@{perf\_counter.h}!get\_system\_ms@{get\_system\_ms}}
+\index{get\_system\_ms@{get\_system\_ms}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{get\_system\_ms()}{get\_system\_ms()}}
+{\footnotesize\ttfamily int32\+\_\+t get\+\_\+system\+\_\+ms (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+get the elapsed milliseconds since perf\+\_\+counter is initialised 
+
+\begin{DoxyReturn}{Returns}
+int32\+\_\+t the elapsed milliseconds 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00488}{488}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00489 \{}
+\DoxyCodeLine{00490     int32\_t nTemp = 0;}
+\DoxyCodeLine{00491     }
+\DoxyCodeLine{00492     \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{00493         nTemp = s\_nSystemMS + (\mbox{\hyperlink{perf__counter_8c_a21ccde78f8ad778f05be60855c5a8283}{check\_systick}}() + s\_nMSResidule) / s\_nMSUnit;}
+\DoxyCodeLine{00494     \}}
+\DoxyCodeLine{00495     }
+\DoxyCodeLine{00496     \textcolor{keywordflow}{return} nTemp;}
+\DoxyCodeLine{00497 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8h_source_l00264}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}\label{perf__counter_8h_a32dabfe5b863f89f71735b20a0caf1ea}} 
+\index{perf\_counter.h@{perf\_counter.h}!get\_system\_ticks@{get\_system\_ticks}}
+\index{get\_system\_ticks@{get\_system\_ticks}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{get\_system\_ticks()}{get\_system\_ticks()}}
+{\footnotesize\ttfamily int64\+\_\+t get\+\_\+system\+\_\+ticks (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+get the elapsed cycles since perf\+\_\+counter is initialised 
+
+\begin{DoxyReturn}{Returns}
+int64\+\_\+t the elpased cycles 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00472}{472}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00473 \{}
+\DoxyCodeLine{00474     int64\_t lTemp = 0;}
+\DoxyCodeLine{00475     }
+\DoxyCodeLine{00476     \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{00477         lTemp = \mbox{\hyperlink{perf__counter_8c_a21ccde78f8ad778f05be60855c5a8283}{check\_systick}}() + s\_lSystemClockCounts;}
+\DoxyCodeLine{00478     \}}
+\DoxyCodeLine{00479 }
+\DoxyCodeLine{00480     \textcolor{keywordflow}{return} lTemp;}
+\DoxyCodeLine{00481 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8h_source_l00264}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}, and \mbox{\hyperlink{perf__counter_8c_source_l00332}{check\+\_\+systick()}}.
+
+
+
+Referenced by \mbox{\hyperlink{perf__counter_8c_source_l00646}{\+\_\+\+\_\+on\+\_\+context\+\_\+switch\+\_\+in()}}, \mbox{\hyperlink{perf__counter_8c_source_l00668}{\+\_\+\+\_\+on\+\_\+context\+\_\+switch\+\_\+out()}}, \mbox{\hyperlink{perf__counter_8c_source_l00691}{\+\_\+\+\_\+start\+\_\+task\+\_\+cycle\+\_\+counter()}}, \mbox{\hyperlink{perf__counter_8c_source_l00711}{\+\_\+\+\_\+stop\+\_\+task\+\_\+cycle\+\_\+counter()}}, and \mbox{\hyperlink{perf__counter_8c_source_l00506}{init\+\_\+task\+\_\+cycle\+\_\+counter()}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a9097d62a30ad2b4f75462c78d7200fa8}\label{perf__counter_8h_a9097d62a30ad2b4f75462c78d7200fa8}} 
+\index{perf\_counter.h@{perf\_counter.h}!init\_cycle\_counter@{init\_cycle\_counter}}
+\index{init\_cycle\_counter@{init\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{init\_cycle\_counter()}{init\_cycle\_counter()}}
+{\footnotesize\ttfamily void init\+\_\+cycle\+\_\+counter (\begin{DoxyParamCaption}\item[{bool}]{b\+Is\+Sys\+Tick\+Occupied }\end{DoxyParamCaption})}
+
+
+
+initialise cycle counter service 
+
+\begin{DoxyNote}{Note}
+-\/ don\textquotesingle{}t forget to tell the function whether the systick is already used by user applications. Don\textquotesingle{}t worry, this cycle counter service won\textquotesingle{}t affect your existing systick service.
+
+-\/ Usually the perf\+\_\+counter can initialise itself with the help of {\bfseries{attribute}}((constructor(255))), this works fine in Arm Compiler 5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn\textquotesingle{}t work for IAR. So, when you are using IAR, please call this function manually to initialise the perf\+\_\+counter service.
+
+-\/ Perf\+\_\+counter library assumes that\+:
+\begin{DoxyEnumerate}
+\item Your project has already using Sys\+Tick
+\item It assumes that you have already implemented the Sys\+Tick\+\_\+\+Handler
+\item It assumes that you have enabled the exception handling for Sys\+Tick. If these are not the case, please\+:
+\begin{DoxyEnumerate}
+\item Add an empty Sys\+Tick\+\_\+\+Handler to your project if you don\textquotesingle{}t have one
+\item Make sure you have the Sys\+Tick Exception handling enabled
+\item And call function init\+\_\+cycle\+\_\+counter(false) if you doesn\textquotesingle{}t use Sys\+Tick in your project at all.
+\end{DoxyEnumerate}
+\end{DoxyEnumerate}
+\end{DoxyNote}
+
+\begin{DoxyParams}{Parameters}
+{\em b\+Is\+Sys\+Tick\+Occupied} & A boolean value which indicates whether Sys\+Tick is already used by user application. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00280}{280}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00281 \{}
+\DoxyCodeLine{00282     \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{00283         \textcolor{keywordflow}{if} (!bIsSysTickOccupied) \{}
+\DoxyCodeLine{00284             \mbox{\hyperlink{perf__counter_8c_ae4e8f0238527c69f522029b93c8e5b78}{SysTick\_Config}}(0x01000000);             \textcolor{comment}{// use the longest period}}
+\DoxyCodeLine{00285         \}}
+\DoxyCodeLine{00286         \mbox{\hyperlink{perf__counter_8c_aaaf6477c2bde2f00f99e3c2fd1060b01}{SCB}}-\/>ICSR      = \mbox{\hyperlink{perf__counter_8c_ab241827d2a793269d8cd99b9b28c2157}{SCB\_ICSR\_PENDSTCLR\_Msk}};}
+\DoxyCodeLine{00287     \}}
+\DoxyCodeLine{00288     }
+\DoxyCodeLine{00289     \mbox{\hyperlink{perf__counter_8c_af33fd92801223d4befa49c610332ddd4}{start\_cycle\_counter}}();}
+\DoxyCodeLine{00290     \textcolor{comment}{//s\_nSystemClockCounts = s\_nCycleCounts;}}
+\DoxyCodeLine{00291     s\_nOffset = \mbox{\hyperlink{perf__counter_8c_a014af75d3945894c4740773e8a28d723}{stop\_cycle\_counter}}();}
+\DoxyCodeLine{00292     }
+\DoxyCodeLine{00293     s\_nUSUnit = \mbox{\hyperlink{perf__counter_8c_aa3cd3e43291e81e795d642b79b6088e6}{SystemCoreClock}} / 1000000ul;}
+\DoxyCodeLine{00294     s\_nMSUnit = \mbox{\hyperlink{perf__counter_8c_aa3cd3e43291e81e795d642b79b6088e6}{SystemCoreClock}} / 1000ul;}
+\DoxyCodeLine{00295     s\_lSystemClockCounts = 0;                       \textcolor{comment}{// reset system cycle counter}}
+\DoxyCodeLine{00296     s\_nSystemMS = 0;                                \textcolor{comment}{// reset system millisecond counter}}
+\DoxyCodeLine{00297     }
+\DoxyCodeLine{00298 \textcolor{preprocessor}{\#if     defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_5\_\_)                                 \(\backslash\) }}
+\DoxyCodeLine{00299 \textcolor{preprocessor}{    ||  defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_6\_\_)                                 \(\backslash\) }}
+\DoxyCodeLine{00300 \textcolor{preprocessor}{    ||  defined(\_\_IS\_COMPILER\_GCC\_\_)                                            \(\backslash\) }}
+\DoxyCodeLine{00301 \textcolor{preprocessor}{    ||  defined(\_\_IS\_COMPILER\_LLVM\_\_) }}
+\DoxyCodeLine{00302     \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \_\_ensure\_systick\_wrapper(\textcolor{keywordtype}{void});}
+\DoxyCodeLine{00303     \_\_ensure\_systick\_wrapper();}
+\DoxyCodeLine{00304 \textcolor{preprocessor}{\#endif }}
+\DoxyCodeLine{00305 }
+\DoxyCodeLine{00306     \mbox{\hyperlink{perf__counter_8c_a4781d1de67a0b4fd21656377d0a2a0bc}{\_\_perf\_os\_patch\_init}}();}
+\DoxyCodeLine{00307 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8h_source_l00264}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}, \mbox{\hyperlink{perf__counter_8c_source_l00069}{SCB}}, \mbox{\hyperlink{perf__counter_8c_source_l00105}{SCB\+\_\+\+ICSR\+\_\+\+PENDSTCLR\+\_\+\+Msk}}, \mbox{\hyperlink{perf__counter_8c_source_l00316}{start\+\_\+cycle\+\_\+counter()}}, and \mbox{\hyperlink{perf__counter_8c_source_l00200}{Sys\+Tick\+\_\+\+Config()}}.
+
+\mbox{\Hypertarget{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}\label{perf__counter_8h_af33fd92801223d4befa49c610332ddd4}} 
+\index{perf\_counter.h@{perf\_counter.h}!start\_cycle\_counter@{start\_cycle\_counter}}
+\index{start\_cycle\_counter@{start\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{start\_cycle\_counter()}{start\_cycle\_counter()}}
+{\footnotesize\ttfamily bool start\+\_\+cycle\+\_\+counter (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+try to set a start pointer for the performance counter 
+
+
+\begin{DoxyRetVals}{Return values}
+{\em false} & the LOAD register is too small\\
+\hline
+{\em true} & performance counter starts \\
+\hline
+\end{DoxyRetVals}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00316}{316}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00317 \{}
+\DoxyCodeLine{00318     \textcolor{keywordflow}{if} (\mbox{\hyperlink{perf__counter_8c_acd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>LOAD < \mbox{\hyperlink{perf__counter_8c_a0f17a2b1bde9a2632daa7ad0b96df9e5}{PERF\_CNT\_COMPENSATION\_THRESHOLD}}) \{}
+\DoxyCodeLine{00319         \textcolor{keywordflow}{return} \textcolor{keyword}{false};}
+\DoxyCodeLine{00320     \}}
+\DoxyCodeLine{00321     }
+\DoxyCodeLine{00322     \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{00323         s\_nCycleCounts =  (int32\_t)\mbox{\hyperlink{perf__counter_8c_acd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>VAL -\/ (int32\_t)\mbox{\hyperlink{perf__counter_8c_acd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>LOAD;}
+\DoxyCodeLine{00324     \}}
+\DoxyCodeLine{00325     \textcolor{keywordflow}{return} \textcolor{keyword}{true};}
+\DoxyCodeLine{00326 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8h_source_l00264}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}, \mbox{\hyperlink{perf__counter_8c_source_l00034}{PERF\+\_\+\+CNT\+\_\+\+COMPENSATION\+\_\+\+THRESHOLD}}, and \mbox{\hyperlink{perf__counter_8c_source_l00068}{Sys\+Tick}}.
+
+
+
+Referenced by \mbox{\hyperlink{perf__counter_8c_source_l00280}{init\+\_\+cycle\+\_\+counter()}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a014af75d3945894c4740773e8a28d723}\label{perf__counter_8h_a014af75d3945894c4740773e8a28d723}} 
+\index{perf\_counter.h@{perf\_counter.h}!stop\_cycle\_counter@{stop\_cycle\_counter}}
+\index{stop\_cycle\_counter@{stop\_cycle\_counter}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{stop\_cycle\_counter()}{stop\_cycle\_counter()}}
+{\footnotesize\ttfamily int32\+\_\+t stop\+\_\+cycle\+\_\+counter (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+
+
+calculate the elapsed cycle count since the last start point 
+
+\begin{DoxyNote}{Note}
+you can have multiple stop\+\_\+cycle\+\_\+counter following one start point
+\end{DoxyNote}
+\begin{DoxyReturn}{Returns}
+int32\+\_\+t the elapsed cycle count 
+\end{DoxyReturn}
+
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00372}{372}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00373 \{}
+\DoxyCodeLine{00374     int32\_t nTemp = 0;}
+\DoxyCodeLine{00375 }
+\DoxyCodeLine{00376     \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{00377         nTemp = \mbox{\hyperlink{perf__counter_8c_a21ccde78f8ad778f05be60855c5a8283}{check\_systick}}() + s\_nCycleCounts;}
+\DoxyCodeLine{00378     \}}
+\DoxyCodeLine{00379 }
+\DoxyCodeLine{00380     \textcolor{keywordflow}{return} nTemp -\/ s\_nOffset;}
+\DoxyCodeLine{00381 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8h_source_l00264}{\+\_\+\+\_\+\+IRQ\+\_\+\+SAFE}}, and \mbox{\hyperlink{perf__counter_8c_source_l00332}{check\+\_\+systick()}}.
+
+\mbox{\Hypertarget{perf__counter_8h_a0a6e5160f19f152b0b9a502e5e24adb7}\label{perf__counter_8h_a0a6e5160f19f152b0b9a502e5e24adb7}} 
+\index{perf\_counter.h@{perf\_counter.h}!user\_code\_insert\_to\_systick\_handler@{user\_code\_insert\_to\_systick\_handler}}
+\index{user\_code\_insert\_to\_systick\_handler@{user\_code\_insert\_to\_systick\_handler}!perf\_counter.h@{perf\_counter.h}}
+\doxysubsubsection{\texorpdfstring{user\_code\_insert\_to\_systick\_handler()}{user\_code\_insert\_to\_systick\_handler()}}
+{\footnotesize\ttfamily void user\+\_\+code\+\_\+insert\+\_\+to\+\_\+systick\+\_\+handler (\begin{DoxyParamCaption}\item[{void}]{ }\end{DoxyParamCaption})}
+
+\begin{DoxyNote}{Note}
+-\/ if you are using a compiler other than armcc or armclang, e.\+g. iar, arm gcc etc, the systick\+\_\+wrapper\+\_\+ual.\+o doesn\textquotesingle{}t work with the linker of your target toolchain as it use the \$\+Super\$\$ which is only supported by armlink. For this condition, you have to manually put this function into your existing Sys\+Tick\+\_\+\+Handler to make the perf\+\_\+counter library work.
+
+-\/ if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang) you do NOT have to insert this function into your Sys\+Tick\+\_\+\+Handler, the systick\+\_\+wrapper\+\_\+ual.\+s will do the work for you. 
+\end{DoxyNote}
+update system ms counter
+
+Definition at line \mbox{\hyperlink{perf__counter_8c_source_l00233}{233}} of file \mbox{\hyperlink{perf__counter_8c_source}{perf\+\_\+counter.\+c}}.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00234 \{}
+\DoxyCodeLine{00235     uint32\_t wLoad = \mbox{\hyperlink{perf__counter_8c_acd96c53beeaff8f603fcda425eb295de}{SysTick}}-\/>LOAD + 1;}
+\DoxyCodeLine{00236     s\_nCycleCounts += wLoad;}
+\DoxyCodeLine{00237     s\_lSystemClockCounts += wLoad;}
+\DoxyCodeLine{00238     }
+\DoxyCodeLine{00240     s\_nMSResidule += wLoad;}
+\DoxyCodeLine{00241     int32\_t nMS = s\_nMSResidule / s\_nMSUnit;}
+\DoxyCodeLine{00242     s\_nMSResidule -\/= nMS * s\_nMSUnit;}
+\DoxyCodeLine{00243     s\_nSystemMS += nMS;}
+\DoxyCodeLine{00244 }
+\DoxyCodeLine{00245 \}}
+
+\end{DoxyCode}
+
+
+References \mbox{\hyperlink{perf__counter_8c_source_l00068}{Sys\+Tick}}.
+

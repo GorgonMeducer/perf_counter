@@ -1,0 +1,367 @@
+A dedicated performance counter for Cortex-\/M Systick. It shares the Sys\+Tick with users\textquotesingle{} original Sys\+Tick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,{\ttfamily delay\+\_\+us} and {\ttfamily clock()} service defined in {\ttfamily time.\+h}.\hypertarget{md__r_e_a_d_m_e_autotoc_md1}{}\doxysubsection{$<$strong$>$\+Features\+:$<$/strong$>$}\label{md__r_e_a_d_m_e_autotoc_md1}
+
+\begin{DoxyItemize}
+\item {\bfseries{Measure CPU cycles for specified code segment}}
+\item {\bfseries{\mbox{[}NEW\mbox{]} Enhanced measurement services for RTOS}}
+\begin{DoxyItemize}
+\item Measures {\bfseries{RAW / True}} cycles used for specified code segment inside a thread, {\bfseries{i.\+e. scheduling cost are removed}}.
+\item Measure {\bfseries{RAW/\+True}} cycles used for a data-\/process-\/path across multiple threads.
+\end{DoxyItemize}
+\item {\bfseries{Easy to use}}
+\begin{DoxyItemize}
+\item Helper macros\+: {\ttfamily \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+()}}} , {\ttfamily \mbox{\hyperlink{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}{\+\_\+\+\_\+super\+\_\+loop\+\_\+monitor\+\_\+\+\_\+()}}} etc.
+\item Helper functions\+: {\ttfamily \mbox{\hyperlink{perf__counter_8c_af33fd92801223d4befa49c610332ddd4}{start\+\_\+cycle\+\_\+counter()}}}, {\ttfamily \mbox{\hyperlink{perf__counter_8c_a014af75d3945894c4740773e8a28d723}{stop\+\_\+cycle\+\_\+counter()}}} etc.
+\end{DoxyItemize}
+\item {\bfseries{Support ALL Cortex-\/M processors}}
+\begin{DoxyItemize}
+\item Including {\bfseries{Cortex-\/\+M85}} and Star-\/\+MC1
+\end{DoxyItemize}
+\item {\bfseries{Provide Free Services}}
+\begin{DoxyItemize}
+\item Do {\bfseries{NOT}} interfering with existing Sys\+Tick based applications
+\end{DoxyItemize}
+\item {\bfseries{Support ALL arm compilers}}
+\begin{DoxyItemize}
+\item Arm Compiler 5 (armcc), Arm Compiler 6 (armclang)
+\item arm gcc
+\item LLVM
+\item IAR
+\end{DoxyItemize}
+\item {\bfseries{Simplified Deployment}}
+\begin{DoxyItemize}
+\item {\bfseries{Drag-\/and-\/\+Drop deployment for Arm Compiler 5 and Arm Compiler 6.}}
+\item {\bfseries{CMSIS-\/\+Pack is available}}
+\end{DoxyItemize}
+\item {\bfseries{Time based services}}
+\begin{DoxyItemize}
+\item {\ttfamily \mbox{\hyperlink{perf__counter_8c_a9776dfed871d0e0775c876f16e7618f7}{delay\+\_\+us()}}} and {\ttfamily \mbox{\hyperlink{perf__counter_8c_a2add8ab5b23b568bba6d46f9c977dbce}{delay\+\_\+ms()}}}
+\item Provides Timestamp services via {\itshape {\bfseries{\mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks()}}}}} and {\ttfamily \mbox{\hyperlink{perf__counter_8c_a98c51d83fdb448a2733d0a309366149c}{get\+\_\+system\+\_\+ms()}}}
+\end{DoxyItemize}
+\item {\bfseries{Support both RTOS and bare-\/metal environments}}
+\item {\bfseries{Utilities for C language enhancement}}
+\begin{DoxyItemize}
+\item Macros to detect compilers, e.\+g. {\ttfamily \+\_\+\+\_\+\+IS\+\_\+\+COMPILER\+\_\+\+ARM\+\_\+\+COMPILER\+\_\+6\+\_\+\+\_\+}, {\ttfamily \+\_\+\+\_\+\+IS\+\_\+\+COMPILER\+\_\+\+LLVM\+\_\+\+\_\+} etc.
+\item Macro to create atomicity for specified code block, i.\+e. {\ttfamily \+\_\+\+\_\+\+IRQ\+\_\+\+SAFE\{...\}}
+\item Helper macros for C language extension\+:
+\begin{DoxyItemize}
+\item VB like {\ttfamily \mbox{\hyperlink{perf__counter_8h_afc5b077f9764ca6f11075ce72357dd65}{with()}}}
+\item {\ttfamily \mbox{\hyperlink{perf__counter_8h_a623a729e6571efedb0c5528689d6120d}{foreach()}}}, \mbox{\hyperlink{perf__counter_8h_a7b6c484887a402bba1af11b457264553}{dimof()}}, {\ttfamily \mbox{\hyperlink{perf__counter_8h_a1409defa6d3e973b7efee74d2de7386d}{CONNECT()}}}
+\item C\# like {\ttfamily \mbox{\hyperlink{perf__counter_8h_ad90955bd356a41041a7dcb112a450766}{using()}}}
+\item simple overload feature of OOPC made out of ANSI-\/\+C99, {\ttfamily \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS()}}}
+\item ...
+\end{DoxyItemize}
+\end{DoxyItemize}
+\end{DoxyItemize}\hypertarget{md__r_e_a_d_m_e_autotoc_md2}{}\doxysection{1. How To Use}\label{md__r_e_a_d_m_e_autotoc_md2}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md3}{}\doxysubsection{1.\+1 Measure CPU cycles for specified code segment}\label{md__r_e_a_d_m_e_autotoc_md3}
+You can measure specified code segment with a macro helper {\ttfamily \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+()}}}, it is a wrapper of {\ttfamily \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks()}}}.
+
+{\bfseries{Syntax\+:}}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\_\_cycleof\_\_}}(<Description String \textcolor{keywordflow}{for} the target>, [User Code, see ref 1]) \{}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+Here, \mbox{[}{\bfseries{ref 1}}\mbox{]} is a small user code to read the measurement result via a local variable {\ttfamily \+\_\+\+\_\+cycle\+\_\+count\+\_\+\+\_\+} for perl lovers, you can also use \char`\"{}\`{}\+\_\+\`{}\char`\"{} to read the result. This User Code is optional. If you don\textquotesingle{}t put anything here, the measured result will be shown with a {\ttfamily printf()}.\hypertarget{md__r_e_a_d_m_e_autotoc_md4}{}\doxysubsubsection{$<$strong$>$\+Example 1\+:$<$/strong$>$ Simple measurement with printf}\label{md__r_e_a_d_m_e_autotoc_md4}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\_\_cycleof\_\_}}() \{}
+\DoxyCodeLine{    \textcolor{keywordflow}{foreach}(example\_lv0\_t, s\_tItem, ptItem) \{}
+\DoxyCodeLine{        printf(\textcolor{stringliteral}{"{}Processing item with ID = \%d\(\backslash\)r\(\backslash\)n"{}}, \_-\/>chID);}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+You will see the measured result in console\+:
+
+\hypertarget{md__r_e_a_d_m_e_autotoc_md5}{}\doxysubsubsection{$<$strong$>$\+Example 2\+:$<$/strong$>$ Read measured result via $<$tt$>$\+\_\+\+\_\+cycle\+\_\+counter\+\_\+\+\_\+$<$/tt$>$}\label{md__r_e_a_d_m_e_autotoc_md5}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{int32\_t iCycleResult = 0;}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{comment}{/* measure cycles and store it in a dedicated variable without printf */}}
+\DoxyCodeLine{\mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\_\_cycleof\_\_}}(\textcolor{stringliteral}{"{}delay\_us(1000ul)"{}}, }
+\DoxyCodeLine{    \textcolor{comment}{/* insert code to \_\_cycleof\_\_ body, "{}\{\}"{} can be omitted  */}}
+\DoxyCodeLine{    \{}
+\DoxyCodeLine{        iCycleResult = \_\_cycle\_count\_\_;   \textcolor{comment}{/*< "{}\_\_cycle\_count\_\_"{} stores the result */}}
+\DoxyCodeLine{    \}) \{}
+\DoxyCodeLine{    \mbox{\hyperlink{perf__counter_8c_a9776dfed871d0e0775c876f16e7618f7}{delay\_us}}(1000ul);}
+\DoxyCodeLine{\}}
+\DoxyCodeLine{}
+\DoxyCodeLine{printf(\textcolor{stringliteral}{"{}\(\backslash\)r\(\backslash\)n delay\_us(1000ul) takes \%d cycles\(\backslash\)r\(\backslash\)n"{}}, (\textcolor{keywordtype}{int})iCycleResult);}
+
+\end{DoxyCode}
+
+
+The result is read out from {\ttfamily \+\_\+\+\_\+cycle\+\_\+count\+\_\+\+\_\+}and used in other place\+:
+
+\hypertarget{md__r_e_a_d_m_e_autotoc_md6}{}\doxysubsection{1.\+2 Timestamp}\label{md__r_e_a_d_m_e_autotoc_md6}
+You can get the system timestamp (since the initialization of perf\+\_\+counter service) via function {\ttfamily \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks()}}} and {\ttfamily \mbox{\hyperlink{perf__counter_8c_a98c51d83fdb448a2733d0a309366149c}{get\+\_\+system\+\_\+ms()}}}.
+
+{\bfseries{NOTE}}\+: The {\ttfamily \mbox{\hyperlink{perf__counter_8c_a98c51d83fdb448a2733d0a309366149c}{get\+\_\+system\+\_\+ms()}}} is {\bfseries{NOT}} a wrapper of the function {\ttfamily \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks()}}}.
+
+There are various way to take advantage of those functions.\hypertarget{md__r_e_a_d_m_e_autotoc_md7}{}\doxysubsubsection{Example 3\+: Use $<$tt$>$get\+\_\+system\+\_\+ms()$<$/tt$>$ as random seed}\label{md__r_e_a_d_m_e_autotoc_md7}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <stdio.h>}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include <stdlib.h>}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{perf__counter_8h}{perf\_counter.h}}"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main (\textcolor{keywordtype}{void}) }
+\DoxyCodeLine{\{}
+\DoxyCodeLine{   \textcolor{keywordtype}{int} i, n;}
+\DoxyCodeLine{   }
+\DoxyCodeLine{   n = 5;}
+\DoxyCodeLine{   }
+\DoxyCodeLine{   \textcolor{comment}{/* Intializes random number generator */}}
+\DoxyCodeLine{   srand((\textcolor{keywordtype}{unsigned}) \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}());}
+\DoxyCodeLine{}
+\DoxyCodeLine{   \textcolor{comment}{/* Print 5 random numbers from 0 to 1024 */}}
+\DoxyCodeLine{   \textcolor{keywordflow}{for}( i = 0 ; i < n ; i++ ) \{}
+\DoxyCodeLine{      printf(\textcolor{stringliteral}{"{}\%d\(\backslash\)n"{}}, rand() \& 0x3FF);}
+\DoxyCodeLine{   \}}
+\DoxyCodeLine{   }
+\DoxyCodeLine{   \textcolor{keywordflow}{return}(0);}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md8}{}\doxysubsubsection{Example 4\+: Measure CPU cycles}\label{md__r_e_a_d_m_e_autotoc_md8}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordflow}{do} \{}
+\DoxyCodeLine{    int64\_t tStart = \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}();}
+\DoxyCodeLine{    \mbox{\hyperlink{perf__counter_8h_a966a3eb20671a2a8c44d63d459f5472e}{\_\_IRQ\_SAFE}} \{}
+\DoxyCodeLine{        printf(\textcolor{stringliteral}{"{}no interrupt \(\backslash\)r\(\backslash\)n"{}});}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{    printf(\textcolor{stringliteral}{"{}used clock cycle: \%d"{}}, (int32\_t)(\mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\_system\_ticks}}() -\/ tStart));}
+\DoxyCodeLine{\} \textcolor{keywordflow}{while}(0);}
+
+\end{DoxyCode}
+
+
+This example shows how to use the delta value of {\ttfamily \mbox{\hyperlink{perf__counter_8c_a32dabfe5b863f89f71735b20a0caf1ea}{get\+\_\+system\+\_\+ticks()}}} to measure the CPU cycles used by specified code segment. In fact, the {\ttfamily \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+()}}} is implemented in the same way\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#define \_\_cycleof\_\_(\_\_STR, ...)                                                 \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{            using(int64\_t \_ = get\_system\_ticks(), \_\_cycle\_count\_\_ = \_,          \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{                \_=\_, \{                                                          \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{                \_ = get\_system\_ticks() -\/ \_;                                     \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{                \_\_cycle\_count\_\_ = \_;                                            \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{                if (\_\_PLOOC\_VA\_NUM\_ARGS(\_\_VA\_ARGS\_\_) == 0) \{                    \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{                    printf("{}\(\backslash\)r\(\backslash\)n"{}});                                             \(\backslash\)}
+\DoxyCodeLine{                    printf("{}-\/[Cycle Report]"{});                                  \(\backslash\)}
+\DoxyCodeLine{                    printf("{}-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/\(\backslash\)r\(\backslash\)n"{}); \(\backslash\)}
+\DoxyCodeLine{                    printf(\_\_STR "{} total cycle count: \%d [\%08x]\(\backslash\)r\(\backslash\)n"{},           \(\backslash\)}
+\DoxyCodeLine{                            (int)\_, (int)\_);                                    \(\backslash\)}
+\DoxyCodeLine{                \} else \{                                                        \(\backslash\)}
+\DoxyCodeLine{                    \_\_VA\_ARGS\_\_                                                 \(\backslash\)}
+\DoxyCodeLine{                \};                                                              \(\backslash\)}
+\DoxyCodeLine{            \})}
+
+\end{DoxyCode}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md9}{}\doxysection{2. How To Deploy}\label{md__r_e_a_d_m_e_autotoc_md9}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md10}{}\doxysubsection{2.\+1 Generic(\+Default) method for all compilers}\label{md__r_e_a_d_m_e_autotoc_md10}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md11}{}\doxysubsubsection{2.\+1.\+1 For Bare-\/metal\+:}\label{md__r_e_a_d_m_e_autotoc_md11}
+
+\begin{DoxyEnumerate}
+\item Clone the code to your local with following command lines\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{git clone https://github.com/GorgonMeducer/perf\_counter.git}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Add including path for {\ttfamily perf\+\_\+counter} folder
+\item Add {\ttfamily \mbox{\hyperlink{perf__counter_8c}{perf\+\_\+counter.\+c}}} to your compilation
+\item Include \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}} in corresponding c source file\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{perf__counter_8h}{perf\_counter.h}}"{}}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Make sure your system contains the CMSIS (with a version 5.\+7.\+0 or above) as {\ttfamily \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}}} includes {\ttfamily cmsis\+\_\+compiler.\+h}.
+\item Call the function {\ttfamily \mbox{\hyperlink{perf__counter_8c_a0a6e5160f19f152b0b9a502e5e24adb7}{user\+\_\+code\+\_\+insert\+\_\+to\+\_\+systick\+\_\+handler()}}} in your {\ttfamily Sys\+Tick\+\_\+\+Handler()}
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} SysTick\_Handler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{    \mbox{\hyperlink{perf__counter_8c_a0a6e5160f19f152b0b9a502e5e24adb7}{user\_code\_insert\_to\_systick\_handler}}();}
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ Implement an empty funciton {\ttfamily \+\_\+\+\_\+ensure\+\_\+systick\+\_\+wrapper()} as there is no wrapper actually used in this deployment method\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} \_\_ensure\_systick\_wrapper(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Make sure the {\ttfamily System\+Core\+Clock} is updated with the same value as CPU frequency.
+\item {\bfseries{IMPORTANT}}\+: Make sure the {\ttfamily Sys\+Tick\+\_\+\+CTRL\+\_\+\+CLKSOURCE\+\_\+\+Msk} bit ( bit 2) of {\ttfamily Sys\+Tick-\/\texorpdfstring{$>$}{>}CTRL} register is {\ttfamily 1} that means Sys\+Tick runs with the same clock source as the target Cortex-\/M processor.
+\item Initialize the perf\+\_\+counter with boolean value that indicates whether the user applications and/or RTOS have already occupied the Sys\+Tick.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} main(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    SystemCoreClockUpdate();}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \mbox{\hyperlink{perf__counter_8c_a9097d62a30ad2b4f75462c78d7200fa8}{init\_cycle\_counter}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{    \textcolor{keywordflow}{while}(1) \{}
+\DoxyCodeLine{        ...}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{IMPORTANT}}\+: Please enable GNU extension in your compiler. For {\bfseries{GCC}} and {\bfseries{CLANG}}, it is {\ttfamily -\/-\/std=gnu99} or {\ttfamily -\/-\/std=gnu11}, and for other compilers, please check the user manual first. Failed to do so, you will not only trigger the warning in {\ttfamily \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}}}, but also lose the function correctness of {\ttfamily \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+()}}} and {\ttfamily \mbox{\hyperlink{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}{\+\_\+\+\_\+super\+\_\+loop\+\_\+monitor\+\_\+\+\_\+()}}}, because {\ttfamily \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS()}}} isn\textquotesingle{}t report {\ttfamily 0} when passed with no argument.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#if \_\_PLOOC\_VA\_NUM\_ARGS() != 0}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#warning Please enable GNC extensions, it is required by \_\_cycleof\_\_() and \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{\_\_super\_loop\_monitor\_\_()}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item It is nice to add macro definition {\ttfamily \+\_\+\+\_\+\+PERF\+\_\+\+COUNTER\+\_\+\+\_\+} to your project GLOBALLY. It helps other module to detect the existence of perf\+\_\+counter. For Example, LVGL \href{https://github.com/lvgl/lvgl/blob/d367bb7cf17dc34863f4439bba9b66a820088951/env_support/cmsis-pack/lv_conf_cmsis.h\#L81-L99}{\texttt{ {\ttfamily lv\+\_\+conf\+\_\+cmsis.\+h}}} use this macro to detect perf\+\_\+counter and uses {\ttfamily \mbox{\hyperlink{perf__counter_8c_a98c51d83fdb448a2733d0a309366149c}{get\+\_\+system\+\_\+ms()}}} to implement {\ttfamily lv\+\_\+tick\+\_\+get()}.
+\end{DoxyEnumerate}
+
+{\bfseries{Enjoy !}}\hypertarget{md__r_e_a_d_m_e_autotoc_md12}{}\doxysubsection{2.\+2 Use cmsis-\/pack in MDK}\label{md__r_e_a_d_m_e_autotoc_md12}
+
+\begin{DoxyEnumerate}
+\item Download the cmsis-\/pack from {\ttfamily cmsis-\/pack} folder. It is a file with name {\ttfamily Gorgon\+Meducer.\+perf\+\_\+counter.\texorpdfstring{$<$}{<}version\texorpdfstring{$>$}{>}.pack}, for example {\ttfamily Gorgon\+Meducer.\+perf\+\_\+counter.\+1.\+9.\+4.\+pack}
+\item Double click it to install this cmsis-\/pack. Once finished, you can find it in your Pack-\/\+Installer\+:
+
+ In the future, you can pull the latest version of perf\+\_\+counter from the menu {\ttfamily Packs-\/\texorpdfstring{$>$}{>}Check For Updates} as shown below\+:
+
+
+\item Open the RTE management window, find the {\bfseries{Utilities}} and select the {\bfseries{Core}} inside perf\+\_\+counter as shown below\+:
+\end{DoxyEnumerate}
+
+
+
+
+\begin{DoxyEnumerate}
+\item Include {\ttfamily \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}}} in corresponding c source file\+:
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{perf__counter_8h}{perf\_counter.h}}"{}}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item Make sure your system contains the CMSIS (with a version 5.\+7.\+0 or above) as {\ttfamily \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}}} includes {\ttfamily cmsis\+\_\+compiler.\+h}. Usually, you should do this with RTE as shown below\+:
+\end{DoxyEnumerate}
+
+
+
+
+\begin{DoxyEnumerate}
+\item Make sure the {\ttfamily System\+Core\+Clock} is updated with the same value as CPU frequency.
+\item {\bfseries{IMPORTANT}}\+: Make sure the {\ttfamily Sys\+Tick\+\_\+\+CTRL\+\_\+\+CLKSOURCE\+\_\+\+Msk} bit ( bit 2) of {\ttfamily Sys\+Tick-\/\texorpdfstring{$>$}{>}CTRL} register is {\ttfamily 1} that means Sys\+Tick runs with the same clock source as the target Cortex-\/M processor.
+\item Initialize the perf\+\_\+counter with boolean value that indicates whether the user applications and/or RTOS have already occupied the Sys\+Tick.
+\end{DoxyEnumerate}
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} main(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    SystemCoreClockUpdate();}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \mbox{\hyperlink{perf__counter_8c_a9097d62a30ad2b4f75462c78d7200fa8}{init\_cycle\_counter}}(\textcolor{keyword}{true});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    ...}
+\DoxyCodeLine{    \textcolor{keywordflow}{while}(1) \{}
+\DoxyCodeLine{        ...}
+\DoxyCodeLine{    \}}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+
+\begin{DoxyEnumerate}
+\item {\bfseries{IMPORTANT}}\+: Please enable GNU extension in your compiler.
+
+For Arm Compiler 5, please select both {\bfseries{C99 mode}} and GNU extensions in the {\bfseries{Option for target dialog}} as shown below\+:
+\end{DoxyEnumerate}
+
+
+
+For Arm Compiler 6, please select {\bfseries{gnu99}} or {\bfseries{gnu11}} in Language C drop-\/list as shown below\+:
+
+
+
+Failed to do so, you will not only trigger the warning in {\ttfamily \mbox{\hyperlink{perf__counter_8h}{perf\+\_\+counter.\+h}}}, but also lose the function correctness of {\ttfamily \mbox{\hyperlink{perf__counter_8h_a147d3eb2e96136dc1758aa8d3e2a089c}{\+\_\+\+\_\+cycleof\+\_\+\+\_\+()}}} and {\ttfamily \mbox{\hyperlink{perf__counter_8h_acfa3bf174dd68eeca5c7e4a16cdc24ea}{\+\_\+\+\_\+super\+\_\+loop\+\_\+monitor\+\_\+\+\_\+()}}}, because {\ttfamily \mbox{\hyperlink{perf__counter_8h_a9d1c7b8467fca7e2fcf0426ef294a171}{\+\_\+\+\_\+\+PLOOC\+\_\+\+VA\+\_\+\+NUM\+\_\+\+ARGS()}}} isn\textquotesingle{}t report {\ttfamily 0} when passed with no argument.
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#if \_\_PLOOC\_VA\_NUM\_ARGS() != 0}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#warning Please enable GNC extensions, it is required by \_\_cycleof\_\_() and \(\backslash\)}}
+\DoxyCodeLine{\textcolor{preprocessor}{\_\_super\_loop\_monitor\_\_()}}
+\DoxyCodeLine{\textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
+
+
+{\bfseries{Enjoy !}}\hypertarget{md__r_e_a_d_m_e_autotoc_md13}{}\doxysection{3. FAQ}\label{md__r_e_a_d_m_e_autotoc_md13}
+\hypertarget{md__r_e_a_d_m_e_autotoc_md14}{}\doxysubsection{3.\+1 Why I see $<$tt$>$\+Undefined symbol \$\+Super\$\$\+Sys\+Tick\+\_\+\+Handler$<$/tt$>$}\label{md__r_e_a_d_m_e_autotoc_md14}
+This error usually pops-\/up in {\bfseries{Arm Compiler 5}} and {\bfseries{Arm Compiler 6}}, it is because you haven\textquotesingle{}t implement any non-\/weak {\ttfamily Systick\+\_\+\+Handler()}. Please provide an EMPTY one in any c source file to solve this problem\+:
+
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{keywordtype}{void} SysTick\_Handler(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\{}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+
+
+{\bfseries{NOTE}}\+: If you deploy perf\+\_\+counter using cmsis-\/pack and encounter this issue, please {\bfseries{DO NOT}} call function {\ttfamily \mbox{\hyperlink{perf__counter_8c_a0a6e5160f19f152b0b9a502e5e24adb7}{user\+\_\+code\+\_\+insert\+\_\+to\+\_\+systick\+\_\+handler()}}} in this {\bfseries{should-\/be-\/empty}} {\ttfamily Sys\+Tick\+\_\+\+Handler()}.\hypertarget{md__r_e_a_d_m_e_autotoc_md15}{}\doxysection{4.  License}\label{md__r_e_a_d_m_e_autotoc_md15}
+{\bfseries{Performance Counter for Cortex-\/M}}, a.\+k.\+a. {\itshape {\bfseries{perf\+\_\+counter}}} is under Apache 2.\+0 license. 

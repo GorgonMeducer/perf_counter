@@ -219,8 +219,16 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 }
 
 /*!
- * \brief the handler code that user has to insert to SysTick_Handler
- * \note  If you deploy perf_counter using .lib with arm compiler 5 and arm copmiler 6, please do **NOT** call this function in SysTick_Handler
+ * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
+ *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
+ *        of your target toolchain as it use the $Super$$ which is only supported
+ *        by armlink. For this condition, you have to manually put this function
+ *        into your existing SysTick_Handler to make the perf_counter library
+ *        work.
+ * 
+ * \note  - if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
+ *        you do NOT have to insert this function into your SysTick_Handler,
+ *        the systick_wrapper_ual.s will do the work for you.
  */
 void user_code_insert_to_systick_handler(void)
 {
@@ -242,16 +250,38 @@ void __perf_os_patch_init(void)
 }
 
 
-/*! 
-  \brief initialise cycle counter service
-  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick is already used by user application.
-  \note  don't forget to tell the function whether the systick is already used by user applications. Don't worry, this cycle counter service won't affect your existing systick service.
+/*! \brief   initialise cycle counter service
+ *  \note    - don't forget to tell the function whether the systick is already
+ *           used by user applications. 
+ *           Don't worry, this cycle counter service won't affect your existing
+ *           systick service.
+ * 
+ *  \note    - Usually the perf_counter can initialise itself with the help of
+ *           __attribute__((constructor(255))), this works fine in Arm Compiler
+ *           5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn't
+ *           work for IAR. So, when you are using IAR, please call this function
+ *           manually to initialise the perf_counter service.
+ * 
+ *  \note    - Perf_counter library assumes that:
+ *           1. Your project has already using SysTick
+ *           2. It assumes that you have already implemented the SysTick_Handler
+ *           3. It assumes that you have enabled the exception handling for 
+ *              SysTick.
+ *           If these are not the case, please:
+ *               1. Add an empty SysTick_Handler to your project if you don't have 
+ *              one
+ *               2. Make sure you have the SysTick Exception handling enabled
+ *               3. And call function init_cycle_counter(false) if you doesn't 
+ *              use SysTick in your project at all.
+ * 
+ *  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
+ *           is already used by user application.
  */
 void init_cycle_counter(bool bIsSysTickOccupied)
 {
     __IRQ_SAFE {
         if (!bIsSysTickOccupied) {
-            SysTick_Config(0x01000000);             //! use the longest period
+            SysTick_Config(0x01000000);             // use the longest period
         }
         SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
     }
@@ -262,8 +292,8 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     
     s_nUSUnit = SystemCoreClock / 1000000ul;
     s_nMSUnit = SystemCoreClock / 1000ul;
-    s_lSystemClockCounts = 0;                       //! reset system cycle counter
-    s_nSystemMS = 0;                                //! reset system millisecond counter
+    s_lSystemClockCounts = 0;                       // reset system cycle counter
+    s_nSystemMS = 0;                                // reset system millisecond counter
     
 #if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
     ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
@@ -276,10 +306,13 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     __perf_os_patch_init();
 }
 
-/*! \brief try to start the performance counter
- *! \retval false the LOAD register is too small
- *! \retval true performance counter starts
-*/
+/*! 
+ * \brief try to set a start pointer for the performance counter
+ *
+ * \retval false the LOAD register is too small
+ *
+ * \retval true performance counter starts
+ */
 bool start_cycle_counter(void)
 {
     if (SysTick->LOAD < PERF_CNT_COMPENSATION_THRESHOLD) {
@@ -293,32 +326,32 @@ bool start_cycle_counter(void)
 }
 
 /*! \note this function should only be called when irq is disabled
- *!       hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
- *!       won't change. 
+ *        hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
+ *        won't change. 
  */
 __STATIC_INLINE int32_t check_systick(void)
 {
     int32_t nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
 
     /*! \note Since we cannot stop counting temporarily, there are several 
-     *!       conditions which we should take into consideration:
-     *!       Condition 1: when assigning nTemp with the register value (LOAD-VAL), 
-     *!           the underflow didn't happen but when we check the PENDSTSET bit,
-     *!           the underflow happens, for this condition, we should not
-     *!           do any compensation. When this happens, the (LOAD-nTemp) is  
-     *!           smaller than PERF_CNT_COMPENSATION_THRESHOLD (a small value) as
-     *!           long as LOAD is bigger than (or equals to) the 
-     *!           PERF_CNT_COMPENSATION_THRESHOLD;
-     *!       Condition 2: when assigning nTemp with the register value (LOAD-VAL), 
-     *!           the VAL is zero and underflow happened and the PENDSTSET bit
-     *!           is set, for this condition, we should not do any compensation.
-     *!           When this happens, the (LOAD-nTemp) is equals to zero.
-     *!       Condition 3: when assigning nTemp with the register value (LOAD-VAL),
-     *!           the underflow has already happened, hence the PENDSTSET 
-     *!           is set, for this condition, we should compensate the return 
-     *!           value. When this happens, the (LOAD-nTemp) is bigger than (or
-     *!           equals to) PERF_CNT_COMPENSATION_THRESHOLD.
-     *!       The following code implements an equivalent logic.
+     *        conditions which we should take into consideration:
+     *        - Condition 1: when assigning nTemp with the register value (LOAD-VAL), 
+     *            the underflow didn't happen but when we check the PENDSTSET bit,
+     *            the underflow happens, for this condition, we should not
+     *            do any compensation. When this happens, the (LOAD-nTemp) is  
+     *            smaller than PERF_CNT_COMPENSATION_THRESHOLD (a small value) as
+     *            long as LOAD is bigger than (or equals to) the 
+     *            PERF_CNT_COMPENSATION_THRESHOLD;
+     *        - Condition 2: when assigning nTemp with the register value (LOAD-VAL), 
+     *            the VAL is zero and underflow happened and the PENDSTSET bit
+     *            is set, for this condition, we should not do any compensation.
+     *            When this happens, the (LOAD-nTemp) is equals to zero.
+     *        - Condition 3: when assigning nTemp with the register value (LOAD-VAL),
+     *            the underflow has already happened, hence the PENDSTSET 
+     *            is set, for this condition, we should compensate the return 
+     *            value. When this happens, the (LOAD-nTemp) is bigger than (or
+     *            equals to) PERF_CNT_COMPENSATION_THRESHOLD.
+     *        The following code implements an equivalent logic.
      */
     if (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk){
         if (((int32_t)SysTick->LOAD - nTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
@@ -329,12 +362,12 @@ __STATIC_INLINE int32_t check_systick(void)
     return nTemp;
 }
 
-/**
- * @brief calculate the elapsed cycle count since the last start point
+/*!
+ * \brief calculate the elapsed cycle count since the last start point
  *
- * @note  you can have multiple stop_cycle_counter following one start point
+ * \note  you can have multiple stop_cycle_counter following one start point
  *
- * @return int32_t the elapsed cycle count
+ * \return int32_t the elapsed cycle count
  */
 int32_t stop_cycle_counter(void)
 {
@@ -358,9 +391,9 @@ void __perf_counter_init(void)
 }
 
 /*!
- * \brief delay specified time in microseconds
+ * \brief delay specified time in microsecond
  * 
- * \param nUs time in microseconds
+ * \param nUs time in microsecond
  */
 void delay_us(int32_t nUs)
 {
@@ -377,9 +410,9 @@ void delay_us(int32_t nUs)
 }
 
 /*!
- *! \brief delay specified time in milliseconds
- *!
- *! \param nMs time in milliseconds
+ * \brief delay specified time in millisecond
+ * 
+ * \param nUs time in millisecond
  */
 void delay_ms(int32_t nMs)
 {

@@ -1,0 +1,96 @@
+\hypertarget{structtsk_task_control_block}{}\doxysection{tsk\+Task\+Control\+Block Struct Reference}
+\label{structtsk_task_control_block}\index{tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+volatile Stack\+Type\+\_\+t $\ast$ \mbox{\hyperlink{structtsk_task_control_block_a41989bc39d576125f4492364592f9e1a}{px\+Top\+Of\+Stack}}
+\item 
+List\+Item\+\_\+t \mbox{\hyperlink{structtsk_task_control_block_a2575f6a579ef61db0db66d7b1b52ec48}{x\+State\+List\+Item}}
+\item 
+List\+Item\+\_\+t \mbox{\hyperlink{structtsk_task_control_block_a139605d93d834601f34be927ecba3a15}{x\+Event\+List\+Item}}
+\item 
+UBase\+Type\+\_\+t \mbox{\hyperlink{structtsk_task_control_block_a0befed3dd0fe55b4314158f4814f50ae}{ux\+Priority}}
+\item 
+Stack\+Type\+\_\+t $\ast$ \mbox{\hyperlink{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}{px\+Stack}}
+\item 
+char \mbox{\hyperlink{structtsk_task_control_block_afa7d65deeca135b921eaa78fbbf52918}{pc\+Task\+Name}} \mbox{[}config\+MAX\+\_\+\+TASK\+\_\+\+NAME\+\_\+\+LEN\mbox{]}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00077}{77}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+
+
+\doxysubsection{Field Documentation}
+\mbox{\Hypertarget{structtsk_task_control_block_afa7d65deeca135b921eaa78fbbf52918}\label{structtsk_task_control_block_afa7d65deeca135b921eaa78fbbf52918}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!pcTaskName@{pcTaskName}}
+\index{pcTaskName@{pcTaskName}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{pcTaskName}{pcTaskName}}
+{\footnotesize\ttfamily char pc\+Task\+Name\mbox{[}config\+MAX\+\_\+\+TASK\+\_\+\+NAME\+\_\+\+LEN\mbox{]}}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00089}{89}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+\mbox{\Hypertarget{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}\label{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!pxStack@{pxStack}}
+\index{pxStack@{pxStack}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{pxStack}{pxStack}}
+{\footnotesize\ttfamily Stack\+Type\+\_\+t$\ast$ px\+Stack}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00088}{88}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+
+
+Referenced by \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00237}{get\+\_\+rtos\+\_\+task\+\_\+cycle\+\_\+info()}}.
+
+\mbox{\Hypertarget{structtsk_task_control_block_a41989bc39d576125f4492364592f9e1a}\label{structtsk_task_control_block_a41989bc39d576125f4492364592f9e1a}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!pxTopOfStack@{pxTopOfStack}}
+\index{pxTopOfStack@{pxTopOfStack}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{pxTopOfStack}{pxTopOfStack}}
+{\footnotesize\ttfamily volatile Stack\+Type\+\_\+t$\ast$ px\+Top\+Of\+Stack}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00079}{79}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+\mbox{\Hypertarget{structtsk_task_control_block_a0befed3dd0fe55b4314158f4814f50ae}\label{structtsk_task_control_block_a0befed3dd0fe55b4314158f4814f50ae}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!uxPriority@{uxPriority}}
+\index{uxPriority@{uxPriority}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{uxPriority}{uxPriority}}
+{\footnotesize\ttfamily UBase\+Type\+\_\+t ux\+Priority}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00087}{87}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+\mbox{\Hypertarget{structtsk_task_control_block_a139605d93d834601f34be927ecba3a15}\label{structtsk_task_control_block_a139605d93d834601f34be927ecba3a15}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!xEventListItem@{xEventListItem}}
+\index{xEventListItem@{xEventListItem}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{xEventListItem}{xEventListItem}}
+{\footnotesize\ttfamily List\+Item\+\_\+t x\+Event\+List\+Item}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00086}{86}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+\mbox{\Hypertarget{structtsk_task_control_block_a2575f6a579ef61db0db66d7b1b52ec48}\label{structtsk_task_control_block_a2575f6a579ef61db0db66d7b1b52ec48}} 
+\index{tskTaskControlBlock@{tskTaskControlBlock}!xStateListItem@{xStateListItem}}
+\index{xStateListItem@{xStateListItem}!tskTaskControlBlock@{tskTaskControlBlock}}
+\doxysubsubsection{\texorpdfstring{xStateListItem}{xStateListItem}}
+{\footnotesize\ttfamily List\+Item\+\_\+t x\+State\+List\+Item}
+
+
+
+Definition at line \mbox{\hyperlink{perf__os__patch__freertos_8c_source_l00085}{85}} of file \mbox{\hyperlink{perf__os__patch__freertos_8c_source}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}.
+
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{perf__os__patch__freertos_8c}{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}}\end{DoxyCompactItemize}

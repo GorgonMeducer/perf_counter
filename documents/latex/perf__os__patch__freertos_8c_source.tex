@@ -1,0 +1,237 @@
+\hypertarget{perf__os__patch__freertos_8c_source}{}\doxysection{perf\+\_\+os\+\_\+patch\+\_\+freertos.\+c}
+\mbox{\hyperlink{perf__os__patch__freertos_8c}{Go to the documentation of this file.}}
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00001}00001 \textcolor{comment}{/****************************************************************************}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00002}00002 \textcolor{comment}{*  Copyright 2022 Gorgon Meducer (Email:embedded\_zhuoran@hotmail.com)       *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00003}00003 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00004}00004 \textcolor{comment}{*  Licensed under the Apache License, Version 2.0 (the "{}License"{});          *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00005}00005 \textcolor{comment}{*  you may not use this file except in compliance with the License.         *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00006}00006 \textcolor{comment}{*  You may obtain a copy of the License at                                  *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00007}00007 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00008}00008 \textcolor{comment}{*     http://www.apache.org/licenses/LICENSE-\/2.0                            *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00009}00009 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00010}00010 \textcolor{comment}{*  Unless required by applicable law or agreed to in writing, software      *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00011}00011 \textcolor{comment}{*  distributed under the License is distributed on an "{}AS IS"{} BASIS,        *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00012}00012 \textcolor{comment}{*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00013}00013 \textcolor{comment}{*  See the License for the specific language governing permissions and      *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00014}00014 \textcolor{comment}{*  limitations under the License.                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00015}00015 \textcolor{comment}{*                                                                           *}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00016}00016 \textcolor{comment}{****************************************************************************/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00017}00017 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00018}00018 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00019}00019 \textcolor{comment}{/*============================ INCLUDES ======================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00020}00020 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00021}00021 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00022}00022 \textcolor{comment}{/* Defining MPU\_WRAPPERS\_INCLUDED\_FROM\_API\_FILE prevents task.h from redefining}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00023}00023 \textcolor{comment}{all the API functions to use the MPU wrappers.  That should only be done when}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00024}00024 \textcolor{comment}{task.h is included from an application file. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00025}\mbox{\hyperlink{perf__os__patch__freertos_8c_ab622d8c674f2a417a666a7ed89109e79}{00025}} \textcolor{preprocessor}{\#define MPU\_WRAPPERS\_INCLUDED\_FROM\_API\_FILE}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00026}00026 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00027}00027 \textcolor{comment}{/* FreeRTOS includes. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00028}00028 \textcolor{preprocessor}{\#include "{}FreeRTOS.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00029}00029 \textcolor{preprocessor}{\#include "{}task.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00030}00030 \textcolor{preprocessor}{\#include "{}timers.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00031}00031 \textcolor{preprocessor}{\#include "{}stack\_macros.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00032}00032 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00033}00033 \textcolor{comment}{/* Lint e9021, e961 and e750 are suppressed as a MISRA exception justified}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00034}00034 \textcolor{comment}{because the MPU ports require MPU\_WRAPPERS\_INCLUDED\_FROM\_API\_FILE to be defined}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00035}00035 \textcolor{comment}{for the header files above, but not in this file, in order to generate the}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00036}00036 \textcolor{comment}{correct privileged Vs unprivileged linkage and placement. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00037}00037 \textcolor{preprocessor}{\#undef MPU\_WRAPPERS\_INCLUDED\_FROM\_API\_FILE }\textcolor{comment}{/*lint !e961 !e750 !e9021. */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00038}00038 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00039}00039 \textcolor{preprocessor}{\#include "{}\mbox{\hyperlink{perf__counter_8h}{perf\_counter.h}}"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00040}00040 \textcolor{preprocessor}{\#include "{}cmsis\_compiler.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00041}00041 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00042}00042 \textcolor{comment}{/*============================ MACROS ========================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00043}00043 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00044}00044 \textcolor{preprocessor}{\#undef \_\_WRAP\_FUNC}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00045}00045 \textcolor{preprocessor}{\#undef WRAP\_FUNC}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00046}00046 \textcolor{preprocessor}{\#if defined(\_\_IS\_COMPILER\_ARM\_COMPILER\_\_) \&\& \_\_IS\_COMPILER\_ARM\_COMPILER\_\_ }}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00047}00047 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00048}00048 \textcolor{preprocessor}{\#   define \_\_WRAP\_FUNC(\_\_NAME)     \$Sub\$\$\#\#\_\_NAME}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00049}00049 \textcolor{preprocessor}{\#   define \_\_ORIG\_FUNC(\_\_NAME)     \$Super\$\$\#\#\_\_NAME}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00050}00050 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00051}00051 \textcolor{preprocessor}{\#elif (defined(\_\_IS\_COMPILER\_LLVM\_\_) \&\& \_\_IS\_COMPILER\_LLVM\_\_) \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00052}00052 \textcolor{preprocessor}{  ||  (defined(\_\_IS\_COMPILER\_GCC\_\_) \&\& \_\_IS\_COMPILER\_GCC\_\_)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00053}00053 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00054}00054 \textcolor{preprocessor}{\#   define \_\_WRAP\_FUNC(\_\_NAME)     \_\_wrap\_\#\#\_\_NAME}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00055}00055 \textcolor{preprocessor}{\#   define \_\_ORIG\_FUNC(\_\_NAME)     \_\_real\_\#\#\_\_NAME}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00056}00056 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00057}00057 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00058}\mbox{\hyperlink{perf__os__patch__freertos_8c_a34b5fd2f760a3a19875464d26bdb71df}{00058}} \textcolor{preprocessor}{\#define WRAP\_FUNC(\_\_NAME)       \_\_WRAP\_FUNC(\_\_NAME)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00059}\mbox{\hyperlink{perf__os__patch__freertos_8c_aa7290a1d64a5cbe15d52fec89b35f1b9}{00059}} \textcolor{preprocessor}{\#define ORIG\_FUNC(\_\_NAME)       \_\_ORIG\_FUNC(\_\_NAME)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00060}00060 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00061}00061 \textcolor{keyword}{struct }\mbox{\hyperlink{struct____task__cycle__info__t}{\_\_task\_cycle\_info\_t}} \{}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00062}00062     \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}}       \mbox{\hyperlink{struct____task__cycle__info__t_a8af024785267321e4ef544e7f25d80dc}{tInfo}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00063}00063     int64\_t                 \mbox{\hyperlink{struct____task__cycle__info__t_ae2aae11f91e3eea654ceeac9b81706cb}{lLastTimeStamp}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00064}00064     \mbox{\hyperlink{structtask__cycle__info__agent__t}{task\_cycle\_info\_agent\_t}} \mbox{\hyperlink{struct____task__cycle__info__t_a7d50a2272c4a1b65f927e8c6d1242b33}{tList}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00065}00065     uint32\_t                \mbox{\hyperlink{struct____task__cycle__info__t_a88c8aad5ae23ae04fa44b2892081561b}{wMagicWord}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00066}00066 \} ;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00067}00067 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00068}00068 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00069}00069 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00070}00070 \textcolor{comment}{/*============================ TYPES =========================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00071}00071 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00072}00072 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00073}00073 \textcolor{comment}{ * Task control block.  A task control block (TCB) is allocated for each task,}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00074}00074 \textcolor{comment}{ * and stores task state information, including a pointer to the task's context}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00075}00075 \textcolor{comment}{ * (the task's run time environment, including register values)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00076}00076 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00077}\mbox{\hyperlink{structtsk_task_control_block}{00077}} \textcolor{keyword}{typedef} \textcolor{keyword}{struct }\mbox{\hyperlink{structtsk_task_control_block}{tskTaskControlBlock}}           \textcolor{comment}{/* The old naming convention is used to prevent breaking kernel aware debuggers. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00078}00078 \{}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00079}\mbox{\hyperlink{structtsk_task_control_block_a41989bc39d576125f4492364592f9e1a}{00079}}     \textcolor{keyword}{volatile} StackType\_t    *\mbox{\hyperlink{structtsk_task_control_block_a41989bc39d576125f4492364592f9e1a}{pxTopOfStack}};  \textcolor{comment}{/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00080}00080 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00081}00081 \textcolor{preprocessor}{    \#if ( portUSING\_MPU\_WRAPPERS == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00082}00082         xMPU\_SETTINGS   xMPUSettings;       \textcolor{comment}{/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00083}00083 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00084}00084 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00085}\mbox{\hyperlink{structtsk_task_control_block_a2575f6a579ef61db0db66d7b1b52ec48}{00085}}     ListItem\_t          \mbox{\hyperlink{structtsk_task_control_block_a2575f6a579ef61db0db66d7b1b52ec48}{xStateListItem}};   \textcolor{comment}{/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00086}\mbox{\hyperlink{structtsk_task_control_block_a139605d93d834601f34be927ecba3a15}{00086}}     ListItem\_t          \mbox{\hyperlink{structtsk_task_control_block_a139605d93d834601f34be927ecba3a15}{xEventListItem}};       \textcolor{comment}{/*< Used to reference a task from an event list. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00087}\mbox{\hyperlink{structtsk_task_control_block_a0befed3dd0fe55b4314158f4814f50ae}{00087}}     UBaseType\_t         \mbox{\hyperlink{structtsk_task_control_block_a0befed3dd0fe55b4314158f4814f50ae}{uxPriority}};           \textcolor{comment}{/*< The priority of the task.  0 is the lowest priority. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00088}\mbox{\hyperlink{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}{00088}}     StackType\_t         *\mbox{\hyperlink{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}{pxStack}};            \textcolor{comment}{/*< Points to the start of the stack. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00089}\mbox{\hyperlink{structtsk_task_control_block_afa7d65deeca135b921eaa78fbbf52918}{00089}}     \textcolor{keywordtype}{char}                \mbox{\hyperlink{structtsk_task_control_block_afa7d65deeca135b921eaa78fbbf52918}{pcTaskName}}[ configMAX\_TASK\_NAME\_LEN ];\textcolor{comment}{/*< Descriptive name given to the task when created.  Facilitates debugging only. */} \textcolor{comment}{/*lint !e971 Unqualified char types are allowed for strings and single characters only. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00090}00090 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00091}00091 \textcolor{preprocessor}{    \#if ( ( portSTACK\_GROWTH > 0 ) || ( configRECORD\_STACK\_HIGH\_ADDRESS == 1 ) )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00092}00092         StackType\_t     *pxEndOfStack;      \textcolor{comment}{/*< Points to the highest valid address for the stack. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00093}00093 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00094}00094 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00095}00095 \textcolor{preprocessor}{    \#if ( portCRITICAL\_NESTING\_IN\_TCB == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00096}00096         UBaseType\_t     uxCriticalNesting;  \textcolor{comment}{/*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00097}00097 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00098}00098 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00099}00099 \textcolor{preprocessor}{    \#if ( configUSE\_TRACE\_FACILITY == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00100}00100         UBaseType\_t     uxTCBNumber;        \textcolor{comment}{/*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00101}00101         UBaseType\_t     uxTaskNumber;       \textcolor{comment}{/*< Stores a number specifically for use by third party trace code. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00102}00102 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00103}00103 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00104}00104 \textcolor{preprocessor}{    \#if ( configUSE\_MUTEXES == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00105}00105         UBaseType\_t     uxBasePriority;     \textcolor{comment}{/*< The priority last assigned to the task -\/ used by the priority inheritance mechanism. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00106}00106         UBaseType\_t     uxMutexesHeld;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00107}00107 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00108}00108 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00109}00109 \textcolor{preprocessor}{    \#if ( configUSE\_APPLICATION\_TASK\_TAG == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00110}00110         TaskHookFunction\_t pxTaskTag;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00111}00111 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00112}00112 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00113}00113 \textcolor{preprocessor}{    \#if( configNUM\_THREAD\_LOCAL\_STORAGE\_POINTERS > 0 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00114}00114         \textcolor{keywordtype}{void}            *pvThreadLocalStoragePointers[ configNUM\_THREAD\_LOCAL\_STORAGE\_POINTERS ];}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00115}00115 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00116}00116 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00117}00117 \textcolor{preprocessor}{    \#if( configGENERATE\_RUN\_TIME\_STATS == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00118}00118         uint32\_t        ulRunTimeCounter;   \textcolor{comment}{/*< Stores the amount of time the task has spent in the Running state. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00119}00119 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00120}00120 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00121}00121 \textcolor{preprocessor}{    \#if ( configUSE\_NEWLIB\_REENTRANT == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00122}00122         \textcolor{comment}{/* Allocate a Newlib reent structure that is specific to this task.}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00123}00123 \textcolor{comment}{        Note Newlib support has been included by popular demand, but is not}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00124}00124 \textcolor{comment}{        used by the FreeRTOS maintainers themselves.  FreeRTOS is not}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00125}00125 \textcolor{comment}{        responsible for resulting newlib operation.  User must be familiar with}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00126}00126 \textcolor{comment}{        newlib and must provide system-\/wide implementations of the necessary}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00127}00127 \textcolor{comment}{        stubs. Be warned that (at the time of writing) the current newlib design}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00128}00128 \textcolor{comment}{        implements a system-\/wide malloc() that must be provided with locks.}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00129}00129 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00130}00130 \textcolor{comment}{        See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00131}00131 \textcolor{comment}{        for additional information. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00132}00132         \textcolor{keyword}{struct  }\_reent xNewLib\_reent;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00133}00133 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00134}00134 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00135}00135 \textcolor{preprocessor}{    \#if( configUSE\_TASK\_NOTIFICATIONS == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00136}00136         \textcolor{keyword}{volatile} uint32\_t ulNotifiedValue;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00137}00137         \textcolor{keyword}{volatile} uint8\_t ucNotifyState;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00138}00138 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00139}00139 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00140}00140     \textcolor{comment}{/* See the comments in FreeRTOS.h with the definition of}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00141}00141 \textcolor{comment}{    tskSTATIC\_AND\_DYNAMIC\_ALLOCATION\_POSSIBLE. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00142}00142 \textcolor{preprocessor}{    \#if( tskSTATIC\_AND\_DYNAMIC\_ALLOCATION\_POSSIBLE != 0 ) }\textcolor{comment}{/*lint !e731 !e9029 Macro has been consolidated for readability reasons. */}\textcolor{preprocessor}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00143}00143         uint8\_t ucStaticallyAllocated;      \textcolor{comment}{/*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00144}00144 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00145}00145 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00146}00146 \textcolor{preprocessor}{    \#if( INCLUDE\_xTaskAbortDelay == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00147}00147         uint8\_t ucDelayAborted;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00148}00148 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00149}00149 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00150}00150 \textcolor{preprocessor}{    \#if( configUSE\_POSIX\_ERRNO == 1 )}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00151}00151         \textcolor{keywordtype}{int} iTaskErrno;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00152}00152 \textcolor{preprocessor}{    \#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00153}00153 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00154}\mbox{\hyperlink{perf__os__patch__freertos_8c_a67b1ddede4e49c946dd720d83c5838a5}{00154}} \} \mbox{\hyperlink{perf__os__patch__freertos_8c_a67b1ddede4e49c946dd720d83c5838a5}{tskTCB}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00155}00155 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00156}00156 \textcolor{comment}{/* The old tskTCB name is maintained above then typedefed to the new TCB\_t name}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00157}00157 \textcolor{comment}{below to enable the use of older kernel aware debuggers. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00158}\mbox{\hyperlink{perf__os__patch__freertos_8c_aa3c2dda92a6dc22860bbdb36e42a0453}{00158}} \textcolor{keyword}{typedef} \mbox{\hyperlink{structtsk_task_control_block}{tskTCB}} \mbox{\hyperlink{perf__os__patch__freertos_8c_aa3c2dda92a6dc22860bbdb36e42a0453}{TCB\_t}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00159}00159 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00160}00160 \textcolor{comment}{/*lint -\/save -\/e956 A manual analysis and inspection has been used to determine}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00161}00161 \textcolor{comment}{which static variables must be declared volatile. */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00162}00162 PRIVILEGED\_DATA }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00163}00163 \textcolor{keyword}{extern} \mbox{\hyperlink{structtsk_task_control_block}{TCB\_t}} * \textcolor{keyword}{volatile} \mbox{\hyperlink{perf__os__patch__freertos_8c_acdecf2afe97343aba42b111bc6df9eea}{pxCurrentTCB}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00164}00164 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00172}00172 \textcolor{comment}{/*}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00174}00174 \textcolor{comment}{\#define \_\_PERF\_CNT\_USE\_RTOS\_\_}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00175}00175 \textcolor{comment}{            }}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00176}00176 \textcolor{comment}{\#define traceTASK\_SWITCHED\_OUT\_DISABLE  }}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00177}00177 \textcolor{comment}{\#define traceTASK\_SWITCHED\_IN\_DISABLE}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00178}00178 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00179}00179 \textcolor{comment}{extern void \_\_freertos\_evr\_on\_task\_switched\_out (void *ptTCB);}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00180}00180 \textcolor{comment}{extern void \_\_freertos\_evr\_on\_task\_switched\_in(void *ptTCB, unsigned int uxTopPriority) ;}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00181}00181 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00182}00182 \textcolor{comment}{\#   define traceTASK\_SWITCHED\_OUT()                                             \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00183}00183 \textcolor{comment}{        \_\_freertos\_evr\_on\_task\_switched\_out(pxCurrentTCB)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00184}00184 \textcolor{comment}{\#   define traceTASK\_SWITCHED\_IN()                                              \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00185}00185 \textcolor{comment}{        \_\_freertos\_evr\_on\_task\_switched\_in(pxCurrentTCB, uxTopReadyPriority)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00186}00186 \textcolor{comment}{}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00187}00187 \textcolor{comment}{ */}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00188}00188 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00189}00189 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00190}00190 \textcolor{comment}{/*============================ GLOBAL VARIABLES ==============================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00191}00191 \textcolor{comment}{/*============================ LOCAL VARIABLES ===============================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00192}00192 \textcolor{comment}{/*============================ PROTOTYPES ====================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00193}00193 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__os__patch__freertos_8c_aded00de9fbde9be7f8872f85685b36a4}{\_\_on\_context\_switch\_in}}(uint32\_t *pwStack);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00194}00194 \textcolor{keyword}{extern} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__os__patch__freertos_8c_aee2926404ade74811fa658786035f745}{\_\_on\_context\_switch\_out}}(uint32\_t *pwStack);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00195}00195 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00196}00196 \textcolor{comment}{/*============================ IMPLEMENTATION ================================*/}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00197}00197 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00198}00198 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00199}00199 \textcolor{preprocessor}{\#if defined(RTE\_Compiler\_EventRecorder)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00200}00200 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00201}00201 \textcolor{preprocessor}{\#   include "{}EventRecorder.h"{}}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00202}00202 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00203}00203 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00204}00204 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00205}00205 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00206}\mbox{\hyperlink{perf__os__patch__freertos_8c_af1545bfa164313b88b851eb84f466541}{00206}} \textcolor{preprocessor}{\#define EvtFreeRTOSTasksNo              (0xF0U)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00207}00207 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00208}\mbox{\hyperlink{perf__os__patch__freertos_8c_a324f9bb05f8ce010d19ec560b4e1da95}{00208}} \textcolor{preprocessor}{\#define EvtFreeRTOSTasks\_TaskSwitchedOut                    \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00209}00209 \textcolor{preprocessor}{            EventID(EventLevelOp,     EvtFreeRTOSTasksNo, 0x0BU)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00210}\mbox{\hyperlink{perf__os__patch__freertos_8c_aea3ef800c9428b732ffbe8445eefee66}{00210}} \textcolor{preprocessor}{\#define EvtFreeRTOSTasks\_TaskSwitchedIn                     \(\backslash\)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00211}00211 \textcolor{preprocessor}{            EventID(EventLevelOp,     EvtFreeRTOSTasksNo, 0x0CU)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00212}00212 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00213}\mbox{\hyperlink{perf__os__patch__freertos_8c_a5d7733a0a2eec8eb3c6782ddfd6bf44c}{00213}} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__os__patch__freertos_8c_a5d7733a0a2eec8eb3c6782ddfd6bf44c}{\_\_freertos\_evr\_on\_task\_switched\_out}} (\textcolor{keywordtype}{void} *ptTCB) \{}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00214}00214 \textcolor{preprocessor}{\#if defined(RTE\_Compiler\_EventRecorder)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00215}00215   EventRecord2(\mbox{\hyperlink{perf__os__patch__freertos_8c_a324f9bb05f8ce010d19ec560b4e1da95}{EvtFreeRTOSTasks\_TaskSwitchedOut}}, (uint32\_t)ptTCB, 0U);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00216}00216 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00217}00217   (void)\mbox{\hyperlink{perf__os__patch__freertos_8c_acdecf2afe97343aba42b111bc6df9eea}{pxCurrentTCB}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00218}00218 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00219}00219     }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00220}00220     \mbox{\hyperlink{perf__os__patch__freertos_8c_aee2926404ade74811fa658786035f745}{\_\_on\_context\_switch\_out}}(((\mbox{\hyperlink{structtsk_task_control_block}{TCB\_t}} *)ptTCB)-\/>pxStack);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00221}00221     }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00222}00222 \}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00223}00223 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00224}00224 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00225}\mbox{\hyperlink{perf__os__patch__freertos_8c_a411ff611b06926d6bcde27c0c621895c}{00225}} \textcolor{keywordtype}{void} \mbox{\hyperlink{perf__os__patch__freertos_8c_a411ff611b06926d6bcde27c0c621895c}{\_\_freertos\_evr\_on\_task\_switched\_in}}(\textcolor{keywordtype}{void} *ptTCB, uint32\_t uxTopPriority) \{}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00226}00226 \textcolor{preprocessor}{\#if defined(RTE\_Compiler\_EventRecorder)}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00227}00227   EventRecord2(\mbox{\hyperlink{perf__os__patch__freertos_8c_aea3ef800c9428b732ffbe8445eefee66}{EvtFreeRTOSTasks\_TaskSwitchedIn}}, (uint32\_t)ptTCB, uxTopPriority);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00228}00228 \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00229}00229   (void)\mbox{\hyperlink{perf__os__patch__freertos_8c_acdecf2afe97343aba42b111bc6df9eea}{pxCurrentTCB}};}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00230}00230   (void)uxTopPriority;}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00231}00231 \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00232}00232     }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00233}00233     \mbox{\hyperlink{perf__os__patch__freertos_8c_aded00de9fbde9be7f8872f85685b36a4}{\_\_on\_context\_switch\_in}}(((\mbox{\hyperlink{structtsk_task_control_block}{TCB\_t}} *)ptTCB)-\/>pxStack);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00234}00234 \}}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00235}00235 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00236}00236 }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00237}\mbox{\hyperlink{perf__os__patch__freertos_8c_aafe74ae771ab855185531aae1e42657c}{00237}} \mbox{\hyperlink{structtask__cycle__info__t}{task\_cycle\_info\_t}} * \mbox{\hyperlink{perf__os__patch__freertos_8c_aafe74ae771ab855185531aae1e42657c}{get\_rtos\_task\_cycle\_info}}(\textcolor{keywordtype}{void})}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00238}00238 \{   }
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00239}00239     \textcolor{keywordflow}{return} \&(((\textcolor{keyword}{struct }\mbox{\hyperlink{struct____task__cycle__info__t}{\_\_task\_cycle\_info\_t}} *)\mbox{\hyperlink{perf__os__patch__freertos_8c_acdecf2afe97343aba42b111bc6df9eea}{pxCurrentTCB}}-\/>\mbox{\hyperlink{structtsk_task_control_block_aaecd48bdf732c1df94b258956ca85bd7}{pxStack}})-\/>tInfo);}
+\DoxyCodeLine{\Hypertarget{perf__os__patch__freertos_8c_source_l00240}00240 \}}
+
+\end{DoxyCode}
