@@ -249,6 +249,14 @@ void __perf_os_patch_init(void)
 {
 }
 
+/*!
+ * \brief update perf_counter as SystemCoreClock has been updated.
+ */
+void update_perf_counter(void)
+{
+    s_nUSUnit = SystemCoreClock / 1000000ul;
+    s_nMSUnit = SystemCoreClock / 1000ul;
+}
 
 /*! \brief   initialise cycle counter service
  *  \note    - don't forget to tell the function whether the systick is already
@@ -290,8 +298,7 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     //s_nSystemClockCounts = s_nCycleCounts;
     s_nOffset = stop_cycle_counter();
     
-    s_nUSUnit = SystemCoreClock / 1000000ul;
-    s_nMSUnit = SystemCoreClock / 1000ul;
+    update_perf_counter();
     s_lSystemClockCounts = 0;                       // reset system cycle counter
     s_nSystemMS = 0;                                // reset system millisecond counter
     

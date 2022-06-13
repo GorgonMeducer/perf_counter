@@ -582,6 +582,10 @@ extern void init_cycle_counter(bool bIsSysTickOccupied);
  */
 extern void user_code_insert_to_systick_handler(void);
 
+/*!
+ * \brief update perf_counter as SystemCoreClock has been updated.
+ */
+extern void update_perf_counter(void);
 
 //#if defined(__clang__)
 //#   pragma clang diagnostic pop
