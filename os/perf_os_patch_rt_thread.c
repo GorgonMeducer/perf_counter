@@ -75,12 +75,10 @@ void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to)
     __on_context_switch_in(to->stack_addr);
 }
 
-#if RTTHREAD_VERSION <= 40100
 void __perf_os_patch_init(void)
 {
     rt_scheduler_sethook(&__rt_thread_scheduler_hook);
 }
-#endif
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
 {   
