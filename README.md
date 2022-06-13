@@ -1,4 +1,4 @@
-# perf_counter (v1.9.5a)
+# perf_counter (v1.9.6-dev)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 [Doxygen Entry](./documents/html/index.html)
@@ -27,6 +27,7 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
 - **Simplified Deployment**
   - **Drag-and-Drop deployment for Arm Compiler 5 and Arm Compiler 6.**
   - **CMSIS-Pack is available**
+  - **RT-Thread package is avaialble**
 - **Time based services**
   - `delay_us()` and `delay_ms()`
   - Provides Timestamp services via ***get_system_ticks()*** and `get_system_ms()`
@@ -186,7 +187,7 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 
 2. Add including path for `perf_counter` folder
 3. Add `perf_counter.c` to your compilation 
-4. Include perf_counter.h in corresponding c source file:
+4. Include `perf_counter.h` in corresponding c source file:
 
 ```c
 #include "perf_counter.h"
