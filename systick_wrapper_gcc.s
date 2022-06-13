@@ -28,10 +28,10 @@
 
 __wrap_SysTick_Handler:
     push    {r4, r5}
-    push        {r4, lr}
+    push    {r4, lr}
     ldr     R0, =user_code_insert_to_systick_handler
     blx     R0
-    pop         {r4, r5}
+    pop     {r4, r5}
     mov     lr, r5
     pop     {r4, r5}
     ldr     R0, =__real_SysTick_Handler
