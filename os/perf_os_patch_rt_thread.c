@@ -52,8 +52,8 @@ struct __task_cycle_info_t {
 
 
 #ifndef RT_USING_HOOK
-#error In order to use perf_counter:RT-Thread-Patch, please define RT_USING_HOOK\
- in rtconfig.h. If you don't want to use this patch, please un-select it in RTE.
+#error "In order to use perf_counter:RT-Thread-Patch, please define RT_USING_HOOK \
+in rtconfig.h. If you don't want to use this patch, please un-select it in RTE."
 #endif
 
 
@@ -75,12 +75,34 @@ void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to)
     __on_context_switch_in(to->stack_addr);
 }
 
-void __perf_os_patch_init(void)
-{
-    rt_scheduler_sethook(&__rt_thread_scheduler_hook);
-}
-
 task_cycle_info_t * get_rtos_task_cycle_info(void)
 {   
     return &(((struct __task_cycle_info_t *)rt_current_thread->stack_addr)->tInfo);
 }
+
+void __perf_os_patch_init(void)
+{
+#ifdef PKG_USING_PERF_COUNTER
+    rt_tick_sethook(user_code_insert_to_systick_handler);
+#endif
+    rt_scheduler_sethook(__rt_thread_scheduler_hook);
+}
+
+#ifdef PKG_USING_PERF_COUNTER
+void __ensure_systick_wrapper(void)
+{
+}
+
+#define DBG_TAG    "perf_counter"
+#define DBG_LVL    DBG_INFO
+#include <rtdbg.h>
+
+static int _perf_counter_init(void)
+{
+    extern uint32_t SystemCoreClock;
+    init_cycle_counter(true);
+    LOG_I("perf_counter init, SystemCoreClock:%d", SystemCoreClock);
+    return 0;
+}
+INIT_PREV_EXPORT(_perf_counter_init);
+#endif
