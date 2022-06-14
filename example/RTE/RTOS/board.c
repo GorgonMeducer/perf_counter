@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006-2019, RT-Thread Development Team
+ * Copyright (c) 2006-2022, RT-Thread Development Team
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -8,7 +8,7 @@
  * 2017-07-24     Tanek        the first version
  * 2018-11-12     Ernest Chen  modify copyright
  */
- 
+
 #include <stdint.h>
 #include <rthw.h>
 #include <rtthread.h>
@@ -20,12 +20,12 @@
 #define _SYSTICK_CALIB  (*(rt_uint32_t *)(_SCB_BASE + 0xC))
 #define _SYSTICK_PRI    (*(rt_uint8_t  *)(0xE000ED23UL))
 
-// Updates the variable SystemCoreClock and must be called 
+// Updates the variable SystemCoreClock and must be called
 // whenever the core clock is changed during program execution.
 extern void SystemCoreClockUpdate(void);
 
-// Holds the system core clock, which is the system clock 
-// frequency supplied to the SysTick timer and the processor 
+// Holds the system core clock, which is the system clock
+// frequency supplied to the SysTick timer and the processor
 // core clock.
 extern uint32_t SystemCoreClock;
 
@@ -35,12 +35,12 @@ static uint32_t _SysTick_Config(rt_uint32_t ticks)
     {
         return 1;
     }
-    
-    _SYSTICK_LOAD = ticks - 1; 
+
+    _SYSTICK_LOAD = ticks - 1;
     _SYSTICK_PRI = 0xFF;
     _SYSTICK_VAL  = 0;
-    _SYSTICK_CTRL = 0x07;  
-    
+    _SYSTICK_CTRL = 0x07;
+
     return 0;
 }
 
@@ -65,7 +65,7 @@ void rt_hw_board_init()
 {
     /* System Clock Update */
     SystemCoreClockUpdate();
-    
+
     /* System Tick Configuration */
     _SysTick_Config(SystemCoreClock / RT_TICK_PER_SECOND);
 

@@ -43,7 +43,7 @@ typedef struct example_lv1_t {
 
 
 typedef struct example_lv0_t {
-    
+
     uint32_t    wA;
     uint16_t    hwB;
     uint8_t     chC;
@@ -66,15 +66,15 @@ static example_lv0_t s_tItem[8] = {
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
-int main (void) 
+int main (void)
 {
     int32_t iCycleResult = 0;
-    
+
     /*! demo of using() block */
-    using(int a = 0,printf("========= On Enter =======\r\n"), 
+    using(int a = 0,printf("========= On Enter =======\r\n"),
                     printf("========= On Leave =======\r\n")) {
         printf("\t In Body a=%d \r\n", ++a);
-    }    
+    }
 
     __cycleof__("Calibration") {}
 
@@ -88,14 +88,14 @@ int main (void)
     }
 
     /* measure cycles and store it in a dedicated variable without printf */
-    __cycleof__("delay_us(1000ul)", 
+    __cycleof__("delay_us(1000ul)",
         /* insert code to __cycleof__ body, "{}" can be omitted  */
         {
             iCycleResult = __cycle_count__;   /*< "__cycle_count__" stores the result */
         }) {
         delay_us(1000ul);
     }
-    
+
     printf("\r\n delay_us(1000ul) takes %d cycles\r\n", (int)iCycleResult);
 
     /*! demo of with block */
@@ -103,7 +103,7 @@ int main (void)
         _->wA = 1;
         _->hwB = 2;
         _->chC = 3;
-        
+
         with(example_lv1_t, &pitem->tLV1) {
             _->wLV1A = 4;
             _->hwLV1B = 5;
@@ -119,7 +119,7 @@ int main (void)
         }
         printf("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
     } while(0);
-    
+
     while (1) {
         printf("\r\nhello world\r\n");
         delay_ms(1000);

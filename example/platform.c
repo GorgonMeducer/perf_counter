@@ -38,7 +38,7 @@ static volatile uint32_t s_wMSCounter = 0;
   SysTick / Timer0 IRQ Handler
  *----------------------------------------------------------------------------*/
 
-void SysTick_Handler (void) 
+void SysTick_Handler (void)
 {
     if (s_wMSCounter) {
         s_wMSCounter--;
@@ -53,11 +53,11 @@ __attribute__((constructor(101)))
 void platform_init(void)
 {
     SystemCoreClockUpdate();
-    
+
     uart_config(25000000ul);
-    
+
     /* Generate interrupt each 1 ms  */
-    SysTick_Config(SystemCoreClock / 1000);    
+    SysTick_Config(SystemCoreClock / 1000);
 }
 
 

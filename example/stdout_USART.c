@@ -116,8 +116,8 @@ typedef struct
 /* ================             Peripheral declaration             ================ */
 /* ================================================================================ */
 
-//#define CMSDK_UART0_BASE_ADDRESS	(0x41303000ul)
-#define CMSDK_UART0_BASE_ADDRESS	(0x40004000ul)
+//#define CMSDK_UART0_BASE_ADDRESS  (0x41303000ul)
+#define CMSDK_UART0_BASE_ADDRESS    (0x40004000ul)
 #define CMSDK_UART0             ((CMSDK_UART_TypeDef              *) CMSDK_UART0_BASE_ADDRESS)
 
 
@@ -125,7 +125,7 @@ void uart_config(uint32_t wUARTFrequency)
 {
     CMSDK_UART0->CTRL = 0;         /* Disable UART when changing configuration */
     CMSDK_UART0->BAUDDIV = wUARTFrequency / 115200ul;    /* 25MHz / 38400 = 651 */
-    CMSDK_UART0->CTRL = CMSDK_UART_CTRL_TXEN_Msk|CMSDK_UART_CTRL_RXEN_Msk;  
+    CMSDK_UART0->CTRL = CMSDK_UART_CTRL_TXEN_Msk|CMSDK_UART_CTRL_RXEN_Msk;
 }
 
 char stdin_getchar(void)
@@ -152,26 +152,26 @@ int _write (int fd, char *ptr, int len)
         do {
             stdout_putchar(*ptr++);
         } while(--n);
-        
+
         return len;
-    } 
-  
+    }
+
     return -1;
 }
 
 
 int stderr_putchar(char txchar)
 {
-	return stdout_putchar(txchar);
+    return stdout_putchar(txchar);
 }
 
 void ttywrch (int ch)
 {
-	stdout_putchar(ch);
+    stdout_putchar(ch);
 }
 
 
-#define log_str(...)		                            \
+#define log_str(...)                                    \
     do {                                                \
         const char *pchSrc = __VA_ARGS__;               \
         uint_fast16_t hwSize = sizeof(__VA_ARGS__);     \
@@ -184,11 +184,11 @@ __NO_RETURN
 void _sys_exit(int n)
 {
     UNUSED_PARAM(n);
-	log_str("\r\n");
-	log_str("_[TEST COMPLETE]_________________________________________________\r\n");
-	log_str("\r\n\r\n");
+    log_str("\r\n");
+    log_str("_[TEST COMPLETE]_________________________________________________\r\n");
+    log_str("\r\n\r\n");
 
-	while(1) {
+    while(1) {
         __asm volatile ("nop");
     }
 }
