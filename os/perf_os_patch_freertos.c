@@ -43,7 +43,7 @@ correct privileged Vs unprivileged linkage and placement. */
 
 #undef __WRAP_FUNC
 #undef WRAP_FUNC
-#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__ 
+#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__
 
 #   define __WRAP_FUNC(__NAME)     $Sub$$##__NAME
 #   define __ORIG_FUNC(__NAME)     $Super$$##__NAME
@@ -74,82 +74,82 @@ struct __task_cycle_info_t {
  * and stores task state information, including a pointer to the task's context
  * (the task's run time environment, including register values)
  */
-typedef struct tskTaskControlBlock 			/* The old naming convention is used to prevent breaking kernel aware debuggers. */
+typedef struct tskTaskControlBlock          /* The old naming convention is used to prevent breaking kernel aware debuggers. */
 {
-	volatile StackType_t	*pxTopOfStack;	/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
+    volatile StackType_t    *pxTopOfStack;  /*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
 
-	#if ( portUSING_MPU_WRAPPERS == 1 )
-		xMPU_SETTINGS	xMPUSettings;		/*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
-	#endif
+    #if ( portUSING_MPU_WRAPPERS == 1 )
+        xMPU_SETTINGS   xMPUSettings;       /*< The MPU settings are defined as part of the port layer.  THIS MUST BE THE SECOND MEMBER OF THE TCB STRUCT. */
+    #endif
 
-	ListItem_t			xStateListItem;	/*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
-	ListItem_t			xEventListItem;		/*< Used to reference a task from an event list. */
-	UBaseType_t			uxPriority;			/*< The priority of the task.  0 is the lowest priority. */
-	StackType_t			*pxStack;			/*< Points to the start of the stack. */
-	char				pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
+    ListItem_t          xStateListItem; /*< The list that the state list item of a task is reference from denotes the state of that task (Ready, Blocked, Suspended ). */
+    ListItem_t          xEventListItem;     /*< Used to reference a task from an event list. */
+    UBaseType_t         uxPriority;         /*< The priority of the task.  0 is the lowest priority. */
+    StackType_t         *pxStack;           /*< Points to the start of the stack. */
+    char                pcTaskName[ configMAX_TASK_NAME_LEN ];/*< Descriptive name given to the task when created.  Facilitates debugging only. */ /*lint !e971 Unqualified char types are allowed for strings and single characters only. */
 
-	#if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
-		StackType_t		*pxEndOfStack;		/*< Points to the highest valid address for the stack. */
-	#endif
+    #if ( ( portSTACK_GROWTH > 0 ) || ( configRECORD_STACK_HIGH_ADDRESS == 1 ) )
+        StackType_t     *pxEndOfStack;      /*< Points to the highest valid address for the stack. */
+    #endif
 
-	#if ( portCRITICAL_NESTING_IN_TCB == 1 )
-		UBaseType_t		uxCriticalNesting;	/*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
-	#endif
+    #if ( portCRITICAL_NESTING_IN_TCB == 1 )
+        UBaseType_t     uxCriticalNesting;  /*< Holds the critical section nesting depth for ports that do not maintain their own count in the port layer. */
+    #endif
 
-	#if ( configUSE_TRACE_FACILITY == 1 )
-		UBaseType_t		uxTCBNumber;		/*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
-		UBaseType_t		uxTaskNumber;		/*< Stores a number specifically for use by third party trace code. */
-	#endif
+    #if ( configUSE_TRACE_FACILITY == 1 )
+        UBaseType_t     uxTCBNumber;        /*< Stores a number that increments each time a TCB is created.  It allows debuggers to determine when a task has been deleted and then recreated. */
+        UBaseType_t     uxTaskNumber;       /*< Stores a number specifically for use by third party trace code. */
+    #endif
 
-	#if ( configUSE_MUTEXES == 1 )
-		UBaseType_t		uxBasePriority;		/*< The priority last assigned to the task - used by the priority inheritance mechanism. */
-		UBaseType_t		uxMutexesHeld;
-	#endif
+    #if ( configUSE_MUTEXES == 1 )
+        UBaseType_t     uxBasePriority;     /*< The priority last assigned to the task - used by the priority inheritance mechanism. */
+        UBaseType_t     uxMutexesHeld;
+    #endif
 
-	#if ( configUSE_APPLICATION_TASK_TAG == 1 )
-		TaskHookFunction_t pxTaskTag;
-	#endif
+    #if ( configUSE_APPLICATION_TASK_TAG == 1 )
+        TaskHookFunction_t pxTaskTag;
+    #endif
 
-	#if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
-		void			*pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
-	#endif
+    #if( configNUM_THREAD_LOCAL_STORAGE_POINTERS > 0 )
+        void            *pvThreadLocalStoragePointers[ configNUM_THREAD_LOCAL_STORAGE_POINTERS ];
+    #endif
 
-	#if( configGENERATE_RUN_TIME_STATS == 1 )
-		uint32_t		ulRunTimeCounter;	/*< Stores the amount of time the task has spent in the Running state. */
-	#endif
+    #if( configGENERATE_RUN_TIME_STATS == 1 )
+        uint32_t        ulRunTimeCounter;   /*< Stores the amount of time the task has spent in the Running state. */
+    #endif
 
-	#if ( configUSE_NEWLIB_REENTRANT == 1 )
-		/* Allocate a Newlib reent structure that is specific to this task.
-		Note Newlib support has been included by popular demand, but is not
-		used by the FreeRTOS maintainers themselves.  FreeRTOS is not
-		responsible for resulting newlib operation.  User must be familiar with
-		newlib and must provide system-wide implementations of the necessary
-		stubs. Be warned that (at the time of writing) the current newlib design
-		implements a system-wide malloc() that must be provided with locks.
+    #if ( configUSE_NEWLIB_REENTRANT == 1 )
+        /* Allocate a Newlib reent structure that is specific to this task.
+        Note Newlib support has been included by popular demand, but is not
+        used by the FreeRTOS maintainers themselves.  FreeRTOS is not
+        responsible for resulting newlib operation.  User must be familiar with
+        newlib and must provide system-wide implementations of the necessary
+        stubs. Be warned that (at the time of writing) the current newlib design
+        implements a system-wide malloc() that must be provided with locks.
 
-		See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
-		for additional information. */
-		struct	_reent xNewLib_reent;
-	#endif
+        See the third party link http://www.nadler.com/embedded/newlibAndFreeRTOS.html
+        for additional information. */
+        struct  _reent xNewLib_reent;
+    #endif
 
-	#if( configUSE_TASK_NOTIFICATIONS == 1 )
-		volatile uint32_t ulNotifiedValue;
-		volatile uint8_t ucNotifyState;
-	#endif
+    #if( configUSE_TASK_NOTIFICATIONS == 1 )
+        volatile uint32_t ulNotifiedValue;
+        volatile uint8_t ucNotifyState;
+    #endif
 
-	/* See the comments in FreeRTOS.h with the definition of
-	tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE. */
-	#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
-		uint8_t	ucStaticallyAllocated; 		/*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
-	#endif
+    /* See the comments in FreeRTOS.h with the definition of
+    tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE. */
+    #if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
+        uint8_t ucStaticallyAllocated;      /*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
+    #endif
 
-	#if( INCLUDE_xTaskAbortDelay == 1 )
-		uint8_t ucDelayAborted;
-	#endif
+    #if( INCLUDE_xTaskAbortDelay == 1 )
+        uint8_t ucDelayAborted;
+    #endif
 
-	#if( configUSE_POSIX_ERRNO == 1 )
-		int iTaskErrno;
-	#endif
+    #if( configUSE_POSIX_ERRNO == 1 )
+        int iTaskErrno;
+    #endif
 
 } tskTCB;
 
@@ -159,11 +159,11 @@ typedef tskTCB TCB_t;
 
 /*lint -save -e956 A manual analysis and inspection has been used to determine
 which static variables must be declared volatile. */
-PRIVILEGED_DATA 
+PRIVILEGED_DATA
 extern TCB_t * volatile pxCurrentTCB;
 
-/*! \note if you aren't using perf_counter inside KEIL with RTE, please create 
- *!          a header file called "Pre_Include_Global.h", copy the following 
+/*! \note if you aren't using perf_counter inside KEIL with RTE, please create
+ *!          a header file called "Pre_Include_Global.h", copy the following
  *!          content into the header file and and put following option
  *!          to your command line (supposing you are using arm compiler 6):
  *!          -include "Pre_Include_Global.h"
@@ -172,8 +172,8 @@ extern TCB_t * volatile pxCurrentTCB;
 /*
 //! \brief Enable RTOS Patch for perf_counter
 #define __PERF_CNT_USE_RTOS__
-            
-#define traceTASK_SWITCHED_OUT_DISABLE  
+
+#define traceTASK_SWITCHED_OUT_DISABLE
 #define traceTASK_SWITCHED_IN_DISABLE
 
 extern void __freertos_evr_on_task_switched_out (void *ptTCB);
@@ -216,9 +216,9 @@ void __freertos_evr_on_task_switched_out (void *ptTCB) {
 #else
   (void)pxCurrentTCB;
 #endif
-    
+
     __on_context_switch_out(((TCB_t *)ptTCB)->pxStack);
-    
+
 }
 
 
@@ -229,12 +229,12 @@ void __freertos_evr_on_task_switched_in(void *ptTCB, uint32_t uxTopPriority) {
   (void)pxCurrentTCB;
   (void)uxTopPriority;
 #endif
-    
+
     __on_context_switch_in(((TCB_t *)ptTCB)->pxStack);
 }
 
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
-{   
+{
     return &(((struct __task_cycle_info_t *)pxCurrentTCB->pxStack)->tInfo);
 }

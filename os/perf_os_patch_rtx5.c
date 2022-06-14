@@ -28,7 +28,7 @@
 
 #undef __WRAP_FUNC
 #undef WRAP_FUNC
-#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__ 
+#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__
 
 #   define __WRAP_FUNC(__NAME)     $Sub$$##__NAME
 #   define __ORIG_FUNC(__NAME)     $Super$$##__NAME
@@ -67,19 +67,19 @@ void __on_context_switch (osRtxThread_t *thread)
     if (NULL != osRtxInfo.thread.run.curr) {
         __on_context_switch_out(osRtxInfo.thread.run.curr->stack_mem);
     }
-    
+
     __on_context_switch_in(thread->stack_mem);
 }
 
 __attribute__((used))
-void EvrRtxThreadSwitched (osThreadId_t thread_id) 
+void EvrRtxThreadSwitched (osThreadId_t thread_id)
 {
     __on_context_switch((osRtxThread_t *)thread_id);
-    
+
 #if defined(RTE_Compiler_EventRecorder)
 #   define EvtRtxThreadSwitched     \
-        EventID(EventLevelOp,     EvtRtxThreadNo, 0x19U)    
-    
+        EventID(EventLevelOp,     EvtRtxThreadNo, 0x19U)
+
     (void)EventRecord2(EvtRtxThreadSwitched, (uint32_t)thread_id, 0U);
 #else
     (void)thread_id;
@@ -88,12 +88,12 @@ void EvrRtxThreadSwitched (osThreadId_t thread_id)
 
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
-{   
+{
     osRtxThread_t *curr = osRtxInfo.thread.run.curr;
     if (NULL == curr) {
         return NULL;
     }
-    
+
     return &(((struct __task_cycle_info_t *)curr->stack_mem)->tInfo);
 }
 

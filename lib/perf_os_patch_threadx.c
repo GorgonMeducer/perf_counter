@@ -28,7 +28,7 @@
 
 #undef __WRAP_FUNC
 #undef WRAP_FUNC
-#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__ 
+#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__
 
 #   define __WRAP_FUNC(__NAME)     $Sub$$##__NAME
 #   define __ORIG_FUNC(__NAME)     $Super$$##__NAME
@@ -70,9 +70,9 @@ extern void __on_context_switch_out(uint32_t *pwStack);
 /*============================ IMPLEMENTATION ================================*/
 
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
-void WRAP_FUNC(_tx_execution_thread_enter)(void) 
+void WRAP_FUNC(_tx_execution_thread_enter)(void)
 #else
-void _tx_execution_thread_enter (void) 
+void _tx_execution_thread_enter (void)
 #endif
 {
     TX_THREAD * ptThread = NULL;
@@ -82,44 +82,44 @@ void _tx_execution_thread_enter (void)
 
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
     extern void ORIG_FUNC(_tx_execution_thread_enter)(void);
-    
+
     ORIG_FUNC(_tx_execution_thread_enter)();
 #endif
 }
 
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
-void WRAP_FUNC(_tx_execution_thread_exit)(void) 
+void WRAP_FUNC(_tx_execution_thread_exit)(void)
 #else
-void _tx_execution_thread_exit(void) 
+void _tx_execution_thread_exit(void)
 #endif
 {
     TX_THREAD * ptThread = NULL;
     TX_THREAD_GET_CURRENT(ptThread);
-    
+
     if (NULL != ptThread) {
         __on_context_switch_out(ptThread->tx_thread_stack_start);
     }
 #if defined(TX_EXECUTION_PROFILE_ENABLE)
     extern void ORIG_FUNC(_tx_execution_thread_exit)(void);
-    
+
     ORIG_FUNC(_tx_execution_thread_exit)();
 #endif
 }
 
 #if !defined(TX_EXECUTION_PROFILE_ENABLE)
-void _tx_execution_isr_exit(void) 
+void _tx_execution_isr_exit(void)
 {
 
 }
 
-void _tx_execution_isr_enter(void) 
+void _tx_execution_isr_enter(void)
 {
 
 }
 #endif
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
-{   
+{
     TX_THREAD * ptThread = NULL;
     TX_THREAD_GET_CURRENT(ptThread);
 

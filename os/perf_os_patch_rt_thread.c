@@ -27,7 +27,7 @@
 
 #undef __WRAP_FUNC
 #undef WRAP_FUNC
-#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__ 
+#if defined(__IS_COMPILER_ARM_COMPILER__) && __IS_COMPILER_ARM_COMPILER__
 
 #   define __WRAP_FUNC(__NAME)     $Sub$$##__NAME
 #   define __ORIG_FUNC(__NAME)     $Super$$##__NAME
@@ -71,12 +71,12 @@ void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to)
     if (NULL != from) {
         __on_context_switch_out(from->stack_addr);
     }
-    
+
     __on_context_switch_in(to->stack_addr);
 }
 
 task_cycle_info_t * get_rtos_task_cycle_info(void)
-{   
+{
     return &(((struct __task_cycle_info_t *)rt_current_thread->stack_addr)->tInfo);
 }
 
