@@ -3,8 +3,8 @@
  * Auto generated Run-Time-Environment Configuration File
  *      *** Do not modify ! ***
  *
- * Project: 'gcc_example'
- * Target:  'gcc_lib'
+ * Project: 'gcc_example' 
+ * Target:  'gcc_lib' 
  */
 
 #ifndef RTE_COMPONENTS_H
@@ -12,11 +12,11 @@
 
 
 /*
- * Define the Device Header File:
+ * Define the Device Header File: 
  */
 #define CMSIS_device_header "ARMCM0.h"
 
-/* GorgonMeducer.Performance Counter::Utilities:perf_counter:Core:Library:1.9.4-alpha */
+/* GorgonMeducer.Performance Counter::Utilities:perf_counter:Core:Library:1.9.4 */
 #define __PERF_COUNTER__
 
 
