@@ -31,9 +31,9 @@ extern "C" {
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         5
+#define __PERF_COUNTER_VER_REVISE__         6
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            "rel"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -85,6 +85,10 @@ extern "C" {
 //! @}
 #endif
 //! @}
+
+#ifdef __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
+#   include __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
+#endif
 
 #if defined(__clang__)
 #   pragma clang diagnostic push
@@ -269,6 +273,9 @@ extern "C" {
                         __set_PRIMASK(SAFE_NAME(temp)))
 #endif
 
+#ifndef __perf_counter_printf__
+#   define __perf_counter_printf__      printf
+#endif
 
 #if __PLOOC_VA_NUM_ARGS() != 0
 #warning Please enable GNC extensions, it is required by __cycleof__() and \
@@ -283,10 +290,12 @@ __super_loop_monitor__()
                 _ = get_system_ticks() - _;                                     \
                 __cycle_count__ = _;                                            \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
-                    printf("\r\n");                                             \
-                    printf("-[Cycle Report]");                                  \
-                    printf("--------------------------------------------\r\n"); \
-                    printf(__STR " total cycle count: %d [%08x]\r\n",           \
+                    __perf_counter_printf__("\r\n");                            \
+                    __perf_counter_printf__("-[Cycle Report]");                 \
+                    __perf_counter_printf__(                                    \
+                        "--------------------------------------------\r\n");    \
+                    __perf_counter_printf__(                                    \
+                        __STR " total cycle count: %d [%08x]\r\n",              \
                             (int)_, (int)_);                                    \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
@@ -310,9 +319,10 @@ __super_loop_monitor__()
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
                                                                                 \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
-                printf("%s CPU Usage %2.3f%%\r\n", __func__,                    \
-                        (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 / \
-                                (double)__cpu_usage__.lTimeElapsed));           \
+                __perf_counter_printf__(                                        \
+                    "%s CPU Usage %2.3f%%\r\n", __func__,                       \
+                    (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 /     \
+                            (double)__cpu_usage__.lTimeElapsed));               \
             } else {                                                            \
                 __VA_ARGS__;                                                    \
             }                                                                   \
@@ -346,30 +356,39 @@ struct task_cycle_info_agent_t {
 /*============================ PROTOTYPES ====================================*/
 
 
-
-
-/*! \brief try to set a start pointer for the performance counter
- *! \retval false the LOAD register is too small
- *! \retval true performance counter starts
-*/
+/*!
+ * \brief try to set a start pointer for the performance counter
+ *
+ * \retval false the LOAD register is too small
+ *
+ * \retval true performance counter starts
+ */
 extern bool start_cycle_counter(void);
 
-/*! \brief calculate the elapsed cycle count since the last start point
- *!
- *! \note you can have multiple stop_cycle_counter following one start point
- *!
- *! \return the elapsed cycle count.
+/*!
+ * \brief calculate the elapsed cycle count since the last start point
+ *
+ * \note  you can have multiple stop_cycle_counter following one start point
+ *
+ * \return int32_t the elapsed cycle count
  */
 extern int32_t stop_cycle_counter(void);
 
-/* Function : delay specified us with the help from systick
+/*!
+ * \brief delay specified time in microsecond
+ *
+ * \param nUs time in microsecond
  */
-extern void delay_us(int32_t iUs);
+extern void delay_us(int32_t nUs);
 
-/* Function : delay specified ms with the help from systick
+/*!
+ * \brief delay specified time in millisecond
+ *
+ * \param nUs time in millisecond
  */
 extern void delay_ms(int32_t nMs);
 
+#ifdef __PERF_CNT_USE_LONG_CLOCK__
 /*! \note the prototype of this clock() is different from the one defined in
  *!           time.h. As clock_t is usually defined as unsigned int, it is
  *!           not big enough in Cortex-M system to hold a time-stamp. clock()
@@ -391,15 +410,24 @@ extern void delay_ms(int32_t nMs);
  *!           and 2) do not include system header file <time.h>
  *!
  */
-#ifdef __PERF_CNT_USE_LONG_CLOCK__
 #if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow))
 #endif
 extern int64_t clock(void);
 #endif
 
+/*!
+ * \brief get the elapsed cycles since perf_counter is initialised
+ *
+ * \return int64_t the elpased cycles
+ */
 extern int64_t get_system_ticks(void);
 
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ *
+ * \return int32_t the elapsed milliseconds
+ */
 extern int32_t get_system_ms(void);
 
 
@@ -411,29 +439,36 @@ extern void init_task_cycle_counter(void);
 
 /*! \brief provide cycle information for target task if perf_counter is used
  *!        together with an RTOS in the support list.
- *!
  *!        Support RTOS List:
  *!           - RTX5
+ *!           - RT-Thread
+ *!           - ThreadX
+ *!           - FreeRTOS
+ *!
+ *! \return task_cycle_info_t* the cycle info object passed to this function
  */
 extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
 
-/*! \brief intialize a given task_cycle_info_t object and enable it before
+/*!
+ *! \brief intialize a given task_cycle_info_t object and enable it before
  *!        registering it.
+ *!
+ *! \return task_cycle_info_t* the cycle info object passed to this function
  */
 extern task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief enable a given task_cycle_info_t object
  *!
  *! \param ptInfo the address of target task_cycle_info_t object
- *! \return previous status
+ *! \return bool previous status
  */
 extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief disable a given task_cycle_info_t object
  *!
  *! \param ptInfo the address of target task_cycle_info_t object
- *! \return previous status
+ *! \return bool previous status
  */
 extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo);
 
@@ -449,14 +484,18 @@ void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus);
  *!
  *! \note the ptAgent it is better to be allocated as a static variable, global
  *!       variable or comes from heap or pool
+ *!
+ *! \return task_cycle_info_agent_t* the agent passed to this function
  */
 extern
 task_cycle_info_agent_t *register_task_cycle_agent(
                                             task_cycle_info_t *ptInfo,
                                             task_cycle_info_agent_t *ptAgent);
 
-/*! \brief remove a global virtual cycle counter agent from the current task
+/*!
+ *! \brief remove a global virtual cycle counter agent from the current task
  *!
+ *! \return task_cycle_info_agent_t* the agent passed to this function
  */
 extern
 task_cycle_info_agent_t *
@@ -480,7 +519,7 @@ extern void __start_task_cycle_counter(task_cycle_info_t *ptInfo);
  *!        is non-NULL, it returns the total used cycles of the specified
  *!        task_cycle_info_t object.
  *!
- *! \return the elapsed cycle count.
+ *! \return int64_t the elapsed cycle count.
  */
 extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 
@@ -510,48 +549,53 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 
 /*! \brief   initialise cycle counter service
- *!          and don't forget to tell the function whether the systick is already
- *!          used by user applications.
- *!          Don't worry, this cycle counter service won't affect your existing
- *!          systick service.
- *!
- *! \note    Usually the perf_counter can initialise itself with the help of
- *!          __attribute__((constructor(255))), this works fine in Arm Compiler
- *!          5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn't
- *!          work for IAR. So, when you are using IAR, please call this function
- *!          manually to initialise the perf_counter service.
- *!
- *! \note    Perf_counter library assumes that:
- *!          a. Your project has already using SysTick
- *!          b. It assumes that you have already implemented the SysTick_Handler
- *!          c. It assumes that you have enabled the exception handling for
- *!             SysTick.
- *!          If these are not the case, please:
- *!          a. Add an empty SysTick_Handler to your project if you don't have
- *!             one
- *!          b. Make sure you have the SysTick Exception handling enabled
- *!          c. And call function init_cycle_counter(false) if you doesn't
- *!             use SysTick in your project at all.
- *!
- *! \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
- *!          is already used by user application.
+ *  \note    - don't forget to tell the function whether the systick is already
+ *           used by user applications.
+ *           Don't worry, this cycle counter service won't affect your existing
+ *           systick service.
+ *
+ *  \note    - Usually the perf_counter can initialise itself with the help of
+ *           __attribute__((constructor(255))), this works fine in Arm Compiler
+ *           5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn't
+ *           work for IAR. So, when you are using IAR, please call this function
+ *           manually to initialise the perf_counter service.
+ *
+ *  \note    - Perf_counter library assumes that:
+ *           1. Your project has already using SysTick
+ *           2. It assumes that you have already implemented the SysTick_Handler
+ *           3. It assumes that you have enabled the exception handling for
+ *              SysTick.
+ *           If these are not the case, please:
+ *               1. Add an empty SysTick_Handler to your project if you don't have
+ *              one
+ *               2. Make sure you have the SysTick Exception handling enabled
+ *               3. And call function init_cycle_counter(false) if you doesn't
+ *              use SysTick in your project at all.
+ *
+ *  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
+ *           is already used by user application.
  */
 extern void init_cycle_counter(bool bIsSysTickOccupied);
 
 
-/*! \note  if you are using a compiler other than armcc or armclang, e.g. iar,
- *!        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
- *!        of your target toolchain as it use the $Super$$ which is only supported
- *!        by armlink. For this condition, you have to manually put this function
- *!        into your existing SysTick_Handler to make the perf_counter library
- *!        work.
- *!
- *! \note  if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
- *!        you do NOT have to insert this function into your SysTick_Handler,
- *!        the systick_wrapper_ual.s will do the work for you.
+/*!
+ * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
+ *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
+ *        of your target toolchain as it use the $Super$$ which is only supported
+ *        by armlink. For this condition, you have to manually put this function
+ *        into your existing SysTick_Handler to make the perf_counter library
+ *        work.
+ *
+ * \note  - if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
+ *        you do NOT have to insert this function into your SysTick_Handler,
+ *        the systick_wrapper_ual.s will do the work for you.
  */
 extern void user_code_insert_to_systick_handler(void);
 
+/*!
+ * \brief update perf_counter as SystemCoreClock has been updated.
+ */
+extern void update_perf_counter(void);
 
 //#if defined(__clang__)
 //#   pragma clang diagnostic pop
