@@ -143,7 +143,7 @@ cp -f ./os/perf_os_patch_rtx5.c ./lib
 cp -f ./os/perf_os_patch_freertos.c ./lib
 cp -f ./os/perf_os_patch_rt_thread.c ./lib
 cp -f ./os/perf_os_patch_threadx.c ./lib
-cp -f ./os/perf_counter.h ./lib
+cp -f ./perf_counter.h ./lib
 
 # directories
 echo Adding directories to pack:

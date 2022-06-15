@@ -16,7 +16,15 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-05-20" version="1.9.5" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.5.pack">
+    <release date="2022-06-15" version="1.9.6" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
+      - Add RT-Thread Package
+      - Add new API update_perf_counter() for notifying perf_counter that SystemCoreClock has been updated
+      - Add a macro __perf_counter_printf__ to retarget printf
+      - Add a macor __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__ for people to insert a platform specific header file.
+      - Add Doxygen
+      - Other minor changes
+    </release>
+    <release date="2022-05-20" version="1.9.5" url="https://github.com/GorgonMeducer/perf_counter/raw/734e2ac7e00ad71a591aeef37f47001543de4d6e/cmsis-pack/GorgonMeducer.perf_counter.1.9.5.pack">
       - Add support for Cortex-M85, Star-MC1 and all other Armv8.1-M processors
       - Update Readme
     </release>
@@ -164,9 +172,9 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.4">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.6">
             <description>A dedicated performance counter for Cortex-M systick.</description>
-            <doc></doc>
+            <doc>documents/Doxygen/html/index.html</doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
