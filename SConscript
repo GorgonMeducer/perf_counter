@@ -21,6 +21,8 @@ try:
 except:
     pass
 
-group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = ['__PERF_CNT_USE_RTOS__'], CPPPATH = path)
+group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'],
+    CPPDEFINES = ['__PERF_CNT_USE_RTOS__', '__PERF_COUNT_PLATFORM_SPECIFIC_HEADER__=<rtthread.h>', '__perf_counter_printf__=rt_kprintf'],
+    CPPPATH = path)
 
 Return('group')
