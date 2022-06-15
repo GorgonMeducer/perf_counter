@@ -86,6 +86,10 @@ extern "C" {
 #endif
 //! @}
 
+#ifdef __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
+#   include __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
+#endif
+
 #if defined(__clang__)
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wunknown-warning-option"
