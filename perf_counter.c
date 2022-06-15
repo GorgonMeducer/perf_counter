@@ -474,7 +474,7 @@ int64_t clock(void)
 /*!
  * \brief get the elapsed cycles since perf_counter is initialised
  *
- * \return int64_t the elpased cycles
+ * \return int64_t the elapsed cycles
  */
 int64_t get_system_ticks(void)
 {
