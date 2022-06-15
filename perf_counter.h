@@ -269,6 +269,9 @@ extern "C" {
                         __set_PRIMASK(SAFE_NAME(temp)))
 #endif
 
+#ifndef __perf_counter_printf__
+#   define __perf_counter_printf__      printf
+#endif
 
 #if __PLOOC_VA_NUM_ARGS() != 0
 #warning Please enable GNC extensions, it is required by __cycleof__() and \
@@ -283,10 +286,12 @@ __super_loop_monitor__()
                 _ = get_system_ticks() - _;                                     \
                 __cycle_count__ = _;                                            \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
-                    printf("\r\n");                                             \
-                    printf("-[Cycle Report]");                                  \
-                    printf("--------------------------------------------\r\n"); \
-                    printf(__STR " total cycle count: %d [%08x]\r\n",           \
+                    __perf_counter_printf__("\r\n");                            \
+                    __perf_counter_printf__("-[Cycle Report]");                 \
+                    __perf_counter_printf__(                                    \
+                        "--------------------------------------------\r\n");    \
+                    __perf_counter_printf__(                                    \
+                        __STR " total cycle count: %d [%08x]\r\n",              \
                             (int)_, (int)_);                                    \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
@@ -310,9 +315,10 @@ __super_loop_monitor__()
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
                                                                                 \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
-                printf("%s CPU Usage %2.3f%%\r\n", __func__,                    \
-                        (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 / \
-                                (double)__cpu_usage__.lTimeElapsed));           \
+                __perf_counter_printf__(                                        \
+                    "%s CPU Usage %2.3f%%\r\n", __func__,                       \
+                    (float)((double)__cpu_usage__.lTaskUsedCycles * 100.0 /     \
+                            (double)__cpu_usage__.lTimeElapsed));               \
             } else {                                                            \
                 __VA_ARGS__;                                                    \
             }                                                                   \
