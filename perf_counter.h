@@ -269,7 +269,10 @@ extern "C" {
                         __set_PRIMASK(SAFE_NAME(temp)))
 #endif
 
-#ifndef __perf_counter_printf__
+#if defined(__RTTHREAD__)
+#   include <rtthread.h>
+#   define __perf_counter_printf__      rt_kprintf
+#elif !defined(__perf_counter_printf__)
 #   define __perf_counter_printf__      printf
 #endif
 
