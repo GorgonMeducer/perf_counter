@@ -341,7 +341,11 @@ __super_loop_monitor__()
 #endif
 ```
 
+### 2.3 Use perf_counter in RT-Thread RTOS
 
+perf_counter has registered as one of the [RT-Thread software packages](https://packages.rt-thread.org/en/detail.html?package=perf_counter), which locats in `system` category. In [ENV](https://www.rt-thread.io/download.html?download=Env) or [RT-Thread Studio](https://www.rt-thread.io/download.html?download=Studio), you just need to simply enable cputime framework. RT-Thread will automatically enable perf_counter if you are using Cortex-M architecture.
+
+![rt-thread-settings](./documents/pictures/rt-thread-settings.png)
 
 **Enjoy !**
 
