@@ -29,6 +29,10 @@ extern "C" {
 #endif
 /*============================ MACROS ========================================*/
 
+/*!
+ * \addtogroup gBasic 1 Basic
+ * @{
+ */
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
 #define __PERF_COUNTER_VER_REVISE__         7
@@ -39,52 +43,55 @@ extern "C" {
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
                                +__PERF_COUNTER_VER_REVISE__)
 
-//! \name The macros to identify the compiler
-//! @{
 
-//! \note for IAR
+/*! @} */
+
+/*!
+ * \addtogroup gHelper 3 Helper
+ * @{
+ */
+
+// for IAR
 #undef __IS_COMPILER_IAR__
 #if defined(__IAR_SYSTEMS_ICC__)
 #   define __IS_COMPILER_IAR__                  1
 #endif
 
-//! \note for arm compiler 5
+// for arm compiler 5
 #undef __IS_COMPILER_ARM_COMPILER_5__
 #if ((__ARMCC_VERSION >= 5000000) && (__ARMCC_VERSION < 6000000))
 #   define __IS_COMPILER_ARM_COMPILER_5__       1
 #endif
-//! @}
 
-//! \note for arm compiler 6
+
+//for arm compiler 6
 
 #undef __IS_COMPILER_ARM_COMPILER_6__
 #if defined(__ARMCC_VERSION) && (__ARMCC_VERSION >= 6010050)
 #   define __IS_COMPILER_ARM_COMPILER_6__       1
 #endif
-
 #undef __IS_COMPILER_ARM_COMPILER__
 #if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__   \
 ||  defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__
-
 #   define __IS_COMPILER_ARM_COMPILER__         1
-
 #endif
 
-
+// for clang
 #undef  __IS_COMPILER_LLVM__
 #if defined(__clang__) && !__IS_COMPILER_ARM_COMPILER_6__
 #   define __IS_COMPILER_LLVM__                 1
 #else
-//! \note for gcc
+
+// for gcc
 #   undef __IS_COMPILER_GCC__
 #   if defined(__GNUC__) && !(  defined(__IS_COMPILER_ARM_COMPILER__)           \
                             ||  defined(__IS_COMPILER_LLVM__)                   \
                             ||  defined(__IS_COMPILER_IAR__))
 #       define __IS_COMPILER_GCC__              1
 #   endif
-//! @}
+
 #endif
-//! @}
+
 
 #ifdef __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
 #   include __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
@@ -282,7 +289,14 @@ extern "C" {
 __super_loop_monitor__()
 #endif
 
+/*! @} */
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+/*!
+ * \addtogroup gBasic 1 Basic
+ * @{
+ */
 
 #define __cycleof__(__STR, ...)                                                 \
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
@@ -302,8 +316,12 @@ __super_loop_monitor__()
                 };                                                              \
             })
 
+/*! @} */
 
-
+/*!
+ * \addtogroup gRTOS 2 RTOS Support
+ * @{
+ */
 #define __super_loop_monitor__(__N, ...)                                        \
     using(                                                                      \
         struct {                                                                \
@@ -350,18 +368,21 @@ struct task_cycle_info_agent_t {
     task_cycle_info_agent_t *ptPrev;
 };
 
+/*! @} */
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
 
+/*!
+ * \addtogroup gBasic 1 Basic
+ * @{
+ */
 
 /*!
  * \brief try to set a start pointer for the performance counter
- *
  * \retval false the LOAD register is too small
- *
  * \retval true performance counter starts
  */
 __attribute__((noinline))
@@ -369,9 +390,7 @@ extern bool start_cycle_counter(void);
 
 /*!
  * \brief calculate the elapsed cycle count since the last start point
- *
  * \note  you can have multiple stop_cycle_counter following one start point
- *
  * \return int32_t the elapsed cycle count
  */
 __attribute__((noinline))
@@ -379,15 +398,13 @@ extern int32_t stop_cycle_counter(void);
 
 /*!
  * \brief delay specified time in microsecond
- *
- * \param nUs time in microsecond
+ * \param[in] nUs time in microsecond
  */
 extern void delay_us(int32_t nUs);
 
 /*!
  * \brief delay specified time in millisecond
- *
- * \param nUs time in millisecond
+ * \param[in] nMs time in millisecond
  */
 extern void delay_ms(int32_t nMs);
 
@@ -422,7 +439,6 @@ extern int64_t clock(void);
 
 /*!
  * \brief get the elapsed cycles since perf_counter is initialised
- *
  * \return int64_t the elpased cycles
  */
 __attribute__((noinline))
@@ -430,11 +446,17 @@ extern int64_t get_system_ticks(void);
 
 /*!
  * \brief get the elapsed milliseconds since perf_counter is initialised
- *
  * \return int32_t the elapsed milliseconds
  */
 extern int32_t get_system_ms(void);
 
+
+/*! @} */
+
+/*!
+ * \addtogroup gRTOS
+ * @{
+ */
 
 #if defined(__PERF_CNT_USE_RTOS__)
 
@@ -442,55 +464,55 @@ extern int32_t get_system_ms(void);
  */
 extern void init_task_cycle_counter(void);
 
-/*! \brief provide cycle information for target task if perf_counter is used
- *!        together with an RTOS in the support list.
- *!        Support RTOS List:
- *!           - RTX5
- *!           - RT-Thread
- *!           - ThreadX
- *!           - FreeRTOS
- *!
- *! \return task_cycle_info_t* the cycle info object passed to this function
+/*! \brief provide cycle information for target task
+ *  \details Support RTOS List:
+ *           - RTX5
+ *           - RT-Thread
+ *           - ThreadX
+ *           - FreeRTOS
+ *
+ * \return task_cycle_info_t* the cycle info object passed to this function
  */
 extern task_cycle_info_t * get_rtos_task_cycle_info(void);
 
 
 /*!
- *! \brief intialize a given task_cycle_info_t object and enable it before
- *!        registering it.
- *!
- *! \return task_cycle_info_t* the cycle info object passed to this function
+ * \brief intialize a given task_cycle_info_t object and enable it before
+ *        registering it.
+ * \return task_cycle_info_t* the cycle info object passed to this function
  */
 extern task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief enable a given task_cycle_info_t object
- *!
- *! \param ptInfo the address of target task_cycle_info_t object
- *! \return bool previous status
+ *
+ * \param[in] ptInfo the address of target task_cycle_info_t object
+ * \return bool previous status
  */
 extern bool enable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief disable a given task_cycle_info_t object
- *!
- *! \param ptInfo the address of target task_cycle_info_t object
- *! \return bool previous status
+ *
+ * \param[in] ptInfo the address of target task_cycle_info_t object
+ * \return bool previous status
  */
 extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo);
 
 /*! \brief resume the enabled status of a given task_cycle_info_t object
- *!
- *! \param ptInfo the address of target task_cycle_info_t object
- *! \param bEnabledStatus the previous status
+ *
+ * \param[in] ptInfo the address of target task_cycle_info_t object
+ * \param[in] bEnabledStatus the previous status
  */
 extern
 void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus);
 
-/*! \brief register a global virtual cycle counter agent to the current task
- *!
- *! \note the ptAgent it is better to be allocated as a static variable, global
- *!       variable or comes from heap or pool
- *!
- *! \return task_cycle_info_agent_t* the agent passed to this function
+/*! 
+ * \brief register a global virtual cycle counter agent to the current task
+ * \param[in] ptInfo the address of target task_cycle_info_t object
+ * \param[in] ptAgent an list node for the task_cycle_info_t object
+ * \note the ptAgent it is better to be allocated as a static variable, global
+ *       variable or comes from heap or pool
+ *
+ * \return task_cycle_info_agent_t* the agent passed to this function
  */
 extern
 task_cycle_info_agent_t *register_task_cycle_agent(
@@ -498,34 +520,34 @@ task_cycle_info_agent_t *register_task_cycle_agent(
                                             task_cycle_info_agent_t *ptAgent);
 
 /*!
- *! \brief remove a global virtual cycle counter agent from the current task
- *!
- *! \return task_cycle_info_agent_t* the agent passed to this function
+ * \brief remove a global virtual cycle counter agent from the current task
+ * \param[in] ptAgent the list node currently in use
+ * \return task_cycle_info_agent_t* the agent passed to this function
  */
 extern
 task_cycle_info_agent_t *
 unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
 
 /*! \brief reset and start the virtual cycle counter for the current task
- *!
- *! \param ptInfo the target task_cycle_info_t object
+ *
+ * \param[in] ptInfo the target task_cycle_info_t object
  */
 __attribute__((noinline))
 extern void __start_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 /*! \brief calculate the elapsed cycle count for current task since the last
- *!        start point
- *!
- *! \note you can call stop_cycle_counter() multiple times following one
- *!       start_task_cycle_counter()
- *!
- *! \param ptInfo the target task_cycle_info_t object
- *!
- *! \note  When ptInfo is NULL, it returns current task cycle info, when ptInfo
- *!        is non-NULL, it returns the total used cycles of the specified
- *!        task_cycle_info_t object.
- *!
- *! \return int64_t the elapsed cycle count.
+ *        start point
+ *
+ * \note you can call stop_cycle_counter() multiple times following one
+ *       start_task_cycle_counter()
+ *
+ * \param[in] ptInfo the target task_cycle_info_t object
+ *
+ * \note  When ptInfo is NULL, it returns current task cycle info, when ptInfo
+ *        is non-NULL, it returns the total used cycles of the specified
+ *        task_cycle_info_t object.
+ *
+ * \return int64_t the elapsed cycle count.
  */
 __attribute__((noinline))
 extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
@@ -548,6 +570,13 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 #   define disable_task_cycle_info(...)     (false)
 #   define resume_task_cycle_info(...)
 #endif
+
+/*! @} */
+
+/*!
+ * \addtogroup gBasic 1 Basic
+ * @{
+ */
 
 /*----------------------------------------------------------------------------*
  * Please ignore the following APIs unless you have encountered some known    *
@@ -579,13 +608,15 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  *               3. And call function init_cycle_counter(false) if you doesn't
  *              use SysTick in your project at all.
  *
- *  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
+ *  \param[in] bIsSysTickOccupied  A boolean value which indicates whether SysTick
  *           is already used by user application.
  */
 extern void init_cycle_counter(bool bIsSysTickOccupied);
 
 
 /*!
+ * \brief a system timer handler inserted to the SysTick_Handler
+ * 
  * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
  *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
  *        of your target toolchain as it use the $Super$$ which is only supported
@@ -603,6 +634,8 @@ extern void user_code_insert_to_systick_handler(void);
  * \brief update perf_counter as SystemCoreClock has been updated.
  */
 extern void update_perf_counter(void);
+
+/*! @} */
 
 //#if defined(__clang__)
 //#   pragma clang diagnostic pop
