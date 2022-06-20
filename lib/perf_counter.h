@@ -31,9 +31,9 @@ extern "C" {
 
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         6
+#define __PERF_COUNTER_VER_REVISE__         7
 
-#define __PERF_COUNTER_VER_STR__            "rel"
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -356,6 +356,7 @@ struct task_cycle_info_agent_t {
 /*============================ PROTOTYPES ====================================*/
 
 
+
 /*!
  * \brief try to set a start pointer for the performance counter
  *
@@ -363,6 +364,7 @@ struct task_cycle_info_agent_t {
  *
  * \retval true performance counter starts
  */
+__attribute__((noinline))
 extern bool start_cycle_counter(void);
 
 /*!
@@ -372,6 +374,7 @@ extern bool start_cycle_counter(void);
  *
  * \return int32_t the elapsed cycle count
  */
+__attribute__((noinline))
 extern int32_t stop_cycle_counter(void);
 
 /*!
@@ -413,6 +416,7 @@ extern void delay_ms(int32_t nMs);
 #if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow))
 #endif
+__attribute__((noinline))
 extern int64_t clock(void);
 #endif
 
@@ -421,6 +425,7 @@ extern int64_t clock(void);
  *
  * \return int64_t the elpased cycles
  */
+__attribute__((noinline))
 extern int64_t get_system_ticks(void);
 
 /*!
@@ -505,6 +510,7 @@ unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent);
  *!
  *! \param ptInfo the target task_cycle_info_t object
  */
+__attribute__((noinline))
 extern void __start_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 /*! \brief calculate the elapsed cycle count for current task since the last
@@ -521,6 +527,7 @@ extern void __start_task_cycle_counter(task_cycle_info_t *ptInfo);
  *!
  *! \return int64_t the elapsed cycle count.
  */
+__attribute__((noinline))
 extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
 
 
