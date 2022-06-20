@@ -40,13 +40,6 @@
 
 
 /* IO definitions (access restrictions to peripheral registers) */
-/*!
-    \defgroup CMSIS_glob_defs CMSIS Global Defines
-
-    <strong>IO Type Qualifiers</strong> are used
-    \li to specify the access to peripheral variables.
-    \li for automatic generation of peripheral register debug information.
-*/
 #ifdef __cplusplus
   #define   __I     volatile             /*!< Defines 'read only' permissions */
 #else
@@ -153,18 +146,12 @@ typedef struct
   __IOM uint32_t CPACR;                  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register */
 } SCB_Type;
 
-/*!
- * \name __task_cycle_info_t
- *
- */
-//! @{
 struct __task_cycle_info_t {
     task_cycle_info_t       tInfo;             //!< cycle information
     int64_t                 lLastTimeStamp;    //!< previous timestamp
     task_cycle_info_agent_t tList;             //!< the root of the agent list
     uint32_t                wMagicWord;        //!< an magic word for validation
 } ;
-//! @}
 
 
 /*============================ GLOBAL VARIABLES ==============================*/
@@ -185,18 +172,6 @@ volatile static int64_t s_lSystemClockCounts = 0;
 /*============================ IMPLEMENTATION ================================*/
 /*============================ INCLUDES ======================================*/
 
-
-/*!
-  \brief   System Tick Configuration
-  \details Initializes the System Timer and its interrupt, and starts the System Tick Timer.
-           Counter is in free running mode to generate periodic interrupts.
-  \param [in]  ticks  Number of ticks between two interrupts.
-  \return          0  Function succeeded.
-  \return          1  Function failed.
-  \note    When the variable <b>__Vendor_SysTickConfig</b> is set to 1, then the
-           function <b>SysTick_Config</b> is not included. In this case, the file <b><i>device</i>.h</b>
-           must contain a vendor-specific implementation of this function.
- */
 __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 {
     if ((ticks - 1UL) > SysTick_LOAD_RELOAD_Msk)
@@ -218,25 +193,13 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
     return (0UL);                                                               /* Function successful */
 }
 
-/*!
- * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
- *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
- *        of your target toolchain as it use the $Super$$ which is only supported
- *        by armlink. For this condition, you have to manually put this function
- *        into your existing SysTick_Handler to make the perf_counter library
- *        work.
- *
- * \note  - if you are using Arm Compiler 5 (armcc) or Arm Compiler 6 (armclang)
- *        you do NOT have to insert this function into your SysTick_Handler,
- *        the systick_wrapper_ual.s will do the work for you.
- */
 void user_code_insert_to_systick_handler(void)
 {
     uint32_t wLoad = SysTick->LOAD + 1;
     s_nCycleCounts += wLoad;
     s_lSystemClockCounts += wLoad;
 
-    //! update system ms counter
+    // update system ms counter
     s_nMSResidule += wLoad;
     int32_t nMS = s_nMSResidule / s_nMSUnit;
     s_nMSResidule -= nMS * s_nMSUnit;
@@ -249,42 +212,14 @@ void __perf_os_patch_init(void)
 {
 }
 
-/*!
- * \brief update perf_counter as SystemCoreClock has been updated.
- */
+
 void update_perf_counter(void)
 {
     s_nUSUnit = SystemCoreClock / 1000000ul;
     s_nMSUnit = SystemCoreClock / 1000ul;
 }
 
-/*! \brief   initialise cycle counter service
- *  \note    - don't forget to tell the function whether the systick is already
- *           used by user applications.
- *           Don't worry, this cycle counter service won't affect your existing
- *           systick service.
- *
- *  \note    - Usually the perf_counter can initialise itself with the help of
- *           __attribute__((constructor(255))), this works fine in Arm Compiler
- *           5 (armcc), Arm Compiler 6 (armclang), arm gcc and llvm. It doesn't
- *           work for IAR. So, when you are using IAR, please call this function
- *           manually to initialise the perf_counter service.
- *
- *  \note    - Perf_counter library assumes that:
- *           1. Your project has already using SysTick
- *           2. It assumes that you have already implemented the SysTick_Handler
- *           3. It assumes that you have enabled the exception handling for
- *              SysTick.
- *           If these are not the case, please:
- *               1. Add an empty SysTick_Handler to your project if you don't have
- *              one
- *               2. Make sure you have the SysTick Exception handling enabled
- *               3. And call function init_cycle_counter(false) if you doesn't
- *              use SysTick in your project at all.
- *
- *  \param bIsSysTickOccupied  A boolean value which indicates whether SysTick
- *           is already used by user application.
- */
+
 void init_cycle_counter(bool bIsSysTickOccupied)
 {
     __IRQ_SAFE {
@@ -313,13 +248,7 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     __perf_os_patch_init();
 }
 
-/*!
- * \brief try to set a start pointer for the performance counter
- *
- * \retval false the LOAD register is too small
- *
- * \retval true performance counter starts
- */
+
 __attribute__((noinline))
 bool start_cycle_counter(void)
 {
@@ -341,7 +270,7 @@ __STATIC_INLINE int32_t check_systick(void)
 {
     int32_t nTemp = (int32_t)SysTick->LOAD - (int32_t)SysTick->VAL;
 
-    /*! \note Since we cannot stop counting temporarily, there are several
+    /*        Since we cannot stop counting temporarily, there are several
      *        conditions which we should take into consideration:
      *        - Condition 1: when assigning nTemp with the register value (LOAD-VAL),
      *            the underflow didn't happen but when we check the PENDSTSET bit,
@@ -370,13 +299,6 @@ __STATIC_INLINE int32_t check_systick(void)
     return nTemp;
 }
 
-/*!
- * \brief calculate the elapsed cycle count since the last start point
- *
- * \note  you can have multiple stop_cycle_counter following one start point
- *
- * \return int32_t the elapsed cycle count
- */
 __attribute__((noinline))
 int32_t stop_cycle_counter(void)
 {
@@ -399,11 +321,7 @@ void __perf_counter_init(void)
     init_cycle_counter(true);
 }
 
-/*!
- * \brief delay specified time in microsecond
- *
- * \param nUs time in microsecond
- */
+
 void delay_us(int32_t nUs)
 {
     int64_t lUs = nUs * s_nUSUnit;
@@ -418,11 +336,7 @@ void delay_us(int32_t nUs)
     while(get_system_ticks() < lUs);
 }
 
-/*!
- * \brief delay specified time in millisecond
- *
- * \param nUs time in millisecond
- */
+
 void delay_ms(int32_t nMs)
 {
     int64_t lUs = nMs * s_nMSUnit;
@@ -473,11 +387,7 @@ int64_t clock(void)
     return lTemp;
 }
 
-/*!
- * \brief get the elapsed cycles since perf_counter is initialised
- *
- * \return int64_t the elapsed cycles
- */
+
 __attribute__((noinline))
 int64_t get_system_ticks(void)
 {
@@ -490,11 +400,6 @@ int64_t get_system_ticks(void)
     return lTemp;
 }
 
-/*!
- * \brief get the elapsed milliseconds since perf_counter is initialised
- *
- * \return int32_t the elapsed milliseconds
- */
 int32_t get_system_ms(void)
 {
     int32_t nTemp = 0;
@@ -598,13 +503,13 @@ task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
 
             ptAgent->ptInfo = ptInfo;
 
-            //! push to the stack
+            // push to the stack
             do {
-                //! set next-list
+                // set next-list
                 ptAgent->ptNext = ptRootAgent->tList.ptNext;
                 ptRootAgent->tList.ptNext = ptAgent;
 
-                //! set prev-list
+                // set prev-list
                 ptAgent->ptPrev = &(ptRootAgent->tList);
                 if (NULL != ptAgent->ptNext) {
                     ptAgent->ptNext->ptPrev = ptAgent;
@@ -631,7 +536,7 @@ unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
                 break;      /* this should not happen */
             }
             if (ptPrev->ptNext != ptAgent) {
-                //! already removed
+                // already removed
                 break;
             }
 
@@ -639,7 +544,7 @@ unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
             ptPrev->ptNext = ptAgent->ptNext;
 
             if (NULL != ptAgent->ptNext) {
-                //! remove agent from the prev-list
+                // remove agent from the prev-list
                 ptAgent->ptNext->ptPrev = ptPrev;
             }
 
@@ -662,7 +567,7 @@ void __on_context_switch_in(uint32_t *pwStack)
     ptRootAgent->tInfo.hwActiveCount++;
 
     if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
-        //! update all agents
+        // update all agents
         task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
             if (NULL != ptAgent->ptInfo) {
@@ -684,7 +589,7 @@ void __on_context_switch_out(uint32_t *pwStack)
     ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
 
     if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
-        //! update all agents
+        // update all agents
         task_cycle_info_agent_t *ptAgent = ptRootAgent->tList.ptNext;
         while(NULL != ptAgent) {
             if (NULL != ptAgent->ptInfo) {
