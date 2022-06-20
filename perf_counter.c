@@ -320,6 +320,7 @@ void init_cycle_counter(bool bIsSysTickOccupied)
  *
  * \retval true performance counter starts
  */
+__attribute__((noinline))
 bool start_cycle_counter(void)
 {
     if (SysTick->LOAD < PERF_CNT_COMPENSATION_THRESHOLD) {
@@ -376,6 +377,7 @@ __STATIC_INLINE int32_t check_systick(void)
  *
  * \return int32_t the elapsed cycle count
  */
+__attribute__((noinline))
 int32_t stop_cycle_counter(void)
 {
     int32_t nTemp = 0;
@@ -459,7 +461,7 @@ void delay_ms(int32_t nMs)
 #if !defined(__IS_COMPILER_IAR__)
 __attribute__((nothrow))
 #endif
-
+__attribute__((noinline))
 int64_t clock(void)
 {
     int64_t lTemp = 0;
@@ -476,6 +478,7 @@ int64_t clock(void)
  *
  * \return int64_t the elapsed cycles
  */
+__attribute__((noinline))
 int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
@@ -695,6 +698,7 @@ void __on_context_switch_out(uint32_t *pwStack)
     }
 }
 
+__attribute__((noinline))
 void __start_task_cycle_counter(task_cycle_info_t *ptInfo)
 {
     struct __task_cycle_info_t * ptRootAgent =
@@ -714,7 +718,7 @@ void __start_task_cycle_counter(task_cycle_info_t *ptInfo)
     }
 }
 
-
+__attribute__((noinline))
 int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo)
 {
     struct __task_cycle_info_t * ptRootAgent =
