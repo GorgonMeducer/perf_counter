@@ -37,7 +37,7 @@ extern "C" {
 #define __PERF_COUNTER_VER_MINOR__          9
 #define __PERF_COUNTER_VER_REVISE__         7
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            "rel"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -301,7 +301,7 @@ __super_loop_monitor__()
 #define __cycleof__(__STR, ...)                                                 \
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
                 _=_, {                                                          \
-                _ = get_system_ticks() - _;                                     \
+                _ = get_system_ticks() - _ - g_nOffset;                         \
                 __cycle_count__ = _;                                            \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
                     __perf_counter_printf__("\r\n");                            \
@@ -333,7 +333,7 @@ __super_loop_monitor__()
     for(start_task_cycle_counter();; ({                                         \
         if (!(--SAFE_NAME(cnt))) {                                              \
             __cpu_usage__.lTimeElapsed                                          \
-                = get_system_ticks() - __cpu_usage__.lStart;                    \
+                = get_system_ticks() - __cpu_usage__.lStart - g_nOffset;        \
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
                                                                                 \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
@@ -371,6 +371,8 @@ struct task_cycle_info_agent_t {
 /*! @} */
 
 /*============================ GLOBAL VARIABLES ==============================*/
+extern volatile int64_t g_lLastTimeStamp;
+extern volatile int32_t g_nOffset;
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 
@@ -381,20 +383,41 @@ struct task_cycle_info_agent_t {
  */
 
 /*!
+ * \brief get the elapsed cycles since perf_counter is initialised
+ * \return int64_t the elpased cycles
+ */
+__attribute__((noinline))
+extern int64_t get_system_ticks(void);
+
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int32_t the elapsed milliseconds
+ */
+extern int32_t get_system_ms(void);
+
+/*!
  * \brief try to set a start pointer for the performance counter
  * \retval false the LOAD register is too small
  * \retval true performance counter starts
  */
-__attribute__((noinline))
-extern bool start_cycle_counter(void);
+__STATIC_INLINE
+void start_cycle_counter(void)
+{
+    g_lLastTimeStamp = get_system_ticks();
+}
 
 /*!
  * \brief calculate the elapsed cycle count since the last start point
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
-__attribute__((noinline))
-extern int32_t stop_cycle_counter(void);
+__STATIC_INLINE
+int32_t stop_cycle_counter(void)
+{
+    int32_t nTemp = (int32_t)(get_system_ticks() - g_lLastTimeStamp);
+
+    return nTemp - g_nOffset;
+}
 
 /*!
  * \brief delay specified time in microsecond
@@ -437,18 +460,7 @@ __attribute__((noinline))
 extern int64_t clock(void);
 #endif
 
-/*!
- * \brief get the elapsed cycles since perf_counter is initialised
- * \return int64_t the elpased cycles
- */
-__attribute__((noinline))
-extern int64_t get_system_ticks(void);
 
-/*!
- * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int32_t the elapsed milliseconds
- */
-extern int32_t get_system_ms(void);
 
 
 /*! @} */

@@ -158,8 +158,8 @@ struct __task_cycle_info_t {
 extern uint32_t SystemCoreClock;
 
 /*============================ LOCAL VARIABLES ===============================*/
-volatile static int32_t s_nCycleCounts = 0;
-volatile static int32_t s_nOffset = 0;
+volatile int64_t g_lLastTimeStamp = 0;
+volatile int32_t g_nOffset = 0;
 volatile static int32_t s_nUSUnit = 1;
 volatile static int32_t s_nMSUnit = 1;
 volatile static int32_t s_nMSResidule = 0;
@@ -196,7 +196,6 @@ __STATIC_INLINE uint32_t SysTick_Config(uint32_t ticks)
 void user_code_insert_to_systick_handler(void)
 {
     uint32_t wLoad = SysTick->LOAD + 1;
-    s_nCycleCounts += wLoad;
     s_lSystemClockCounts += wLoad;
 
     // update system ms counter
@@ -204,7 +203,6 @@ void user_code_insert_to_systick_handler(void)
     int32_t nMS = s_nMSResidule / s_nMSUnit;
     s_nMSResidule -= nMS * s_nMSUnit;
     s_nSystemMS += nMS;
-
 }
 
 __WEAK
@@ -227,12 +225,11 @@ void init_cycle_counter(bool bIsSysTickOccupied)
             SysTick_Config(0x01000000);             // use the longest period
         }
         SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
+        
+        g_lLastTimeStamp = get_system_ticks();
+        g_nOffset = get_system_ticks() - g_lLastTimeStamp;
     }
-
-    start_cycle_counter();
-    //s_nSystemClockCounts = s_nCycleCounts;
-    s_nOffset = stop_cycle_counter();
-
+    
     update_perf_counter();
     s_lSystemClockCounts = 0;                       // reset system cycle counter
     s_nSystemMS = 0;                                // reset system millisecond counter
@@ -246,20 +243,6 @@ void init_cycle_counter(bool bIsSysTickOccupied)
 #endif
 
     __perf_os_patch_init();
-}
-
-
-__attribute__((noinline))
-bool start_cycle_counter(void)
-{
-    if (SysTick->LOAD < PERF_CNT_COMPENSATION_THRESHOLD) {
-        return false;
-    }
-
-    __IRQ_SAFE {
-        s_nCycleCounts =  (int32_t)SysTick->VAL - (int32_t)SysTick->LOAD;
-    }
-    return true;
 }
 
 /*! \note this function should only be called when irq is disabled
@@ -297,18 +280,6 @@ __STATIC_INLINE int32_t check_systick(void)
     }
 
     return nTemp;
-}
-
-__attribute__((noinline))
-int32_t stop_cycle_counter(void)
-{
-    int32_t nTemp = 0;
-
-    __IRQ_SAFE {
-        nTemp = check_systick() + s_nCycleCounts;
-    }
-
-    return nTemp - s_nOffset;
 }
 
 #if defined(__IS_COMPILER_IAR__)
@@ -583,7 +554,7 @@ void __on_context_switch_in(uint32_t *pwStack)
 void __on_context_switch_out(uint32_t *pwStack)
 {
     struct __task_cycle_info_t *ptRootAgent = (struct __task_cycle_info_t *)pwStack;
-    int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
+    int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp - g_nOffset;
 
     ptRootAgent->tInfo.nUsedRecent = lCycleUsed;
     ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
@@ -635,7 +606,7 @@ int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo)
     int64_t lCycles = 0;
 
     __IRQ_SAFE {
-        int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp;
+        int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp - g_nOffset;
         ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
 
         if (NULL != ptInfo) {
