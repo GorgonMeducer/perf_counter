@@ -16,7 +16,11 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-06-15" version="1.9.6" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
+    <release date="2022-07-07" version="1.9.7" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.7.pack">
+      - Improve measurement accuracy
+      - Other minor changes
+    </release>
+    <release date="2022-06-15" version="1.9.6" url="https://github.com/GorgonMeducer/perf_counter/raw/88c8db41730d0f4ab84708e828398ecaab434e24/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
       - Add RT-Thread Package
       - Add new API update_perf_counter() for notifying perf_counter that SystemCoreClock has been updated
       - Add a macro __perf_counter_printf__ to retarget printf

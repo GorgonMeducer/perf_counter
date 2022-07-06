@@ -397,8 +397,6 @@ extern int32_t get_system_ms(void);
 
 /*!
  * \brief try to set a start pointer for the performance counter
- * \retval false the LOAD register is too small
- * \retval true performance counter starts
  */
 __STATIC_INLINE
 void start_cycle_counter(void)
