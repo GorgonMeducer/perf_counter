@@ -215,6 +215,11 @@ void update_perf_counter(void)
 {
     s_nUSUnit = SystemCoreClock / 1000000ul;
     s_nMSUnit = SystemCoreClock / 1000ul;
+    
+    __IRQ_SAFE {
+        g_lLastTimeStamp = get_system_ticks();
+        g_nOffset = get_system_ticks() - g_lLastTimeStamp;
+    }
 }
 
 
