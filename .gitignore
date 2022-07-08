@@ -16,3 +16,4 @@ example/example.uvguix.gabriel
 example/GCC_Out
 documents/.DS_Store
 documents/Doxygen
+*.gabriel

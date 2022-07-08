@@ -295,13 +295,16 @@ void __perf_counter_init(void)
 
 void delay_us(int32_t nUs)
 {
-    int64_t lUs = nUs * s_nUSUnit;
+    int64_t lUs = (int64_t)nUs * (int64_t)s_nUSUnit;
+    int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
+                        ? g_nOffset 
+                        : PERF_CNT_DELAY_US_COMPENSATION;
 
-    if (lUs <= PERF_CNT_DELAY_US_COMPENSATION) {
+    if (lUs <= iCompensate) {
         return ;
     }
 
-    lUs -= PERF_CNT_DELAY_US_COMPENSATION;
+    lUs -= iCompensate;
 
     lUs += get_system_ticks();
     while(get_system_ticks() < lUs);
@@ -310,13 +313,16 @@ void delay_us(int32_t nUs)
 
 void delay_ms(int32_t nMs)
 {
-    int64_t lUs = nMs * s_nMSUnit;
+    int64_t lUs = (int64_t)nMs * (int64_t)s_nMSUnit;
+    int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
+                        ? g_nOffset 
+                        : PERF_CNT_DELAY_US_COMPENSATION;
 
-    if (lUs <= PERF_CNT_DELAY_US_COMPENSATION) {
+    if (lUs <= iCompensate) {
         return ;
     }
 
-    lUs -= PERF_CNT_DELAY_US_COMPENSATION;
+    lUs -= iCompensate;
 
     lUs += get_system_ticks();
     while(get_system_ticks() < lUs);

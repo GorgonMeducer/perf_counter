@@ -16,7 +16,7 @@
  */
 #define CMSIS_device_header "ARMCM0.h"
 
-/* GorgonMeducer.Performance Counter::Utilities:perf_counter:Core:Library:1.9.4 */
+/* GorgonMeducer.Performance Counter::Utilities:perf_counter:Core:Library:1.9.6 */
 #define __PERF_COUNTER__
 
 
