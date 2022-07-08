@@ -230,9 +230,6 @@ void init_cycle_counter(bool bIsSysTickOccupied)
             SysTick_Config(0x01000000);             // use the longest period
         }
         SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
-        
-        g_lLastTimeStamp = get_system_ticks();
-        g_nOffset = get_system_ticks() - g_lLastTimeStamp;
     }
     
     update_perf_counter();
