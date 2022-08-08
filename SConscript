@@ -2,11 +2,14 @@ Import('rtconfig')
 from building import *
 import shutil
 
-src = ['perf_counter.c', 'os/perf_os_patch_rt_thread.c']
-
+src = ['perf_counter.c']
 cwd = GetCurrentDir()
 path = [cwd]
-group = []
+CPPDEFINES = ['__PERF_COUNT_PLATFORM_SPECIFIC_HEADER__=<rtthread.h>', '__perf_counter_printf__=rt_kprintf']
+
+if GetDepend('PKG_PERF_COUNTER_USING_THREAD_STATISTIC'):
+    src += ['os/perf_os_patch_rt_thread.c']
+    CPPDEFINES += ['__PERF_CNT_USE_RTOS__']
 
 #delate unused files
 try:
@@ -21,8 +24,6 @@ try:
 except:
     pass
 
-group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'],
-    CPPDEFINES = ['__PERF_CNT_USE_RTOS__', '__PERF_COUNT_PLATFORM_SPECIFIC_HEADER__=<rtthread.h>', '__perf_counter_printf__=rt_kprintf'],
-    CPPPATH = path)
+group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = CPPDEFINES, CPPPATH = path)
 
 Return('group')
