@@ -1,4 +1,4 @@
-# perf_counter (v1.9.8-dev)
+# perf_counter (v1.9.8)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -203,14 +203,6 @@ void SysTick_Handler(void)
     ...
 }
 ```
-Implement an empty funciton `__ensure_systick_wrapper()` as there is no wrapper actually used in this deployment method:
-
-```c
-void __ensure_systick_wrapper(void)
-{
-}
-```
-
 
 
 7. Make sure the `SystemCoreClock` is updated with the same value as CPU frequency. 

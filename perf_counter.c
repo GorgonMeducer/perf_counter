@@ -236,12 +236,14 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     s_lSystemClockCounts = 0;                       // reset system cycle counter
     s_nSystemMS = 0;                                // reset system millisecond counter
 
+#if defined(__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__)
 #if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
     ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
     ||  defined(__IS_COMPILER_GCC__)                                            \
     ||  defined(__IS_COMPILER_LLVM__)
     extern void __ensure_systick_wrapper(void);
     __ensure_systick_wrapper();
+#endif
 #endif
 
     __perf_os_patch_init();
