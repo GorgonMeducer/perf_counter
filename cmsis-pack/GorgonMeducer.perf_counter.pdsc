@@ -16,8 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-07-08" version="1.9.8-dev2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.8-dev2.pack">
+    <release date="2022-08-09" version="1.9.8" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
       - Improve delay accuracy
+      - Fix RT-Thread stack-fully-used issue
+      - introduce macro __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
     </release>
     <release date="2022-06-15" version="1.9.6" url="https://github.com/GorgonMeducer/perf_counter/raw/88c8db41730d0f4ab84708e828398ecaab434e24/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
       - Add RT-Thread Package
@@ -175,7 +177,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.6">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.8">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc>documents/Doxygen/html/index.html</doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
@@ -188,6 +190,7 @@
               <RTE_Components_h>
 
 #define __PERF_COUNTER__
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
               </RTE_Components_h>
             </component>
 
@@ -202,6 +205,7 @@
               <RTE_Components_h>
 
 #define __PERF_COUNTER__
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
               </RTE_Components_h>
             </component>
             
