@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-08-09" version="1.9.8" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
+    <release date="2022-08-10" version="1.9.8" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
       - Improve delay accuracy
       - Fix RT-Thread stack-fully-used issue
       - introduce macro __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
