@@ -242,7 +242,7 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -691,7 +691,7 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define></Define>
+              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
