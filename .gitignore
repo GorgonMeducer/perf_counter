@@ -12,7 +12,6 @@ example/Out
 *.iex
 *.crf
 *.lst
-example/example.uvguix.*
 example/GCC_Out
 documents/.DS_Store
 documents/Doxygen
