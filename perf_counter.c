@@ -286,11 +286,7 @@ __STATIC_INLINE int32_t check_systick(void)
     return nTemp;
 }
 
-#if defined(__IS_COMPILER_IAR__)
 __attribute__((constructor))
-#else
-__attribute__((constructor(255)))
-#endif
 void __perf_counter_init(void)
 {
     init_cycle_counter(true);
@@ -332,6 +328,18 @@ void delay_ms(int32_t nMs)
     while(get_system_ticks() < lUs);
 }
 
+__attribute__((noinline))
+int64_t get_system_ticks(void)
+{
+    int64_t lTemp = 0;
+
+    __IRQ_SAFE {
+        lTemp = check_systick() + s_lSystemClockCounts;
+    }
+
+    return lTemp;
+}
+
 /*! \note the prototype of this clock() is different from the one defined in
  *!           time.h. As clock_t is usually defined as unsigned int, it is
  *!           not big enough in Cortex-M system to hold a time-stamp. clock()
@@ -359,26 +367,7 @@ __attribute__((nothrow))
 __attribute__((noinline))
 int64_t clock(void)
 {
-    int64_t lTemp = 0;
-
-    __IRQ_SAFE {
-        lTemp = check_systick() + s_lSystemClockCounts;
-    }
-
-    return lTemp;
-}
-
-
-__attribute__((noinline))
-int64_t get_system_ticks(void)
-{
-    int64_t lTemp = 0;
-
-    __IRQ_SAFE {
-        lTemp = check_systick() + s_lSystemClockCounts;
-    }
-
-    return lTemp;
+    return get_system_ticks();
 }
 
 int32_t get_system_ms(void)
@@ -391,7 +380,6 @@ int32_t get_system_ms(void)
 
     return nTemp;
 }
-
 
 __WEAK
 task_cycle_info_t * get_rtos_task_cycle_info(void)
