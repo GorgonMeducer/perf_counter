@@ -12,8 +12,9 @@ example/Out
 *.iex
 *.crf
 *.lst
-example/example.uvguix.gabriel
+example/example.uvguix.*
 example/GCC_Out
 documents/.DS_Store
 documents/Doxygen
-*.gabriel
+*@*
+RTE_Components.h
