@@ -18,3 +18,5 @@ documents/.DS_Store
 documents/Doxygen
 *@*
 RTE_Components.h
+*uvgui.*
+*uvguix.*
