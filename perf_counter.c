@@ -163,7 +163,9 @@ volatile int32_t g_nOffset = 0;
 volatile static int32_t s_nUSUnit = 1;
 volatile static int32_t s_nMSUnit = 1;
 volatile static int32_t s_nMSResidule = 0;
+volatile static int32_t s_nUSResidule = 0;
 volatile static int32_t s_nSystemMS = 0;
+volatile static int32_t s_nSystemUS = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
 
@@ -199,10 +201,21 @@ void user_code_insert_to_systick_handler(void)
     s_lSystemClockCounts += wLoad;
 
     // update system ms counter
-    s_nMSResidule += wLoad;
-    int32_t nMS = s_nMSResidule / s_nMSUnit;
-    s_nMSResidule -= nMS * s_nMSUnit;
-    s_nSystemMS += nMS;
+    do {
+        s_nMSResidule += wLoad;
+        int32_t nMS = s_nMSResidule / s_nMSUnit;
+        s_nMSResidule -= nMS * s_nMSUnit;
+        s_nSystemMS += nMS;
+    } while(0);
+
+    // update system us counter
+    do {
+        s_nUSResidule += wLoad;
+        int32_t nUS = s_nUSResidule / s_nUSUnit;
+        s_nUSResidule -= nUS * s_nUSUnit;
+        s_nSystemUS += nUS;
+    } while(0);
+
 }
 
 __WEAK
@@ -235,16 +248,7 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     update_perf_counter();
     s_lSystemClockCounts = 0;                       // reset system cycle counter
     s_nSystemMS = 0;                                // reset system millisecond counter
-
-#if defined(__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__)
-#if     defined(__IS_COMPILER_ARM_COMPILER_5__)                                 \
-    ||  defined(__IS_COMPILER_ARM_COMPILER_6__)                                 \
-    ||  defined(__IS_COMPILER_GCC__)                                            \
-    ||  defined(__IS_COMPILER_LLVM__)
-    extern void __ensure_systick_wrapper(void);
-    __ensure_systick_wrapper();
-#endif
-#endif
+    s_nSystemUS = 0;                                // reset system microsecond counter
 
     __perf_os_patch_init();
 }
@@ -376,6 +380,17 @@ int32_t get_system_ms(void)
 
     __IRQ_SAFE {
         nTemp = s_nSystemMS + (check_systick() + s_nMSResidule) / s_nMSUnit;
+    }
+
+    return nTemp;
+}
+
+int32_t get_system_us(void)
+{
+    int32_t nTemp = 0;
+
+    __IRQ_SAFE {
+        nTemp = s_nSystemUS + (check_systick() + s_nUSResidule) / s_nUSUnit;
     }
 
     return nTemp;

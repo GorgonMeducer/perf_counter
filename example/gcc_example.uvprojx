@@ -244,7 +244,7 @@
               <MiscControls></MiscControls>
               <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
               <Undefine></Undefine>
-              <IncludePath></IncludePath>
+              <IncludePath>..\..\perf_counter_library</IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -268,7 +268,7 @@
             <BSSAddressRange></BSSAddressRange>
             <IncludeLibs></IncludeLibs>
             <IncludeDir></IncludeDir>
-            <Misc>-Wl,--wrap=SysTick_Handler 
+            <Misc>-Wl,--wrap=SysTick_Handler
 
 --specs=nosys.specs -Wl,--gc-sections
 -mcpu=cortex-m0 -lc -ffunction-sections  -fdata-sections
@@ -398,60 +398,15 @@
                 </FileArm>
               </FileOption>
             </File>
+            <File>
+              <FileName>libperf_counter_gcc.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\lib\libperf_counter_gcc.a</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
-          <GroupName>::Utilities</GroupName>
-          <GroupOption>
-            <CommonProperty>
-              <UseCPPCompiler>0</UseCPPCompiler>
-              <RVCTCodeConst>0</RVCTCodeConst>
-              <RVCTZI>0</RVCTZI>
-              <RVCTOtherData>0</RVCTOtherData>
-              <ModuleSelection>0</ModuleSelection>
-              <IncludeInBuild>0</IncludeInBuild>
-              <AlwaysBuild>2</AlwaysBuild>
-              <GenerateAssemblyFile>2</GenerateAssemblyFile>
-              <AssembleAssemblyFile>2</AssembleAssemblyFile>
-              <PublicsOnly>2</PublicsOnly>
-              <StopOnExitCode>11</StopOnExitCode>
-              <CustomArgument></CustomArgument>
-              <IncludeLibraryModules></IncludeLibraryModules>
-              <ComprImg>1</ComprImg>
-            </CommonProperty>
-            <GroupArm>
-              <Carm>
-                <arpcs>2</arpcs>
-                <stkchk>2</stkchk>
-                <reentr>2</reentr>
-                <interw>2</interw>
-                <bigend>2</bigend>
-                <Strict>0</Strict>
-                <Optim>0</Optim>
-                <wLevel>0</wLevel>
-                <uThumb>2</uThumb>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Carm>
-              <Aarm>
-                <bBE>2</bBE>
-                <interw>2</interw>
-                <VariousControls>
-                  <MiscControls></MiscControls>
-                  <Define></Define>
-                  <Undefine></Undefine>
-                  <IncludePath></IncludePath>
-                </VariousControls>
-              </Aarm>
-            </GroupArm>
-          </GroupOption>
         </Group>
       </Groups>
     </Target>
@@ -691,7 +646,7 @@
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
+              <Define></Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -873,13 +828,34 @@
               <FileType>2</FileType>
               <FilePath>..\systick_wrapper_gcc.s</FilePath>
             </File>
+            <File>
+              <FileName>libperf_counter_gcc.a</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\lib\libperf_counter_gcc.a</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArm/>
+              </FileOption>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
-          <GroupName>::Utilities</GroupName>
         </Group>
       </Groups>
     </Target>
@@ -888,17 +864,10 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.5.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.3" url="http://www.keil.com/pack/" vendor="ARM" version="5.8.1"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="example"/>
-          <targetInfo name="gcc_lib"/>
-        </targetInfos>
-      </component>
-      <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Library" Cvendor="GorgonMeducer" Cversion="1.7.7" isTargetSpecific="1">
-        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="1.7.7"/>
-        <targetInfos>
-          <targetInfo excluded="1" name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>

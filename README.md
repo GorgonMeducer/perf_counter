@@ -1,4 +1,4 @@
-# perf_counter (v1.9.8)
+# perf_counter (v1.9.9)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -28,7 +28,7 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - **RT-Thread package is avaialble**
 - **Time based services**
   - `delay_us()` and `delay_ms()`
-  - Provides Timestamp services via ***get_system_ticks()*** and `get_system_ms()`
+  - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.

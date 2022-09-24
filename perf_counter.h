@@ -37,7 +37,7 @@ extern "C" {
 #define __PERF_COUNTER_VER_MINOR__          9
 #define __PERF_COUNTER_VER_REVISE__         9
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            "rel"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -289,6 +289,14 @@ extern "C" {
 __super_loop_monitor__()
 #endif
 
+#if defined(__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__)
+#   if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__
+#       pragma import(__ensure_systick_wrapper)
+#   elif    (defined(__GNUC__) || defined(__clang__))                           \
+        &&  (!defined(__IS_COMPILER_IAR__) || !__IS_COMPILER_IAR__)
+__asm(".global __ensure_systick_wrapper\n\t");
+#   endif
+#endif
 /*! @} */
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
@@ -394,6 +402,12 @@ extern int64_t get_system_ticks(void);
  * \return int32_t the elapsed milliseconds
  */
 extern int32_t get_system_ms(void);
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int32_t the elapsed microsecond
+ */
+extern int32_t get_system_us(void);
 
 /*!
  * \brief try to set a start pointer for the performance counter

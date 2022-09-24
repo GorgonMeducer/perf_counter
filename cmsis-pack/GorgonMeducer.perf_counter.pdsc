@@ -16,7 +16,9 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-09-05" version="1.9.9-dev" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.9-dev.pack">
+    <release date="2022-09-24" version="1.9.9" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.9.pack">
+      - Improve the way to import systick wrapper
+      - Add get_system_us to avoid 64bit integer divider.
       - Minor Update
     </release>
     <release date="2022-08-10" version="1.9.8" url="https://github.com/GorgonMeducer/perf_counter/raw/fbc8e94b0d78abb959462350d15df6885be70d27/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
