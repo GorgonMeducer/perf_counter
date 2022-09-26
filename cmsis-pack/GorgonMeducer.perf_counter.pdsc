@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-09-24" version="1.9.9" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.9.pack">
+    <release date="2022-09-26" version="1.9.9a" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.9a.pack">
       - Improve the way to import systick wrapper
       - Add get_system_us to avoid 64bit integer divider.
       - Minor Update
@@ -182,7 +182,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.9-dev">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.9a">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc>documents/Doxygen/html/index.html</doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
@@ -195,10 +195,14 @@
               <RTE_Components_h>
 
 #define __PERF_COUNTER__
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
               </RTE_Components_h>
-            </component>
 
+
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
+              </Pre_Include_Global_h>
+            </component>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
@@ -210,8 +214,12 @@
               <RTE_Components_h>
 
 #define __PERF_COUNTER__
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
               </RTE_Components_h>
+
+              <Pre_Include_Global_h>
+
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
+              </Pre_Include_Global_h>
             </component>
             
             <component Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
