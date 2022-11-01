@@ -16,7 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-09-26" version="1.9.9a" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.9a.pack">
+    <release date="2022-11-01" version="1.9.10" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack">
+      - Fix the support for RT-Thread
+    </release>
+    <release date="2022-09-26" version="1.9.9a" url="https://github.com/GorgonMeducer/perf_counter/raw/77134b23f9259e3ec4215eb30096c3474ed1d01d/cmsis-pack/GorgonMeducer.perf_counter.1.9.9a.pack">
       - Improve the way to import systick wrapper
       - Add get_system_us to avoid 64bit integer divider.
       - Minor Update
