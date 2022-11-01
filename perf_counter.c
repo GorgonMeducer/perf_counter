@@ -16,6 +16,8 @@
 ****************************************************************************/
 
 /*============================ INCLUDES ======================================*/
+#undef __PERF_COUNT_PLATFORM_SPECIFIC_HEADER__
+
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
