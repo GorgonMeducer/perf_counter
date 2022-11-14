@@ -30,26 +30,26 @@
 ;  <o> Stack Size (in Bytes) <0x0-0xFFFFFFFF:8>
 ;</h>
 
-Stack_Size      EQU      0x00000400
+;Stack_Size      EQU      0x00000400
 
-                AREA     STACK, NOINIT, READWRITE, ALIGN=3
-__stack_limit
-Stack_Mem       SPACE    Stack_Size
-__initial_sp
+;                AREA     STACK, NOINIT, READWRITE, ALIGN=3
+;__stack_limit
+;Stack_Mem       SPACE    Stack_Size
+;__initial_sp
 
 
-;<h> Heap Configuration
-;  <o> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
-;</h>
+;;<h> Heap Configuration
+;;  <o> Heap Size (in Bytes) <0x0-0xFFFFFFFF:8>
+;;</h>
 
-Heap_Size       EQU      0x00000C00
+;Heap_Size       EQU      0x00000C00
 
-                IF       Heap_Size != 0                      ; Heap is provided
-                AREA     HEAP, NOINIT, READWRITE, ALIGN=3
-__heap_base
-Heap_Mem        SPACE    Heap_Size
-__heap_limit
-                ENDIF
+;                IF       Heap_Size != 0                      ; Heap is provided
+;                AREA     HEAP, NOINIT, READWRITE, ALIGN=3
+;__heap_base
+;Heap_Mem        SPACE    Heap_Size
+;__heap_limit
+;                ENDIF
 
 
                 PRESERVE8
@@ -62,8 +62,9 @@ __heap_limit
                 EXPORT   __Vectors
                 EXPORT   __Vectors_End
                 EXPORT   __Vectors_Size
-
-__Vectors       DCD      __initial_sp                        ;     Top of Stack
+                IMPORT   |Image$$ARM_LIB_STACK$$ZI$$Limit|
+                
+__Vectors       DCD      |Image$$ARM_LIB_STACK$$ZI$$Limit|   ;     Top of Stack
                 DCD      Reset_Handler                       ;     Reset Handler
                 DCD      NMI_Handler                         ; -14 NMI Handler
                 DCD      HardFault_Handler                   ; -13 Hard Fault Handler
@@ -154,15 +155,15 @@ $Handler_Name   PROC
 
 ; User setup Stack & Heap
 
-                IF       :LNOT::DEF:__MICROLIB
-                IMPORT   __use_two_region_memory
-                ENDIF
+;                IF       :LNOT::DEF:__MICROLIB
+;                IMPORT   __use_two_region_memory
+;                ENDIF
 
-                EXPORT   __stack_limit
-                EXPORT   __initial_sp
-                IF       Heap_Size != 0                      ; Heap is provided
-                EXPORT   __heap_base
-                EXPORT   __heap_limit
-                ENDIF
+;                EXPORT   __stack_limit
+;                EXPORT   __initial_sp
+;                IF       Heap_Size != 0                      ; Heap is provided
+;                EXPORT   __heap_base
+;                EXPORT   __heap_limit
+;                ENDIF
 
                 END
