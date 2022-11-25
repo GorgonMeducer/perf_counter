@@ -9,7 +9,9 @@
 #define RAM1_LIMIT   (RAM1_BASE + RAM1_SIZE)
 
 #define STACK_SIZE   0x800
-#define HEAP_SIZE    (RAM1_LIMIT - ImageLimit(RW_IRAM1))
+
+#define HEAP_ALIGN   8
+#define HEAP_SIZE    (RAM1_LIMIT - AlignExpr(ImageLimit(RW_IRAM1), HEAP_ALIGN))
 
 LR_IROM1 0x00000000 0x00040000  {    ; load region size_region
   ER_IROM1 0x00000000 0x00040000  {  ; load address = execution address
@@ -26,7 +28,7 @@ LR_IROM1 0x00000000 0x00040000  {    ; load region size_region
    .ANY (+RW +ZI)
   }
   
-  ARM_LIB_HEAP +0 ALIGN 8 EMPTY HEAP_SIZE {}
+  ARM_LIB_HEAP +0 ALIGN HEAP_ALIGN EMPTY HEAP_SIZE {}
   
   ScatterAssert(ImageLimit(ARM_LIB_HEAP) <= RAM1_LIMIT)
 }
