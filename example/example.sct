@@ -13,23 +13,24 @@
 #define HEAP_ALIGN   8
 #define HEAP_SIZE    (RAM1_LIMIT - AlignExpr(ImageLimit(RW_IRAM1), HEAP_ALIGN))
 
+
 LR_IROM1 0x00000000 0x00040000  {    ; load region size_region
-  ER_IROM1 0x00000000 0x00040000  {  ; load address = execution address
-   *.o (RESET, +First)
-   *(InRoot$$Sections)
-   .ANY (+RO)
-   .ANY (+XO)
-  }
-  
-  ARM_LIB_STACK RAM1_BASE ALIGN 8 EMPTY STACK_SIZE {}
-  
-  ;RW_IRAM1 0x20000000 0x00020000  {  ; RW data
-  RW_IRAM1 +0  {  ; RW data
-   .ANY (+RW +ZI)
-  }
-  
-  ARM_LIB_HEAP +0 ALIGN HEAP_ALIGN EMPTY HEAP_SIZE {}
-  
-  ScatterAssert(ImageLimit(ARM_LIB_HEAP) <= RAM1_LIMIT)
+    ER_IROM1 0x00000000 0x00040000  {  ; load address = execution address
+        *.o (RESET, +First)
+        *(InRoot$$Sections)
+        .ANY (+RO)
+        .ANY (+XO)
+    }
+
+    ARM_LIB_STACK RAM1_BASE ALIGN 8 EMPTY FILL 0xDEADBEEF STACK_SIZE {}
+
+    RW_IRAM1 +0  {  ; RW data
+        .ANY (+RW +ZI)
+    }
+
+    ARM_LIB_HEAP +0 ALIGN HEAP_ALIGN EMPTY HEAP_SIZE {}
+
+    ScatterAssert(ImageLimit(ARM_LIB_HEAP) <= RAM1_LIMIT)
 }
+
 

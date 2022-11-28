@@ -63,6 +63,66 @@ static example_lv0_t s_tItem[8] = {
     {.chID = 7},
 };
 
+#if defined(__clang__)
+#   pragma clang diagnostic push
+#   pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
+#   pragma clang diagnostic ignored "-Wdouble-promotion"
+#endif
+uint32_t calculate_stack_usage_topdown(void)
+{
+    extern uint32_t Image$$ARM_LIB_STACK$$Limit[];
+    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Limit;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length / 4;
+    uint32_t wStackUsed = 0;
+
+
+    do {
+        if (*--pwStack == 0xDEADBEEF) {
+            break;
+        }
+        wStackUsed++;
+    } while(--wStackSize);
+    
+    
+    printf("\r\nStack Usage: [%d/%d] %2.2f%%\r\n", 
+            wStackUsed * 4, 
+            (uintptr_t)&Image$$ARM_LIB_STACK$$Length,
+            (   (float)wStackUsed * 400.0f 
+            /   (float)(uintptr_t)&Image$$ARM_LIB_STACK$$Length));
+
+    return wStackUsed * 4;
+}
+
+uint32_t calculate_stack_usage_bottomup(void)
+{
+    extern uint32_t Image$$ARM_LIB_STACK$$Base[];
+    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Base;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length;
+    uint32_t wStackUsed = wStackSize / 4;
+
+    do {
+        if (*pwStack++ != 0xDEADBEEF) {
+            break;
+        }
+    } while(--wStackUsed);
+    
+    printf("\r\nStack Usage: [%d/%d] %2.2f%%\r\n", 
+            wStackUsed * 4, 
+            wStackSize,
+            (   (float)wStackUsed * 400.0f / (float)wStackSize));
+
+    return wStackUsed * 4;
+}
+
+#if defined(__clang__)
+#   pragma clang diagnostic pop
+#endif
+
+
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
@@ -119,6 +179,9 @@ int main (void)
         }
         printf("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
     } while(0);
+
+    calculate_stack_usage_topdown();
+    calculate_stack_usage_bottomup();
 
     while (1) {
         printf("\r\nhello world\r\n");
