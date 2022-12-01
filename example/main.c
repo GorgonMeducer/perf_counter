@@ -62,7 +62,7 @@ static example_lv0_t s_tItem[8] = {
     {.chID = 6},
     {.chID = 7},
 };
-
+#if __IS_COMPILER_ARM_COMPILER__
 #if defined(__clang__)
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
@@ -121,7 +121,7 @@ uint32_t calculate_stack_usage_bottomup(void)
 #if defined(__clang__)
 #   pragma clang diagnostic pop
 #endif
-
+#endif
 
 /*----------------------------------------------------------------------------
   Main function
@@ -180,9 +180,11 @@ int main (void)
         printf("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
     } while(0);
 
+#if __IS_COMPILER_ARM_COMPILER__
     calculate_stack_usage_topdown();
     calculate_stack_usage_bottomup();
-
+#endif
+    
     while (1) {
         printf("\r\nhello world\r\n");
         delay_ms(1000);
