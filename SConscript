@@ -1,5 +1,6 @@
 Import('rtconfig')
 from building import *
+import os
 import shutil
 
 src = ['perf_counter.c', 'os/perf_os_patch_rt_thread.c']
@@ -20,6 +21,6 @@ try:
 except:
     pass
 
-group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = CPPDEFINES, CPPPATH = path)
+group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = CPPDEFINES, CPPPATH = path, CXXFLAGS = ' --gnu')
 
 Return('group')
