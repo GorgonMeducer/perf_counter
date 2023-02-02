@@ -21,6 +21,11 @@ try:
 except:
     pass
 
-group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = CPPDEFINES, CPPPATH = path, CXXFLAGS = ' --gnu')
+CXXFLAGS = ''
+
+if rtconfig.PLATFORM == 'armcc': # Keil AC5
+    CXXFLAGS += ' --gnu'
+
+group = DefineGroup('perf_counter', src, depend = ['PKG_USING_PERF_COUNTER'], CPPDEFINES = CPPDEFINES, CPPPATH = path, CXXFLAGS = CXXFLAGS)
 
 Return('group')
