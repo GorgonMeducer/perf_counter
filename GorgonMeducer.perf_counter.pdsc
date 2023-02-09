@@ -116,8 +116,8 @@
 
         <condition id="Cortex-M Processors">
             <description>Support All Cortex-M based processors</description>
-            <require condition="Previous Generation Cortex-M Processors"/>
-            <require condition="Armv8-M Processors"/>
+            <accept condition="Previous Generation Cortex-M Processors"/>
+            <accept condition="Armv8-M Processors"/>
         </condition>
 
         <condition id="CMSIS-CORE">
