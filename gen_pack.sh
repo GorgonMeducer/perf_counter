@@ -54,6 +54,7 @@ PACK_BASE_FILES="
   perf_counter.c
   perf_counter.h
   systick_wrapper_gcc.s
+  systick_wrapper_gnu.s
   systick_wrapper_ual.s
   LICENSE
   README.md

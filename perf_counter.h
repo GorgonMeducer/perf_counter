@@ -35,9 +35,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          1
 #define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         10
+#define __PERF_COUNTER_VER_REVISE__         11
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            ""
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -285,7 +285,7 @@ extern "C" {
 #endif
 
 #if __PLOOC_VA_NUM_ARGS() != 0
-#warning Please enable GNC extensions, it is required by __cycleof__() and \
+#warning Please enable GNU extensions, it is required by __cycleof__() and \
 __super_loop_monitor__()
 #endif
 
@@ -472,9 +472,6 @@ __attribute__((noinline))
 extern int64_t clock(void);
 #endif
 
-
-
-
 /*! @} */
 
 /*!
@@ -606,7 +603,6 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  * Please ignore the following APIs unless you have encountered some known    *
  * special conditions                                                         *
  *----------------------------------------------------------------------------*/
-
 
 /*! \brief   initialise cycle counter service
  *  \note    - don't forget to tell the function whether the systick is already
