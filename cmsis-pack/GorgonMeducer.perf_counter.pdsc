@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2022-11-01" version="1.9.11" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
+    <release date="2023-02-09" version="1.9.11" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
       - Fix the source variant support for Armv8-M processors
       - Other minor fixes
     </release>
