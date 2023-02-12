@@ -17,6 +17,7 @@ try:
     shutil.rmtree(os.path.join(cwd,'lib'))
     shutil.rmtree(os.path.join(cwd,'example'))
     os.remove(os.path.join(cwd,'systick_wrapper_gcc.s'))
+    os.remove(os.path.join(cwd,'systick_wrapper_gnu.s'))
     os.remove(os.path.join(cwd,'systick_wrapper_ual.s'))
 except:
     pass
