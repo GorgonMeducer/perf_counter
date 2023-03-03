@@ -1831,6 +1831,18 @@
         <package license="License.txt" name="RT-Thread" schemaVersion="1.4" supportContact="https://www.rt-thread.org" url="https://www.rt-thread.org/download/mdk/" vendor="RealThread" version="3.1.3"/>
         <targetInfos/>
       </file>
+      <file attr="config" category="source" name="benchmark\coremark_port\core_portme.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Utilities\core_portme.c</instance>
+        <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter"/>
+        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="benchmark\coremark_port\core_portme.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Utilities\core_portme.h</instance>
+        <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter"/>
+        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.0.0"/>
+        <targetInfos/>
+      </file>
     </files>
   </RTE>
 

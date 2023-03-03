@@ -903,6 +903,18 @@
         <package name="V2M-MPS2_CMx_BSP" schemaVersion="1.2" url="http://www.keil.com/pack/" vendor="Keil" version="1.7.0"/>
         <targetInfos/>
       </file>
+      <file attr="config" category="source" name="benchmark\coremark_port\core_portme.c" version="1.0.0">
+        <instance index="0" removed="1">RTE\Utilities\core_portme.c</instance>
+        <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter"/>
+        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.0.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="header" name="benchmark\coremark_port\core_portme.h" version="1.0.0">
+        <instance index="0" removed="1">RTE\Utilities\core_portme.h</instance>
+        <component Cbundle="Performance Counter" Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter"/>
+        <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.0.0"/>
+        <targetInfos/>
+      </file>
     </files>
   </RTE>
 
