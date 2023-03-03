@@ -1,10 +1,11 @@
-# perf_counter (v1.9.11)
+# perf_counter (v2.0.0)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
 
 - **Measure CPU cycles for specified code segment**
-- **[NEW] Enhanced measurement services for RTOS**
+- **[NEW] Add Coremark 1.0**
+- **Enhanced measurement services for RTOS**
   - Measures **RAW / True** cycles used for specified code segment inside a thread, **i.e. scheduling cost are removed**. 
   - Measure **RAW/True** cycles used for a data-process-path across multiple threads.
 - **Easy to use**

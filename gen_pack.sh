@@ -46,6 +46,7 @@ PACK_DIRS="
   lib
   os
   documents
+  benchmark
 "
 
   

@@ -33,9 +33,9 @@ extern "C" {
  * \addtogroup gBasic 1 Basic
  * @{
  */
-#define __PERF_COUNTER_VER_MAJOR__          1
-#define __PERF_COUNTER_VER_MINOR__          9
-#define __PERF_COUNTER_VER_REVISE__         11
+#define __PERF_COUNTER_VER_MAJOR__          2
+#define __PERF_COUNTER_VER_MINOR__          0
+#define __PERF_COUNTER_VER_REVISE__         0
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -47,7 +47,7 @@ extern "C" {
 /*! @} */
 
 /*!
- * \addtogroup gHelper 3 Helper
+ * \addtogroup gHelper 4 Helper
  * @{
  */
 
@@ -475,7 +475,7 @@ extern int64_t clock(void);
 /*! @} */
 
 /*!
- * \addtogroup gRTOS
+ * \addtogroup gRTOS 2 RTOS
  * @{
  */
 
@@ -656,6 +656,22 @@ extern void user_code_insert_to_systick_handler(void);
 extern void update_perf_counter(void);
 
 /*! @} */
+
+/*!
+ * \addtogroup gBenchmark 3 Benchmark
+ * @{
+ */
+
+#ifdef __PERF_COUNTER_COREMARK__
+
+/*!
+ * \brief entry for coremark
+ */
+void coremark_main(void);
+#endif
+
+/*! @} */
+
 
 //#if defined(__clang__)
 //#   pragma clang diagnostic pop

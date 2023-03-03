@@ -184,7 +184,11 @@ int main (void)
     calculate_stack_usage_topdown();
     calculate_stack_usage_bottomup();
 #endif
-    
+
+#ifdef __PERF_COUNTER_COREMARK__
+    coremark_main();
+#endif
+
     while (1) {
         printf("\r\nhello world\r\n");
         delay_ms(1000);

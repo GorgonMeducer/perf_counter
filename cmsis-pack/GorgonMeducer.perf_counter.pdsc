@@ -16,7 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2023-02-09" version="1.9.11" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
+    <release date="2023-03-02" version="2.0.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
+      - Add Coremark
+    </release>
+    <release date="2023-02-09" version="1.9.11" url="https://github.com/GorgonMeducer/perf_counter/raw/659eb12026977d81391d90290706f9ac3c8efe7e/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
       - Fix the source variant support for Armv8-M processors
       - Other minor fixes
     </release>
@@ -224,10 +227,10 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="1.9.11">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="2.0.0">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc>documents/Doxygen/html/index.html</doc>
-            <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -236,16 +239,16 @@
               </files>
               <RTE_Components_h>
 
-#define __PERF_COUNTER__
+#define __PERF_COUNTER__ 1
               </RTE_Components_h>
 
 
               <Pre_Include_Global_h>
 
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" condition="CMSIS-CORE">
+            <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -256,15 +259,38 @@
               </files>
               <RTE_Components_h>
 
-#define __PERF_COUNTER__
+#define __PERF_COUNTER__ 1
               </RTE_Components_h>
 
               <Pre_Include_Global_h>
 
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
+#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            
+
+            <component Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.0.0" condition="perf_counter">
+              <description>Coremark</description>
+              <files>
+                <file category="source"     name="benchmark/coremark_port/core_main.c"/>
+                <file category="source"     name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.0.0" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.0.0" />
+                
+                <file category="include"    name="benchmark/coremark/" />
+                <file category="source"     name="benchmark/coremark/core_list_join.c"/>
+                <file category="source"     name="benchmark/coremark/core_matrix.c"/>
+                <file category="source"     name="benchmark/coremark/core_state.c"/>
+                <file category="source"     name="benchmark/coremark/core_util.c"/>
+              </files>
+              <Pre_Include_Global_h>
+              
+//! \brief Enable Coremark
+#define __PERF_COUNTER_COREMARK__   1
+#define MAIN_HAS_NOARGC             1
+#define MAIN_HAS_NORETURN           1
+#define HAS_FLOAT                   1
+              </Pre_Include_Global_h>
+            </component>
+
             <component Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
@@ -273,7 +299,7 @@
               <Pre_Include_Global_h>
               
 //! \brief Enable RTOS Patch for perf_counter
-#define __PERF_CNT_USE_RTOS__
+#define __PERF_CNT_USE_RTOS__ 1
               </Pre_Include_Global_h>
             </component>
 
@@ -284,7 +310,7 @@
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
-#define __PERF_CNT_USE_RTOS__
+#define __PERF_CNT_USE_RTOS__ 1
             
 #define traceTASK_SWITCHED_OUT_DISABLE  
 #define traceTASK_SWITCHED_IN_DISABLE
@@ -308,7 +334,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               <Pre_Include_Global_h>
               
 //! \brief Enable RTOS Patch for perf_counter
-#define __PERF_CNT_USE_RTOS__
+#define __PERF_CNT_USE_RTOS__ 1
 
 struct rt_thread;
 extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread *to);
@@ -325,7 +351,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
-#define __PERF_CNT_USE_RTOS__
+#define __PERF_CNT_USE_RTOS__ 1
 
 #define TX_ENABLE_EXECUTION_CHANGE_NOTIFY
 

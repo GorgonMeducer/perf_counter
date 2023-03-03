@@ -30,6 +30,13 @@
 #   pragma GCC diagnostic ignored "-Wattributes"
 #endif
 
+#if defined(__clang__)
+#   pragma clang diagnostic ignored "-Wunknown-warning-option"
+#   pragma clang diagnostic ignored "-Wreserved-identifier"
+#   pragma clang diagnostic ignored "-Wconditional-uninitialized"
+#   pragma clang diagnostic ignored "-Wcast-align"
+#endif
+
 
 /*============================ MACROS ========================================*/
 #ifndef PERF_CNT_COMPENSATION_THRESHOLD
