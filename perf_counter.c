@@ -35,6 +35,7 @@
 #   pragma clang diagnostic ignored "-Wreserved-identifier"
 #   pragma clang diagnostic ignored "-Wconditional-uninitialized"
 #   pragma clang diagnostic ignored "-Wcast-align"
+#   pragma clang diagnostic ignored "-Wmissing-prototypes"
 #endif
 
 
@@ -554,9 +555,9 @@ unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
 void __on_context_switch_in(uint32_t *pwStack)
 {
     struct __task_cycle_info_t *ptRootAgent = (struct __task_cycle_info_t *)pwStack;
-    uint64_t dwTimeStamp = get_system_ticks();
+    int64_t lTimeStamp = get_system_ticks();
 
-    ptRootAgent->lLastTimeStamp = dwTimeStamp;
+    ptRootAgent->lLastTimeStamp = lTimeStamp;
     ptRootAgent->tInfo.hwActiveCount++;
 
     if (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord) {
