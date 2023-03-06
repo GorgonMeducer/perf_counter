@@ -65,7 +65,7 @@ volatile ee_s32 seed5_volatile = 0;
 
 extern uint32_t SystemCoreClock;
 
-static volatile CORE_TICKS s_nCycleElapsed = 0;
+static volatile CORE_TICKS s_tCycleElapsed = 0;
 
 /* Function : start_time
         This function will be called right before starting the timed portion of
@@ -91,7 +91,7 @@ start_time(void)
 void
 stop_time(void)
 {
-    s_nCycleElapsed = stop_cycle_counter();
+    s_tCycleElapsed = stop_cycle_counter();
 }
 /* Function : get_time
         Return an abstract "ticks" number that signifies time on the system.
@@ -105,7 +105,7 @@ stop_time(void)
 CORE_TICKS
 get_time(void)
 {
-    return s_nCycleElapsed;
+    return s_tCycleElapsed;
 }
 /* Function : time_in_secs
         Convert the value returned by get_time to seconds.

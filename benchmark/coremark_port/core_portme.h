@@ -76,7 +76,7 @@ Original Author: Shay Gal-on
 /* Configuration : CORE_TICKS
         Define type of return from the timing functions.
  */
-typedef int32_t CORE_TICKS;
+typedef int64_t CORE_TICKS;
 
 /* Definitions : COMPILER_VERSION, COMPILER_FLAGS, MEM_LOCATION
         Initialize these strings per platform

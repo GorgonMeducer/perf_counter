@@ -424,11 +424,11 @@ void start_cycle_counter(void)
  * \return int32_t the elapsed cycle count
  */
 __STATIC_INLINE
-int32_t stop_cycle_counter(void)
+int64_t stop_cycle_counter(void)
 {
-    int32_t nTemp = (int32_t)(get_system_ticks() - g_lLastTimeStamp);
+    int64_t lTemp = (get_system_ticks() - g_lLastTimeStamp);
 
-    return nTemp - g_nOffset;
+    return lTemp - g_nOffset;
 }
 
 /*!

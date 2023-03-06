@@ -16,7 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2023-03-02" version="2.0.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
+    <release date="2023-03-06" version="2.1.0-dev2" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.1.0-dev2.pack">
+      - Update stop_cycle_counter prototype to solve return-value-overflow issue
+    </release>
+    <release date="2023-03-02" version="2.0.0" url="https://github.com/GorgonMeducer/perf_counter/raw/0c6b79b20308bb9b7d15a7c65f0fe91174c78061/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
       - Add Coremark
     </release>
     <release date="2023-02-09" version="1.9.11" url="https://github.com/GorgonMeducer/perf_counter/raw/659eb12026977d81391d90290706f9ac3c8efe7e/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
@@ -227,7 +230,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="2.0.0">
+        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="2.1.0-dev">
             <description>A dedicated performance counter for Cortex-M systick.</description>
             <doc>documents/Doxygen/html/index.html</doc>
             <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
@@ -268,12 +271,12 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.0.0" condition="perf_counter">
+            <component Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.0" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="source"     name="benchmark/coremark_port/core_main.c"/>
-                <file category="source"     name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.0.0" />
-                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.0.0" />
+                <file category="source"     name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.0" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.0" />
                 
                 <file category="include"    name="benchmark/coremark/" />
                 <file category="source"     name="benchmark/coremark/core_list_join.c"/>
