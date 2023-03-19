@@ -1,23 +1,21 @@
-# perf_counter (v2.1.0-dev)
+# perf_counter (v2.1.0)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
 
 - **Measure CPU cycles for specified code segment**
-- **[NEW] Add Coremark 1.0**
+- **Add Coremark 1.0**
+- **[New] Provide Timer Service for EventRecorder automatically.**
 - **Enhanced measurement services for RTOS**
   - Measures **RAW / True** cycles used for specified code segment inside a thread, **i.e. scheduling cost are removed**. 
   - Measure **RAW/True** cycles used for a data-process-path across multiple threads.
 - **Easy to use**
   - Helper macros: `__cycleof__()` , `__super_loop_monitor__()` etc.
   - Helper functions: `start_cycle_counter()`, `stop_cycle_counter()` etc.
-
 - **Support ALL Cortex-M processors**
   - Including **Cortex-M85** and Star-MC1
-
 - **Provide Free Services**
   - Do **NOT** interfering with existing SysTick based applications
-
 - **Support ALL arm compilers**
   - Arm Compiler 5 (armcc), Arm Compiler 6 (armclang)
   - arm gcc
@@ -169,6 +167,22 @@ This example shows how to use the delta value of `get_system_ticks()` to measure
 ```
 
 
+
+### 1.3 Work with EventRecorder in MDK
+
+If you are using EventRecorder in MDK, once you deployed the `perf_counter`, it will provide the timer service for EventRecorder by implenting the following functions: `EventRecorderTimerSetup()`, `EventRecorderTimerGetFreq()` and `EventRecorderTimerGetCount()`. 
+
+If you have not modify anything in `EventRecorderConf.h`, **you don't have to anything** and please keep the default configuration.  If you see warnings like this:
+
+```
+Invalid Time Stamp Source selected in EventRecorderConf.h!
+```
+
+Please ignore it, or you can set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
+
+
+
+**By using perf_counter as the reference clock, EventRecorder can have the highest clock resolution on the target system without worring about the presence of DWT or any conflicting usage of SysTick.** 
 
 
 
