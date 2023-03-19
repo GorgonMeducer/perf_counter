@@ -406,6 +406,31 @@ int32_t get_system_us(void)
     return nTemp;
 }
 
+
+/// Setup timer hardware.
+/// \return       status (1=Success, 0=Failure)
+uint32_t EventRecorderTimerSetup (void)
+{
+    /* doing nothing at all */
+    return 1;
+}
+
+/// Get timer frequency.
+/// \return       timer frequency in Hz
+uint32_t EventRecorderTimerGetFreq (void)
+{
+    return SystemCoreClock;
+}
+
+/// Get timer count.
+/// \return       timer count (32-bit)
+uint32_t EventRecorderTimerGetCount (void)
+{
+    return get_system_ticks();
+}
+
+
+
 __WEAK
 task_cycle_info_t * get_rtos_task_cycle_info(void)
 {

@@ -11,7 +11,7 @@
 #define STACK_SIZE   0x1000
 
 #define HEAP_ALIGN   8
-#define HEAP_SIZE    (RAM1_LIMIT - AlignExpr(ImageLimit(RW_IRAM1), HEAP_ALIGN))
+#define HEAP_SIZE    (RAM1_LIMIT - AlignExpr(ImageLimit(ZI_RAM_UNINIT), HEAP_ALIGN))
 
 
 LR_IROM1 0x00000000 0x00040000  {    ; load region size_region
@@ -26,6 +26,10 @@ LR_IROM1 0x00000000 0x00040000  {    ; load region size_region
 
     RW_IRAM1 +0  {  ; RW data
         .ANY (+RW +ZI)
+    }
+    
+    ZI_RAM_UNINIT +0 UNINIT {
+        .ANY (.bss.noinit)
     }
 
     ARM_LIB_HEAP +0 ALIGN HEAP_ALIGN EMPTY HEAP_SIZE {}
