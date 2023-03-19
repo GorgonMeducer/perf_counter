@@ -172,7 +172,7 @@ This example shows how to use the delta value of `get_system_ticks()` to measure
 
 If you are using EventRecorder in MDK, once you deployed the `perf_counter`, it will provide the timer service for EventRecorder by implenting the following functions: `EventRecorderTimerSetup()`, `EventRecorderTimerGetFreq()` and `EventRecorderTimerGetCount()`. 
 
-If you have not modify anything in `EventRecorderConf.h`, **you don't have to anything** and please keep the default configuration.  If you see warnings like this:
+If you have not modify anything in `EventRecorderConf.h`, **you don't have to**, and please keep the default configuration.  If you see warnings like this:
 
 ```
 Invalid Time Stamp Source selected in EventRecorderConf.h!
