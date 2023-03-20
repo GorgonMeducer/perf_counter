@@ -178,7 +178,9 @@ If you have not modify anything in `EventRecorderConf.h`, **you don't have to an
 Invalid Time Stamp Source selected in EventRecorderConf.h!
 ```
 
-Please ignore it, or you can set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
+Please set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
+
+**IMPORTANT**: Please always make sure the macro `EVENT_TIMESTAMP_FREQ` is `0`
 
 
 
@@ -369,6 +371,19 @@ void SysTick_Handler(void)
 ```
 
 **NOTE**: If you deploy perf_counter using cmsis-pack and encounter this issue, please **DO NOT** call function `user_code_insert_to_systick_handler()` in this **should-be-empty** `SysTick_Handler()`. 
+
+### 3.2 Why I see perf_counter is in red in MDK project manager?
+
+Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack, hence causing this problem if you have used the older version. 
+
+Sovlving this problem is simple:
+
+1. please unselect ALL the performance components in RTE, press OK and close the uVision. 
+2. reopen the mdk project and select the perf_counter components in RTE
+
+
+
+Sorry about this.  
 
 
 
