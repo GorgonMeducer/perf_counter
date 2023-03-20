@@ -16,7 +16,7 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2023-03-06" version="2.1.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
+    <release date="2023-03-19" version="2.1.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
       - Update stop_cycle_counter prototype to solve return-value-overflow issue
       - Provide timer service for EventRecorder automatically
       - Remove the bundle from cmsis-pack
