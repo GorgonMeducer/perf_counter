@@ -6,7 +6,10 @@ import shutil
 src = ['perf_counter.c', 'os/perf_os_patch_rt_thread.c']
 cwd = GetCurrentDir()
 path = [cwd]
-CPPDEFINES = ['__PERF_COUNT_PLATFORM_SPECIFIC_HEADER__=<rtthread.h>', '__perf_counter_printf__=rt_kprintf', '__PERF_CNT_USE_RTOS__']
+CPPDEFINES = ['__PERF_COUNT_PLATFORM_SPECIFIC_HEADER__=<rtthread.h>', '__perf_counter_printf__=rt_kprintf']
+
+if GetDepend('PKG_PERF_COUNTER_USING_THREAD_STATISTIC'):
+    CPPDEFINES += ['__PERF_CNT_USE_RTOS__']
 
 #delate unused files
 try:
