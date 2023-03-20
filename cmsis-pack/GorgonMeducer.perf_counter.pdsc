@@ -19,6 +19,7 @@
     <release date="2023-03-06" version="2.1.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
       - Update stop_cycle_counter prototype to solve return-value-overflow issue
       - Provide timer service for EventRecorder automatically
+      - Remove the bundle from cmsis-pack
     </release>
     <release date="2023-03-02" version="2.0.0" url="https://github.com/GorgonMeducer/perf_counter/raw/0c6b79b20308bb9b7d15a7c65f0fe91174c78061/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
       - Add Coremark
@@ -229,10 +230,7 @@
   -->
 
     <components>
-        <bundle Cbundle="Performance Counter" Cclass="Utilities" Cversion="2.1.0-dev">
-            <description>A dedicated performance counter for Cortex-M systick.</description>
-            <doc>documents/Doxygen/html/index.html</doc>
-            <component Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -250,7 +248,7 @@
 #define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            <component Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -270,7 +268,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.0" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.0" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="source"     name="benchmark/coremark_port/core_main.c"/>
@@ -293,7 +291,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
@@ -305,7 +303,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_freertos.c"/>
@@ -328,7 +326,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rt_thread.c"/>
@@ -346,7 +344,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </Pre_Include_Global_h>
             </component>
             
-            <component Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_threadx.c"/>
@@ -359,14 +357,13 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
 
               </Pre_Include_Global_h>
             </component>
-
-        </bundle>
     </components>
   
   <!-- optional taxonomy section for defining new component Class and Group names -->
-  <!--
+
   <taxonomy>
+    <description Cclass="Utilities" Cgroup="perf_counter" doc="documents/Doxygen/html/index.html">A dedicated performance counter for Cortex-M systick.</description>
   </taxonomy>
-  -->
+
   
 </package>
