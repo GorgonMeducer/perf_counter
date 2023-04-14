@@ -272,7 +272,7 @@ __super_loop_monitor__()
 
 ### 2.2 Use cmsis-pack in MDK
 
-1. Download the cmsis-pack from `cmsis-pack` folder. It is a file with name `GorgonMeducer.perf_counter.<version>.pack`, for example `GorgonMeducer.perf_counter.1.9.4.pack`
+1. Download the cmsis-pack from the`cmsis-pack` folder. It is a file with name `GorgonMeducer.perf_counter.<version>.pack`, for example `GorgonMeducer.perf_counter.1.9.4.pack`
 
 2. Double click it to install this cmsis-pack. Once finished, you can find it in your Pack-Installer:
 
@@ -376,7 +376,7 @@ void SysTick_Handler(void)
 
 Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack, hence causing this problem if you have used the older version. 
 
-Sovlving this problem is simple:
+To solve this problem: 
 
 1. please unselect ALL the performance components in RTE, press OK and close the uVision. 
 2. reopen the mdk project and select the perf_counter components in RTE
