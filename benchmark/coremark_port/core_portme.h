@@ -104,7 +104,7 @@ typedef int64_t CORE_TICKS;
     "Unspecified" /* "Please put compiler flags here (e.g. -o3)" */
 #endif
 #ifndef MEM_LOCATION
-#define MEM_LOCATION "STACK"
+#define MEM_LOCATION "STATIC"
 #endif
 
 /* Data Types :
@@ -151,7 +151,7 @@ typedef size_t         ee_size_t;
         MEM_STACK - to allocate the data block on the stack (NYI).
 */
 #ifndef MEM_METHOD
-#define MEM_METHOD MEM_STACK
+#define MEM_METHOD MEM_STATIC
 #endif
 
 /* Configuration : MULTITHREAD
