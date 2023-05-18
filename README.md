@@ -295,7 +295,7 @@ __super_loop_monitor__()
 
 ### 2.2 Use cmsis-pack in MDK
 
-1. Download the cmsis-pack from the`cmsis-pack` folder. It is a file with name `GorgonMeducer.perf_counter.<version>.pack`, for example `GorgonMeducer.perf_counter.1.9.4.pack`
+1. Download the cmsis-pack from the`cmsis-pack` folder. It is a file with name `GorgonMeducer.perf_counter.<version>.pack`, for example `GorgonMeducer.perf_counter.2.2.0.pack`
 
 2. Double click it to install this cmsis-pack. Once finished, you can find it in your Pack-Installer:
 
