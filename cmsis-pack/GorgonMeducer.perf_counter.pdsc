@@ -234,7 +234,7 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -252,7 +252,7 @@
 #define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -272,12 +272,12 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.0" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.1" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="source"     name="benchmark/coremark_port/core_main.c"/>
                 <file category="source"     name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.0" />
-                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.0" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.1" />
                 
                 <file category="include"    name="benchmark/coremark/" />
                 <file category="source"     name="benchmark/coremark/core_list_join.c"/>
@@ -295,7 +295,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
@@ -307,7 +307,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_freertos.c"/>
@@ -330,7 +330,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rt_thread.c"/>
