@@ -34,7 +34,7 @@ extern "C" {
  * @{
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
-#define __PERF_COUNTER_VER_MINOR__          1
+#define __PERF_COUNTER_VER_MINOR__          2
 #define __PERF_COUNTER_VER_REVISE__         0
 
 #define __PERF_COUNTER_VER_STR__            ""
@@ -324,6 +324,43 @@ __asm(".global __ensure_systick_wrapper\n\t");
                 };                                                              \
             })
 
+
+
+/*!
+ * \addtogroup gBasicTimerService 1.2 Timer Service
+ * \ingroup gBasic
+ * @{
+ */
+
+/*!
+ * \brief set an alarm with given period in ms and check the status
+ *
+ * \param[in] __ms a time period in millisecond
+ * \param[in] ... an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_ms(__ms, ...)                                         \
+    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+        __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
+        (&SAFE_NAME(s_lTimestamp),##__VA_ARGS__));})
+
+
+/*!
+ * \brief set an alarm with given period in us and check the status
+ *
+ * \param[in] __us a time period in millisecond
+ * \param[in] ... an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_us(__us, ...)                                         \
+    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+        __perfc_is_time_out(perfc_convert_us_to_ticks(__us),                    \
+        (&SAFE_NAME(s_lTimestamp),##__VA_ARGS__));})
+
+/*! @} */
+
 /*! @} */
 
 /*!
@@ -385,11 +422,12 @@ extern volatile int32_t g_nOffset;
 /*============================ PROTOTYPES ====================================*/
 
 
+
 /*!
- * \addtogroup gBasic 1 Basic
+ * \addtogroup gBasicTicks 1.1 Ticks APIs
+ * \ingroup gBasic
  * @{
  */
-
 /*!
  * \brief get the elapsed cycles since perf_counter is initialised
  * \return int64_t the elpased cycles
@@ -397,51 +435,6 @@ extern volatile int32_t g_nOffset;
 __attribute__((noinline))
 extern int64_t get_system_ticks(void);
 
-/*!
- * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int32_t the elapsed milliseconds
- */
-extern int32_t get_system_ms(void);
-
-/*!
- * \brief get the elapsed microsecond since perf_counter is initialised
- * \return int32_t the elapsed microsecond
- */
-extern int32_t get_system_us(void);
-
-/*!
- * \brief try to set a start pointer for the performance counter
- */
-__STATIC_INLINE
-void start_cycle_counter(void)
-{
-    g_lLastTimeStamp = get_system_ticks();
-}
-
-/*!
- * \brief calculate the elapsed cycle count since the last start point
- * \note  you can have multiple stop_cycle_counter following one start point
- * \return int32_t the elapsed cycle count
- */
-__STATIC_INLINE
-int64_t stop_cycle_counter(void)
-{
-    int64_t lTemp = (get_system_ticks() - g_lLastTimeStamp);
-
-    return lTemp - g_nOffset;
-}
-
-/*!
- * \brief delay specified time in microsecond
- * \param[in] nUs time in microsecond
- */
-extern void delay_us(int32_t nUs);
-
-/*!
- * \brief delay specified time in millisecond
- * \param[in] nMs time in millisecond
- */
-extern void delay_ms(int32_t nMs);
 
 #ifdef __PERF_CNT_USE_LONG_CLOCK__
 /*! \note the prototype of this clock() is different from the one defined in
@@ -472,10 +465,120 @@ __attribute__((noinline))
 extern int64_t clock(void);
 #endif
 
-/*! @} */
+/*!
+ * \brief try to set a start pointer for the performance counter
+ */
+__STATIC_INLINE
+void start_cycle_counter(void)
+{
+    g_lLastTimeStamp = get_system_ticks();
+}
 
 /*!
- * \addtogroup gRTOS 2 RTOS
+ * \brief calculate the elapsed cycle count since the last start point
+ * \note  you can have multiple stop_cycle_counter following one start point
+ * \return int32_t the elapsed cycle count
+ */
+__STATIC_INLINE
+int64_t stop_cycle_counter(void)
+{
+    int64_t lTemp = (get_system_ticks() - g_lLastTimeStamp);
+
+    return lTemp - g_nOffset;
+}
+
+
+
+
+/*! @} */
+
+
+/*!
+ * \addtogroup gBasicTimerService 1.2 Timer Service
+ * \ingroup gBasic
+ * @{
+ */
+
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int32_t the elapsed milliseconds
+ */
+extern int32_t get_system_ms(void);
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int32_t the elapsed microsecond
+ */
+extern int32_t get_system_us(void);
+
+
+
+/*!
+ * \brief delay specified time in microsecond
+ * \param[in] nUs time in microsecond
+ */
+extern void delay_us(int32_t nUs);
+
+/*!
+ * \brief delay specified time in millisecond
+ * \param[in] nMs time in millisecond
+ */
+extern void delay_ms(int32_t nMs);
+
+/*! 
+ * \brief convert ticks of a reference timer to millisecond 
+ *
+ * \param[in] lTick the tick count
+ * \return int64_t the millisecond
+ */
+extern
+int64_t perfc_convert_ticks_to_ms(int64_t lTick);
+
+/*! 
+ * \brief convert millisecond into ticks of the reference timer 
+ *
+ * \param[in] wMS the target time in millisecond
+ * \return int64_t the ticks
+ */
+extern
+int64_t perfc_convert_ms_to_ticks(uint32_t wMS);
+
+/*! 
+ * \brief convert ticks of a reference timer to microsecond 
+ *
+ * \param[in] lTick the tick count
+ * \return int64_t the microsecond
+ */
+extern
+int64_t perfc_convert_ticks_to_us(int64_t lTick);
+
+/*! 
+ * \brief convert microsecond into ticks of the reference timer 
+ *
+ * \param[in] wUS the target time in microsecond
+ * \return int64_t the ticks
+ */
+extern
+int64_t perfc_convert_us_to_ticks(uint32_t wUS);
+
+/*!
+ * \brief set an alarm with given period and check the status
+ * 
+ * \param[in] lPeriod a time period in ticks
+ * \param[in] plTimestamp a pointer points to an int64_t integer, if NULL is 
+ *            passed, an static local variable inside the function will be used
+ * \return bool whether it is timeout or not
+ */
+extern
+bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp);
+
+/*! @} */
+
+
+
+
+/*!
+ * \addtogroup gRTOS 2 RTOS Support
  * @{
  */
 

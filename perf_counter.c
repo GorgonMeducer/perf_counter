@@ -406,6 +406,53 @@ int32_t get_system_us(void)
     return nTemp;
 }
 
+int64_t perfc_convert_ticks_to_ms(int64_t lTick)
+{
+    return lTick / (int64_t)s_nMSUnit;
+}
+
+int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
+{
+    int64_t lResult = (int64_t)s_nMSUnit * (int64_t)wMS;
+    return lResult ? lResult : 1;
+}
+
+int64_t perfc_convert_ticks_to_us(int64_t lTick)
+{
+    return lTick / (int64_t)s_nUSUnit;
+}
+
+int64_t perfc_convert_us_to_ticks(uint32_t wMS)
+{
+    int64_t lResult = (int64_t)s_nUSUnit * (int64_t)wMS;
+    return lResult ? lResult : 1;
+}
+
+
+bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp)
+{
+    if (NULL == plTimestamp) {
+        return false;
+    }
+    
+    int64_t lTimestamp = get_system_ticks();
+
+
+    if (0 == *plTimestamp) {
+        *plTimestamp = lPeriod;
+        *plTimestamp += lTimestamp;
+        
+        return false;
+    }
+
+    if (lTimestamp >= *plTimestamp) {
+        *plTimestamp = lPeriod + lTimestamp;
+        return true;
+    }
+
+    return false;
+}
+
 
 /// Setup timer hardware.
 /// \return       status (1=Success, 0=Failure)

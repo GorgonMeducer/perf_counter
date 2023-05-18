@@ -190,7 +190,8 @@ int main (void)
 #endif
 
     while (1) {
-        printf("\r\nhello world\r\n");
-        delay_ms(1000);
+        if (perfc_is_time_out_ms(1000)) {
+            printf("\r[%010d]", get_system_ms());
+        }
     }
 }

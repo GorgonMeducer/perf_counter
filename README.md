@@ -1,11 +1,11 @@
-# perf_counter (v2.1.0)
+# perf_counter (v2.2.0)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
 
 - **Measure CPU cycles for specified code segment**
 - **Add Coremark 1.0**
-- **[New] Provide Timer Service for EventRecorder automatically.**
+- **Provide Timer Service for EventRecorder automatically.**
 - **Enhanced measurement services for RTOS**
   - Measures **RAW / True** cycles used for specified code segment inside a thread, **i.e. scheduling cost are removed**. 
   - Measure **RAW/True** cycles used for a data-process-path across multiple threads.
@@ -168,7 +168,28 @@ This example shows how to use the delta value of `get_system_ticks()` to measure
 
 
 
-### 1.3 Work with EventRecorder in MDK
+### 1.3 Timer Services
+
+perf_counter provides the basic timer services for delaying a given period of time and polling-for-timeout. For example:
+
+```c
+delay_ms(1000);   /* block the program for 1000ms */
+delay_us(50);	  /* block the program for 50us */
+
+while(1) {
+    /* return true every 1000 ms */
+    if (perfc_is_time_out_ms(1000)) {
+        /* print hello world every 1000 ms */
+        printf("\r\nHello world\r\n");
+    }
+}
+```
+
+
+
+
+
+### 1.4 Work with EventRecorder in MDK
 
 If you are using EventRecorder in MDK, once you deployed the `perf_counter`, it will provide the timer service for EventRecorder by implenting the following functions: `EventRecorderTimerSetup()`, `EventRecorderTimerGetFreq()` and `EventRecorderTimerGetCount()`. 
 
@@ -185,6 +206,8 @@ Please set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
 
 
 **By using perf_counter as the reference clock, EventRecorder can have the highest clock resolution on the target system without worring about the presence of DWT or any conflicting usage of SysTick.** 
+
+
 
 
 
