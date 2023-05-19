@@ -397,7 +397,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
 /*!
  * \brief set an alarm with given period in us and check the status
  *
- * \param[in] __ms a time period in microsecond
+ * \param[in] __us a time period in microsecond
  * \param[in] __timestamp_ptr an optional timestamp holder
  * \param[in] __auto_reload whether starting next period after a timeout event
  *
@@ -411,7 +411,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
 /*!
  * \brief set an alarm with given period in us and check the status
  *
- * \param[in] __ms a time period in microsecond
+ * \param[in] __us a time period in microsecond
  * \param[in] __timestamp_ptr an optional timestamp holder
  *
  * \return bool whether it is timeout
@@ -423,7 +423,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
 /*!
  * \brief set an alarm with given period in us and check the status
  *
- * \param[in] __ms a time period in microsecond
+ * \param[in] __us a time period in microsecond
  * \param[in] __timestamp_ptr an optional timestamp holder
  *
  * \return bool whether it is timeout
@@ -434,7 +434,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
 /*!
  * \brief set an alarm with given period in us and check the status
  *
- * \param[in] __ms a time period in microsecond
+ * \param[in] __us a time period in microsecond
  * \param[in] ... an optional timestamp holder
  * \param[in] ... an optional indicator for whether starting next period after a timeout event
  *

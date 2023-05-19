@@ -16,6 +16,9 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2023-05-19" version="2.2.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.1.pack">
+      - Update perfc_is_time_out_ms and perf_is_time_out_us
+    </release>
     <release date="2023-05-18" version="2.2.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.0.pack">
       - Enhance Timer Services
       - Other minor changes
@@ -234,7 +237,7 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.1" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -252,7 +255,7 @@
 #define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.1" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="lib/perf_counter.h"/>
@@ -295,7 +298,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.2.1" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
@@ -307,7 +310,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.2.1" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_freertos.c"/>
@@ -330,7 +333,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.2.0" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.2.1" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_rt_thread.c"/>
@@ -348,7 +351,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.1.0" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.1.1" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
                 <file category="source"     name="lib/perf_os_patch_threadx.c"/>
