@@ -35,7 +35,7 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         0
+#define __PERF_COUNTER_VER_REVISE__         1
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -333,31 +333,117 @@ __asm(".global __ensure_systick_wrapper\n\t");
  */
 
 /*!
+ * \brief should not use
+ */
+#define perfc_is_time_out_ms0()         true
+
+
+
+
+
+/*!
+ * \brief set an alarm with given period in ms and check the status
+ *
+ * \param[in] __ms a time period in millisecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ * \param[in] __auto_reload whether starting next period after a timeout event
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_ms3(__ms, __timestamp_ptr, __auto_reload)             \
+    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+        __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
+        (__timestamp_ptr), (__auto_reload));})
+
+/*!
+ * \brief set an alarm with given period in ms and check the status
+ *
+ * \param[in] __ms a time period in millisecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_ms2(__ms, __timestamp_ptr)                            \
+            perfc_is_time_out_ms3((__ms), (__timestamp_ptr), true)
+
+
+/*!
+ * \brief set an alarm with given period in ms and check the status
+ *
+ * \param[in] __ms a time period in millisecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_ms1(__ms)                                             \
+            perfc_is_time_out_ms3((__ms), &SAFE_NAME(s_lTimestamp), true)
+
+/*!
  * \brief set an alarm with given period in ms and check the status
  *
  * \param[in] __ms a time period in millisecond
  * \param[in] ... an optional timestamp holder
+ * \param[in] ... an optional indicator for whether starting next period after a timeout event
  *
  * \return bool whether it is timeout
  */
-#define perfc_is_time_out_ms(__ms, ...)                                         \
-    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
-        __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
-        (&SAFE_NAME(s_lTimestamp),##__VA_ARGS__));})
+#define perfc_is_time_out_ms(...)                                               \
+            CONNECT2(perfc_is_time_out_ms, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))    \
+                (__VA_ARGS__)
+
+
 
 
 /*!
  * \brief set an alarm with given period in us and check the status
  *
- * \param[in] __us a time period in millisecond
- * \param[in] ... an optional timestamp holder
+ * \param[in] __us a time period in microsecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ * \param[in] __auto_reload whether starting next period after a timeout event
  *
  * \return bool whether it is timeout
  */
-#define perfc_is_time_out_us(__us, ...)                                         \
+#define perfc_is_time_out_us3(__us, __timestamp_ptr, __auto_reload)             \
     ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
         __perfc_is_time_out(perfc_convert_us_to_ticks(__us),                    \
-        (&SAFE_NAME(s_lTimestamp),##__VA_ARGS__));})
+        (__timestamp_ptr), (__auto_reload));})
+
+/*!
+ * \brief set an alarm with given period in us and check the status
+ *
+ * \param[in] __us a time period in microsecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_us2(__us, __timestamp_ptr)                            \
+            perfc_is_time_out_us3((__us), (__timestamp_ptr), true)
+
+
+/*!
+ * \brief set an alarm with given period in us and check the status
+ *
+ * \param[in] __us a time period in microsecond
+ * \param[in] __timestamp_ptr an optional timestamp holder
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_us1(__us)                                             \
+            perfc_is_time_out_us3((__us), &SAFE_NAME(s_lTimestamp), true)
+
+/*!
+ * \brief set an alarm with given period in us and check the status
+ *
+ * \param[in] __us a time period in microsecond
+ * \param[in] ... an optional timestamp holder
+ * \param[in] ... an optional indicator for whether starting next period after a timeout event
+ *
+ * \return bool whether it is timeout
+ */
+#define perfc_is_time_out_us(...)                                               \
+            CONNECT2(perfc_is_time_out_us, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))    \
+                (__VA_ARGS__)
+
 
 /*! @} */
 
@@ -567,10 +653,11 @@ int64_t perfc_convert_us_to_ticks(uint32_t wUS);
  * \param[in] lPeriod a time period in ticks
  * \param[in] plTimestamp a pointer points to an int64_t integer, if NULL is 
  *            passed, an static local variable inside the function will be used
+ * \param[in] bAutoReload whether starting next period after a timeout event.
  * \return bool whether it is timeout or not
  */
 extern
-bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp);
+bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload);
 
 /*! @} */
 

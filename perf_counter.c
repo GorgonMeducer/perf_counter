@@ -429,7 +429,7 @@ int64_t perfc_convert_us_to_ticks(uint32_t wMS)
 }
 
 
-bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp)
+bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload)
 {
     if (NULL == plTimestamp) {
         return false;
@@ -446,7 +446,9 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp)
     }
 
     if (lTimestamp >= *plTimestamp) {
-        *plTimestamp = lPeriod + lTimestamp;
+        if (bAutoReload) {
+            *plTimestamp = lPeriod + lTimestamp;
+        }
         return true;
     }
 
