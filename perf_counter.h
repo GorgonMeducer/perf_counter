@@ -35,9 +35,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         1
+#define __PERF_COUNTER_VER_REVISE__         2
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -337,10 +337,6 @@ __asm(".global __ensure_systick_wrapper\n\t");
  */
 #define perfc_is_time_out_ms0()         true
 
-
-
-
-
 /*!
  * \brief set an alarm with given period in ms and check the status
  *
@@ -351,7 +347,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_ms3(__ms, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+    ({  static int64_t SAFE_NAME(s_lTimestamp);  (void)SAFE_NAME(s_lTimestamp); \
         __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
         (__timestamp_ptr), (__auto_reload));})
 
