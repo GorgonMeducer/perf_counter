@@ -193,5 +193,11 @@ int main (void)
         if (perfc_is_time_out_ms(1000)) {
             printf("\r[%010d]", get_system_ms());
         }
+
+        __cpu_time__(10) {
+            delay_us(3000);
+        }
+        delay_us(7000);
+
     }
 }

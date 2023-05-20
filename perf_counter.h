@@ -35,9 +35,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         1
+#define __PERF_COUNTER_VER_REVISE__         2
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -306,6 +306,19 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * @{
  */
 
+/*!
+ * \brief measure the cycle count of a given code segment
+ * \param[in] __STR a description string for the measurement
+ * \param[in] ... an optional code segement, in which we can read the measured
+ *                result from __cycle_count__.
+ * \details Here is an example:
+    E.g.
+    \code
+        __cycleof__("printf") {
+            printf("hello world\r\n");
+        }
+    \endcode
+ */
 #define __cycleof__(__STR, ...)                                                 \
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
                 _=_, {                                                          \
@@ -324,7 +337,47 @@ __asm(".global __ensure_systick_wrapper\n\t");
                 };                                                              \
             })
 
-
+/*!
+ * \brief measure the cpu usage for a given code segment and print out the 
+ *        result in percentage. 
+ * \param[in] __CNT generate result on every given iterations
+ * \param[in] ... an optional code segement, in which we can read the measured
+ *                result from __usage__ which is a float value.
+ * \details Here is an example, 50% cpu time:
+    E.g.
+    \code
+        while (1) {
+            __cpu_time__(100) {
+                delay_us(5000);
+            }
+            delay_us(5000);
+        }
+    \endcode
+ */
+#define __cpu_time__(__CNT, ...)                                                \
+    static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
+    static uint32_t s_wLoopCounter = (__CNT);                                   \
+    using(int64_t lStart = 0, ({                                                \
+    if (0 == s_wLoopCounter) {                                                  \
+        float __usage__ = (float)((double)SAFE_NAME(s_lTotal)                   \
+                        / (double)(     get_system_ticks()                      \
+                                  -     SAFE_NAME(s_lTimestamp)));              \
+        __usage__ *= 100.0f;                                                    \
+        SAFE_NAME(s_lTimestamp) = 0;                                            \
+        SAFE_NAME(s_lTotal) = 0;                                                \
+        if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                            \
+            printf("CPU Usage %3.2f%%\r\n", (double)__usage__);                 \
+        } else {                                                                \
+            __VA_ARGS__                                                         \
+        }                                                                       \
+    }                                                                           \
+    if (0 == SAFE_NAME(s_lTimestamp)) {                                         \
+        SAFE_NAME(s_lTimestamp) = get_system_ticks();                           \
+        s_wLoopCounter = (__CNT);                                               \
+    }                                                                           \
+    lStart = get_system_ticks();}),                                             \
+    ({SAFE_NAME(s_lTotal) += get_system_ticks() - lStart;                       \
+    s_wLoopCounter--;}))
 
 /*!
  * \addtogroup gBasicTimerService 1.2 Timer Service
@@ -337,10 +390,6 @@ __asm(".global __ensure_systick_wrapper\n\t");
  */
 #define perfc_is_time_out_ms0()         true
 
-
-
-
-
 /*!
  * \brief set an alarm with given period in ms and check the status
  *
@@ -351,7 +400,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_ms3(__ms, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+    ({  static int64_t SAFE_NAME(s_lTimestamp);  (void)SAFE_NAME(s_lTimestamp); \
         __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
         (__timestamp_ptr), (__auto_reload));})
 
@@ -391,9 +440,6 @@ __asm(".global __ensure_systick_wrapper\n\t");
             CONNECT2(perfc_is_time_out_ms, __PLOOC_VA_NUM_ARGS(__VA_ARGS__))    \
                 (__VA_ARGS__)
 
-
-
-
 /*!
  * \brief set an alarm with given period in us and check the status
  *
@@ -404,7 +450,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_us3(__us, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp);                                 \
+    ({  static int64_t SAFE_NAME(s_lTimestamp); (void)SAFE_NAME(s_lTimestamp)   \
         __perfc_is_time_out(perfc_convert_us_to_ticks(__us),                    \
         (__timestamp_ptr), (__auto_reload));})
 
