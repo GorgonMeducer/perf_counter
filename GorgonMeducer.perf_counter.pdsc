@@ -16,14 +16,19 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2023-05-19" version="2.2.1" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.1.pack">
+    <release date="2023-05-20" version="2.2.2-dev" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.2-dev.pack">
+      - Add __cpu_time__
+      - Suppress warnings
+      - Other minor updates
+    </release>
+    <release date="2023-05-19" version="2.2.1" url="https://github.com/GorgonMeducer/perf_counter/raw/748eba059e3d05239cc27dd74394b605b9cf660a/cmsis-pack/GorgonMeducer.perf_counter.2.2.1.pack">
       - Update perfc_is_time_out_ms and perf_is_time_out_us
     </release>
-    <release date="2023-05-18" version="2.2.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.0.pack">
+    <release date="2023-05-18" version="2.2.0" url="https://github.com/GorgonMeducer/perf_counter/raw/8ecc7b436a99cfd68d4eef3302d7d4de56554abb/cmsis-pack/GorgonMeducer.perf_counter.2.2.0.pack">
       - Enhance Timer Services
       - Other minor changes
     </release>
-    <release date="2023-03-19" version="2.1.0" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
+    <release date="2023-03-19" version="2.1.0" url="https://github.com/GorgonMeducer/perf_counter/raw/9c06e5bc585c64df16d80e3598d568be554aadd1/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
       - Update stop_cycle_counter prototype to solve return-value-overflow issue
       - Provide timer service for EventRecorder automatically
       - Remove the bundle from cmsis-pack
