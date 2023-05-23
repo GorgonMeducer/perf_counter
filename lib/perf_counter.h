@@ -357,9 +357,9 @@ __asm(".global __ensure_systick_wrapper\n\t");
 #define __cpu_time__(__CNT, ...)                                                \
     static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
     static uint32_t s_wLoopCounter = (__CNT);                                   \
-    using(int64_t lStart = 0, ({                                                \
+    using(float __usage__ = 0, ({                                               \
     if (0 == s_wLoopCounter) {                                                  \
-        float __usage__ = (float)((double)SAFE_NAME(s_lTotal)                   \
+        __usage__ = (float)((double)SAFE_NAME(s_lTotal)                         \
                         / (double)(     get_system_ticks()                      \
                                   -     SAFE_NAME(s_lTimestamp)));              \
         __usage__ *= 100.0f;                                                    \
@@ -375,8 +375,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
         SAFE_NAME(s_lTimestamp) = get_system_ticks();                           \
         s_wLoopCounter = (__CNT);                                               \
     }                                                                           \
-    lStart = get_system_ticks();}),                                             \
-    ({SAFE_NAME(s_lTotal) += get_system_ticks() - lStart;                       \
+    start_task_cycle_counter();}),                                              \
+    ({SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                         \
     s_wLoopCounter--;}))
 
 /*!

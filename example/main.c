@@ -195,9 +195,9 @@ int main (void)
         }
 
         __cpu_time__(10) {
-            delay_us(3000);
+            delay_us(30000);
         }
-        delay_us(7000);
+        delay_us(70000);
 
     }
 }
