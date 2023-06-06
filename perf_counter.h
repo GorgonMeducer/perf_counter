@@ -338,8 +338,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
             })
 
 /*!
- * \brief measure the cpu usage for a given code segment and print out the 
- *        result in percentage. 
+ * \brief measure the cpu usage for a given code segment and print out the
+ *        result in percentage.
  * \param[in] __CNT generate result on every given iterations
  * \param[in] ... an optional code segement, in which we can read the measured
  *                result from __usage__ which is a float value.
@@ -450,7 +450,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_us3(__us, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp); (void)SAFE_NAME(s_lTimestamp)   \
+    ({  static int64_t SAFE_NAME(s_lTimestamp); (void)SAFE_NAME(s_lTimestamp);  \
         __perfc_is_time_out(perfc_convert_us_to_ticks(__us),                    \
         (__timestamp_ptr), (__auto_reload));})
 
@@ -657,8 +657,8 @@ extern void delay_us(int32_t nUs);
  */
 extern void delay_ms(int32_t nMs);
 
-/*! 
- * \brief convert ticks of a reference timer to millisecond 
+/*!
+ * \brief convert ticks of a reference timer to millisecond
  *
  * \param[in] lTick the tick count
  * \return int64_t the millisecond
@@ -666,8 +666,8 @@ extern void delay_ms(int32_t nMs);
 extern
 int64_t perfc_convert_ticks_to_ms(int64_t lTick);
 
-/*! 
- * \brief convert millisecond into ticks of the reference timer 
+/*!
+ * \brief convert millisecond into ticks of the reference timer
  *
  * \param[in] wMS the target time in millisecond
  * \return int64_t the ticks
@@ -675,8 +675,8 @@ int64_t perfc_convert_ticks_to_ms(int64_t lTick);
 extern
 int64_t perfc_convert_ms_to_ticks(uint32_t wMS);
 
-/*! 
- * \brief convert ticks of a reference timer to microsecond 
+/*!
+ * \brief convert ticks of a reference timer to microsecond
  *
  * \param[in] lTick the tick count
  * \return int64_t the microsecond
@@ -684,8 +684,8 @@ int64_t perfc_convert_ms_to_ticks(uint32_t wMS);
 extern
 int64_t perfc_convert_ticks_to_us(int64_t lTick);
 
-/*! 
- * \brief convert microsecond into ticks of the reference timer 
+/*!
+ * \brief convert microsecond into ticks of the reference timer
  *
  * \param[in] wUS the target time in microsecond
  * \return int64_t the ticks
@@ -695,9 +695,9 @@ int64_t perfc_convert_us_to_ticks(uint32_t wUS);
 
 /*!
  * \brief set an alarm with given period and check the status
- * 
+ *
  * \param[in] lPeriod a time period in ticks
- * \param[in] plTimestamp a pointer points to an int64_t integer, if NULL is 
+ * \param[in] plTimestamp a pointer points to an int64_t integer, if NULL is
  *            passed, an static local variable inside the function will be used
  * \param[in] bAutoReload whether starting next period after a timeout event.
  * \return bool whether it is timeout or not
@@ -762,7 +762,7 @@ extern bool disable_task_cycle_info(task_cycle_info_t *ptInfo);
 extern
 void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus);
 
-/*! 
+/*!
  * \brief register a global virtual cycle counter agent to the current task
  * \param[in] ptInfo the address of target task_cycle_info_t object
  * \param[in] ptAgent an list node for the task_cycle_info_t object
@@ -872,7 +872,7 @@ extern void init_cycle_counter(bool bIsSysTickOccupied);
 
 /*!
  * \brief a system timer handler inserted to the SysTick_Handler
- * 
+ *
  * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
  *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
  *        of your target toolchain as it use the $Super$$ which is only supported
