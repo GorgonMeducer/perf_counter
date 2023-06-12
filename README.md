@@ -216,9 +216,9 @@ Please set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
 
 #### 1.5.1 System Frequency Changing
 
-If you want to change the System Frequency, **after** the changing, make sure:
+If you want to change the System Frequency, **after** the change, make sure:
 
-1. The `SystemCoreClock` has been updated with the new system frequency. Usually the HAL will update the `SystemCoreClock` automatically, but in some rare case where `SystemCoreClock` is updated accordingly, you should do it yourself.
+1. The `SystemCoreClock` has been updated with the new system frequency. Usually, the HAL will update the `SystemCoreClock` automatically, but in some rare cases where `SystemCoreClock` is updated accordingly, you should do it yourself.
 
 2. please call `update_perf_counter()` to notify perf_counter.
 
