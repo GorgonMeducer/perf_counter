@@ -37,7 +37,7 @@ extern "C" {
 #define __PERF_COUNTER_VER_MINOR__          2
 #define __PERF_COUNTER_VER_REVISE__         2
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            ""
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -890,6 +890,22 @@ extern void user_code_insert_to_systick_handler(void);
  * \brief update perf_counter as SystemCoreClock has been updated.
  */
 extern void update_perf_counter(void);
+
+/*!
+ * \brief prepare for reconfiguration of SysTick timer.
+ *
+ * \note some systems (e.g. FreeRTOS) might reconfigure the systick timer to
+ *       fulfil the requirement of their feature. To support this, just
+ *       before the reconfiguration, please call this function in order 
+ *       to make the perf_counter works correctly later. 
+ *
+ * \note after the reconfiguration, please call update_perf_counter() to apply
+ *       the changes to perf_counter.
+ *
+ * \note this function will stop the SysTick, clear the pending bit and set
+ *       the Load register and Current Value register to zero.
+ */
+extern void before_cycle_counter_reconfiguration(void);
 
 /*! @} */
 

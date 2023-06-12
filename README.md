@@ -1,4 +1,4 @@
-# perf_counter (v2.2.2-dev)
+# perf_counter (v2.2.2)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -29,6 +29,9 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - `delay_us()` and `delay_ms()`
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
+  - Support SysTick Reconfiguration
+  - Support changing System Frequency
+
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macro to create atomicity for specified code block, i.e. `__IRQ_SAFE{...}`
@@ -208,6 +211,28 @@ Please set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
 **By using perf_counter as the reference clock, EventRecorder can have the highest clock resolution on the target system without worring about the presence of DWT or any conflicting usage of SysTick.** 
 
 
+
+### 1.5 On System Environment Changing
+
+#### 1.5.1 System Frequency Changing
+
+If you want to change the System Frequency, **after** the changing, make sure:
+
+1. The `SystemCoreClock` has been updated with the new system frequency. Usually the HAL will update the `SystemCoreClock` automatically, but in some rare case where `SystemCoreClock` is updated accordingly, you should do it yourself.
+
+2. please call `update_perf_counter()` to notify perf_counter.
+
+
+
+#### 1.5.2 Reconfigure the SysTick
+
+Some systems (e.g. FreeRTOS) might reconfigure the systick timer to fulfil the requirement of their feature. To support this:
+
+1. **Before the reconfiguration**, please call function `before_cycle_counter_reconfiguration()`.  
+
+   **NOTE**: This function will stop the SysTick, clear the pending bit, and set the Load register and the Current Value registers to zero.
+
+2. After the reconfiguration, please call `update_perf_counter()` to notify perf_counter the new changes. 
 
 
 

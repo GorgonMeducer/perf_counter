@@ -2,8 +2,8 @@
 <index schemaVersion="1.0.0" xs:noNamespaceSchemaLocation="PackIndex.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">
   <vendor>GorgonMeducer</vendor>
   <url>https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/</url>
-  <timestamp>2023-05-19T08:21:00</timestamp>
+  <timestamp>2023-06-12T08:36:00</timestamp>
   <pindex>
-    <pdsc url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" name="perf_counter" version="2.2.1"/>
+    <pdsc url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" name="perf_counter" version="2.2.2"/>
   </pindex>
 </index>

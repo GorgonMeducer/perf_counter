@@ -300,6 +300,26 @@ __STATIC_INLINE int32_t check_systick(void)
     return nTemp;
 }
 
+void before_cycle_counter_reconfiguration(void)
+{
+    __IRQ_SAFE {
+        SysTick->CTRL  = 0;                                                     /* disable SysTick first */
+
+        if (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk) {                               /* pending SysTick exception */
+            SCB->ICSR = SCB_ICSR_PENDSTCLR_Msk;                                 /* clear pending bit */
+
+            user_code_insert_to_systick_handler();                              /* manually handle exception */
+
+        }
+        s_lSystemClockCounts = check_systick();                                 /* get the final cycle counter value */
+
+        SysTick->LOAD = 0UL;
+        SysTick->VAL = 0UL;                                                     /* clear the Current Value Register */
+    }
+}
+
+
+
 __attribute__((constructor))
 void __perf_counter_init(void)
 {
