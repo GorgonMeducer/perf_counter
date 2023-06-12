@@ -311,7 +311,7 @@ void before_cycle_counter_reconfiguration(void)
             user_code_insert_to_systick_handler();                              /* manually handle exception */
 
         }
-        s_lSystemClockCounts = check_systick();                                 /* get the final cycle counter value */
+        s_lSystemClockCounts = get_system_ticks();                              /* get the final cycle counter value */
 
         SysTick->LOAD = 0UL;
         SysTick->VAL = 0UL;                                                     /* clear the Current Value Register */
