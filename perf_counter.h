@@ -366,7 +366,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
         SAFE_NAME(s_lTimestamp) = 0;                                            \
         SAFE_NAME(s_lTotal) = 0;                                                \
         if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                            \
-            printf("CPU Usage %3.2f%%\r\n", (double)__usage__);                 \
+            __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);                 \
         } else {                                                                \
             __VA_ARGS__                                                         \
         }                                                                       \
