@@ -35,9 +35,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         2
+#define __PERF_COUNTER_VER_REVISE__         3
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
