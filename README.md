@@ -15,7 +15,7 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
 - **Support ALL Cortex-M processors**
   - Including **Cortex-M85** and Star-MC1
 - **Provide Free Services**
-  - Do **NOT** interfering with existing SysTick based applications
+  - Do **NOT** interfer with existing SysTick based applications
 - **Support ALL arm compilers**
   - Arm Compiler 5 (armcc), Arm Compiler 6 (armclang)
   - arm gcc
