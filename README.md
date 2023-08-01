@@ -410,7 +410,7 @@ perf_counter has registered as one of the [RT-Thread software packages](https://
 
 ### 3.1 Why I see `Undefined symbol $Super$$SysTick_Handler` 
 
-This error usually pops-up in **Arm Compiler 5** and **Arm Compiler 6**, it is because you haven't implement any non-weak `Systick_Handler()`.  Please provide an EMPTY one in any c source file to solve this problem:
+This error usually pops up in **Arm Compiler 5** and **Arm Compiler 6**. It is because you haven't implemented any non-weak `SysTick_Handler()`.  Please provide an EMPTY one in any c source file to solve this problem:
 
 ```c
 void SysTick_Handler(void)
@@ -420,9 +420,9 @@ void SysTick_Handler(void)
 
 **NOTE**: If you deploy perf_counter using cmsis-pack and encounter this issue, please **DO NOT** call function `user_code_insert_to_systick_handler()` in this **should-be-empty** `SysTick_Handler()`. 
 
-### 3.2 Why I see perf_counter is in red in MDK project manager?
+### 3.2 Why do I see perf_counter in red in the MDK project manager?
 
-Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack, hence causing this problem if you have used the older version. 
+Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack, causing this problem if you have used the older version. 
 
 To solve this problem: 
 
