@@ -44,9 +44,10 @@
 #define ORIG_FUNC(__NAME)       __ORIG_FUNC(__NAME)
 
 
-#ifndef TX_ENABLE_EXECUTION_CHANGE_NOTIFY
-#error In order to use perf_counter:ThreadX-Patch, please define\
- TX_ENABLE_EXECUTION_CHANGE_NOTIFY in the project configuration.\
+#if defined(TX_ENABLE_EXECUTION_CHANGE_NOTIFY) && defined(TX_EXECUTION_PROFILE_ENABLE)
+#error In order to use perf_counter:ThreadX-Patch, please define  \
+ TX_ENABLE_EXECUTION_CHANGE_NOTIFY or TX_EXECUTION_PROFILE_ENABLE \
+ in the project configuration, according to the version of thread.\
  If you don't want to use this patch, please un-select it in RTE\
  or remove this patch from the compilation.
 #endif

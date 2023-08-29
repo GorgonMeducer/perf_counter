@@ -1,4 +1,4 @@
-# perf_counter (v2.2.3-dev)
+# perf_counter (v2.2.3)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -422,9 +422,7 @@ void SysTick_Handler(void)
 
 ### 3.2 Why do I see perf_counter in red in the MDK project manager?
 
-Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack, causing this problem if you have used the older version. 
-
-To solve this problem: 
+Since version v2.1.0 I removed the unnecessary bundle feature from the cmsis-pack. If you have used the older version, you will encounter this issue. To solve this problem: 
 
 1. please unselect ALL the performance components in RTE, press OK and close the uVision. 
 2. reopen the mdk project and select the perf_counter components in RTE
