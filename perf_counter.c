@@ -169,6 +169,7 @@ extern uint32_t SystemCoreClock;
 
 /*============================ LOCAL VARIABLES ===============================*/
 volatile int64_t g_lLastTimeStamp = 0;
+volatile static int64_t s_lOldTimestamp;
 volatile int32_t g_nOffset = 0;
 volatile static int32_t s_nUSUnit = 1;
 volatile static int32_t s_nMSUnit = 1;
@@ -369,6 +370,21 @@ int64_t get_system_ticks(void)
 
     __IRQ_SAFE {
         lTemp = check_systick() + s_lSystemClockCounts;
+        
+        /* When calling get_system_ticks() in an exception handler that has a  
+         * higher priority than the SysTick_Handler, in some rare cases, the 
+         * lTemp might be temporarily smaller than the previous value (i.e. 
+         * s_lOldTimestamp), to mitigate the adverse effects of this problem,
+         * we use the following code to avoid time-rolling-back issue.
+         * 
+         * NOTE: the issue mentioned above doesn't accumulate or have long-lasting
+         *       effects.
+         */
+        if (lTemp < s_lOldTimestamp) {
+            lTemp = s_lOldTimestamp;
+        } else {
+            s_lOldTimestamp = lTemp;
+        }
     }
 
     return lTemp;
