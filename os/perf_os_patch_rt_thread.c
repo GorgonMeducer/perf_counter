@@ -80,7 +80,9 @@ task_cycle_info_t * get_rtos_task_cycle_info(void)
 
 void __perf_os_patch_init(void)
 {
+#if defined(RTTHREAD_VERSION) && (RTTHREAD_VERSION >= (4 * 10000))
     rt_tick_sethook(user_code_insert_to_systick_handler);
+#endif
 
 #if !defined(PKG_USING_PERF_COUNTER) || (defined(PKG_PERF_COUNTER_USING_THREAD_STATISTIC))
     rt_scheduler_sethook(__rt_thread_scheduler_hook);
@@ -88,9 +90,12 @@ void __perf_os_patch_init(void)
 }
 
 #ifdef PKG_USING_PERF_COUNTER
+
+#if defined(RTTHREAD_VERSION) && (RTTHREAD_VERSION >= (4 * 10000))
 void __ensure_systick_wrapper(void)
 {
 }
+#endif
 
 #define DBG_TAG    "perf_counter"
 #define DBG_LVL    DBG_INFO
