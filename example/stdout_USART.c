@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "cmsis_compiler.h"
+#include "perf_counter.h"
 
 /* IO definitions (access restrictions to peripheral registers) */
 /**
