@@ -537,6 +537,24 @@ void init_task_cycle_counter(void)
     ptRootAgent->wMagicWord = MAGIC_WORD_CANARY;
 }
 
+bool perfc_check_task_stack_canary_safe(void)
+{
+    struct __task_cycle_info_t * ptRootAgent =
+        (struct __task_cycle_info_t *)get_rtos_task_cycle_info();
+    do {
+        if (NULL == ptRootAgent) {
+            break;
+        }
+    
+        if  (   (ptRootAgent->wMagicWord = MAGIC_WORD_CANARY)
+            ||  (ptRootAgent->wMagicWord = MAGIC_WORD_AGENT_LIST_VALID)) {
+            return true;
+        }
+    } while(0);
+    
+    return false;
+}
+
 task_cycle_info_t *init_task_cycle_info(task_cycle_info_t *ptInfo)
 {
     do {

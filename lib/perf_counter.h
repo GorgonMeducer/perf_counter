@@ -37,7 +37,7 @@ extern "C" {
 #define __PERF_COUNTER_VER_MINOR__          2
 #define __PERF_COUNTER_VER_REVISE__         4
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            ""
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -721,6 +721,13 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
 /*! \brief initialize the default virtual cycle counter for the current task
  */
 extern void init_task_cycle_counter(void);
+
+/*! \brief check whether the task stack canary is safe or not
+ *  \retval false likely to be a stack-overflow
+ *  \retval true task stack is safe
+ */
+extern
+bool perfc_check_task_stack_canary_safe(void);
 
 /*! \brief provide cycle information for target task
  *  \details Support RTOS List:

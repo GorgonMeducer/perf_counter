@@ -16,7 +16,13 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <release date="2023-08-30" version="2.2.3" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.3.pack">
+    <release date="2023-10-19" version="2.2.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.4.pack">
+      - Add support for RT-Thread-nano
+      - Add an API for checking stack overflow
+      - Improve the support for the Arm Compiler 6.21
+      - Other minor updates
+    </release>
+    <release date="2023-08-30" version="2.2.3" url="https://github.com/GorgonMeducer/perf_counter/raw/5660b13ea30005e31fa713cb4e6c6d7dbe0bcaa3/cmsis-pack/GorgonMeducer.perf_counter.2.2.3.pack">
       - Mitigate time-rolling-back issue when calling get_system_ticks in exception handlers that have higher priorities than the SysTick_Handler.
       - Other minor updates
     </release>
