@@ -825,15 +825,16 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
             __stop_task_cycle_counter((NULL,##__VA_ARGS__))
 
 #elif !defined(__IMPLEMENT_PERF_COUNTER)
-#   define start_task_cycle_counter(...)    start_cycle_counter()
-#   define stop_task_cycle_counter(...)     stop_cycle_counter()
+#   define start_task_cycle_counter(...)        start_cycle_counter()
+#   define stop_task_cycle_counter(...)         stop_cycle_counter()
 #   define init_task_cycle_counter()
 #   define register_task_cycle_agent(...)
 #   define unregister_task_cycle_agent(...)
-#   define init_task_cycle_info(...)        (NULL)
-#   define enable_task_cycle_info(...)      (false)
-#   define disable_task_cycle_info(...)     (false)
+#   define init_task_cycle_info(...)            (NULL)
+#   define enable_task_cycle_info(...)          (false)
+#   define disable_task_cycle_info(...)         (false)
 #   define resume_task_cycle_info(...)
+#   define perfc_check_task_stack_canary_safe() (false)
 #endif
 
 /*! @} */
