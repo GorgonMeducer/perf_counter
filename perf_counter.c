@@ -546,8 +546,8 @@ bool perfc_check_task_stack_canary_safe(void)
             break;
         }
     
-        if  (   (ptRootAgent->wMagicWord = MAGIC_WORD_CANARY)
-            ||  (ptRootAgent->wMagicWord = MAGIC_WORD_AGENT_LIST_VALID)) {
+        if  (   (MAGIC_WORD_CANARY == ptRootAgent->wMagicWord)
+            ||  (MAGIC_WORD_AGENT_LIST_VALID == ptRootAgent->wMagicWord)) {
             return true;
         }
     } while(0);
