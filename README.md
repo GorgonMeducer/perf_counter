@@ -1,4 +1,4 @@
-# perf_counter (v2.2.4-dev)
+# perf_counter (v2.2.4)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -31,7 +31,8 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
 - **Support both RTOS and bare-metal environments**
   - Support SysTick Reconfiguration
   - Support changing System Frequency
-
+  - **[new]** Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
+  
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macro to create atomicity for specified code block, i.e. `__IRQ_SAFE{...}`
