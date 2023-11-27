@@ -20,53 +20,53 @@
     <release version="9.9.9" tag="9.9.9">
       Active development ...
     </release>
-    <release date="2023-10-19" version="2.2.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.4.pack">
+    <release date="2023-10-19" version="2.2.4" tag="2.2.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.4.pack">
       - Add support for RT-Thread-nano
       - Add an API for checking stack overflow
       - Improve the support for the Arm Compiler 6.21
       - Other minor updates
     </release>
-    <release date="2023-08-30" version="2.2.3" url="https://github.com/GorgonMeducer/perf_counter/raw/5660b13ea30005e31fa713cb4e6c6d7dbe0bcaa3/cmsis-pack/GorgonMeducer.perf_counter.2.2.3.pack">
+    <release date="2023-08-30" version="2.2.3" tag="2.2.3" url="https://github.com/GorgonMeducer/perf_counter/raw/5660b13ea30005e31fa713cb4e6c6d7dbe0bcaa3/cmsis-pack/GorgonMeducer.perf_counter.2.2.3.pack">
       - Mitigate time-rolling-back issue when calling get_system_ticks in exception handlers that have higher priorities than the SysTick_Handler.
       - Other minor updates
     </release>
-    <release date="2023-06-12" version="2.2.2" url="https://github.com/GorgonMeducer/perf_counter/raw/124e98b3517aa46122ec7987c7726a065491823e/cmsis-pack/GorgonMeducer.perf_counter.2.2.2.pack">
+    <release date="2023-06-12" version="2.2.2" tag="2.2.2" url="https://github.com/GorgonMeducer/perf_counter/raw/124e98b3517aa46122ec7987c7726a065491823e/cmsis-pack/GorgonMeducer.perf_counter.2.2.2.pack">
       - Add __cpu_time__
       - Support reconfiguring the SysTick
       - Suppress warnings
       - Other minor updates
     </release>
-    <release date="2023-05-19" version="2.2.1" url="https://github.com/GorgonMeducer/perf_counter/raw/748eba059e3d05239cc27dd74394b605b9cf660a/cmsis-pack/GorgonMeducer.perf_counter.2.2.1.pack">
+    <release date="2023-05-19" version="2.2.1" tag="2.2.1" url="https://github.com/GorgonMeducer/perf_counter/raw/748eba059e3d05239cc27dd74394b605b9cf660a/cmsis-pack/GorgonMeducer.perf_counter.2.2.1.pack">
       - Update perfc_is_time_out_ms and perf_is_time_out_us
     </release>
-    <release date="2023-05-18" version="2.2.0" url="https://github.com/GorgonMeducer/perf_counter/raw/8ecc7b436a99cfd68d4eef3302d7d4de56554abb/cmsis-pack/GorgonMeducer.perf_counter.2.2.0.pack">
+    <release date="2023-05-18" version="2.2.0" tag="2.2.0" url="https://github.com/GorgonMeducer/perf_counter/raw/8ecc7b436a99cfd68d4eef3302d7d4de56554abb/cmsis-pack/GorgonMeducer.perf_counter.2.2.0.pack">
       - Enhance Timer Services
       - Other minor changes
     </release>
-    <release date="2023-03-19" version="2.1.0" url="https://github.com/GorgonMeducer/perf_counter/raw/9c06e5bc585c64df16d80e3598d568be554aadd1/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
+    <release date="2023-03-19" version="2.1.0" tag="2.1.0" url="https://github.com/GorgonMeducer/perf_counter/raw/9c06e5bc585c64df16d80e3598d568be554aadd1/cmsis-pack/GorgonMeducer.perf_counter.2.1.0.pack">
       - Update stop_cycle_counter prototype to solve return-value-overflow issue
       - Provide timer service for EventRecorder automatically
       - Remove the bundle from cmsis-pack
     </release>
-    <release date="2023-03-02" version="2.0.0" url="https://github.com/GorgonMeducer/perf_counter/raw/0c6b79b20308bb9b7d15a7c65f0fe91174c78061/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
+    <release date="2023-03-02" version="2.0.0" tag="2.0.0" url="https://github.com/GorgonMeducer/perf_counter/raw/0c6b79b20308bb9b7d15a7c65f0fe91174c78061/cmsis-pack/GorgonMeducer.perf_counter.2.0.0.pack">
       - Add Coremark
     </release>
-    <release date="2023-02-09" version="1.9.11" url="https://github.com/GorgonMeducer/perf_counter/raw/659eb12026977d81391d90290706f9ac3c8efe7e/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
+    <release date="2023-02-09" version="1.9.11" tag="1.9.11" url="https://github.com/GorgonMeducer/perf_counter/raw/659eb12026977d81391d90290706f9ac3c8efe7e/cmsis-pack/GorgonMeducer.perf_counter.1.9.11.pack">
       - Fix the source variant support for Armv8-M processors
       - Other minor fixes
     </release>
-    <release date="2022-11-01" version="1.9.10" url="https://github.com/GorgonMeducer/perf_counter/raw/1115e60d61940b7da833c841d2f4e1bbbcb22793/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack">
+    <release date="2022-11-01" version="1.9.10" tag="1.9.10" url="https://github.com/GorgonMeducer/perf_counter/raw/1115e60d61940b7da833c841d2f4e1bbbcb22793/cmsis-pack/GorgonMeducer.perf_counter.1.9.10.pack">
       - Fix the support for RT-Thread
       - Improve the way to import systick wrapper
       - Add get_system_us to avoid 64bit integer divider.
       - Minor Update
     </release>
-    <release date="2022-08-10" version="1.9.8" url="https://github.com/GorgonMeducer/perf_counter/raw/fbc8e94b0d78abb959462350d15df6885be70d27/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
+    <release date="2022-08-10" version="1.9.8" tag="1.9.8" url="https://github.com/GorgonMeducer/perf_counter/raw/fbc8e94b0d78abb959462350d15df6885be70d27/cmsis-pack/GorgonMeducer.perf_counter.1.9.8.pack">
       - Improve delay accuracy
       - Fix RT-Thread stack-fully-used issue
       - introduce macro __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__
     </release>
-    <release date="2022-06-15" version="1.9.6" url="https://github.com/GorgonMeducer/perf_counter/raw/88c8db41730d0f4ab84708e828398ecaab434e24/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
+    <release date="2022-06-15" version="1.9.6" tag="1.9.6" url="https://github.com/GorgonMeducer/perf_counter/raw/88c8db41730d0f4ab84708e828398ecaab434e24/cmsis-pack/GorgonMeducer.perf_counter.1.9.6.pack">
       - Add RT-Thread Package
       - Add new API update_perf_counter() for notifying perf_counter that SystemCoreClock has been updated
       - Add a macro __perf_counter_printf__ to retarget printf
@@ -74,30 +74,30 @@
       - Add Doxygen
       - Other minor changes
     </release>
-    <release date="2022-05-20" version="1.9.5" url="https://github.com/GorgonMeducer/perf_counter/raw/734e2ac7e00ad71a591aeef37f47001543de4d6e/cmsis-pack/GorgonMeducer.perf_counter.1.9.5.pack">
+    <release date="2022-05-20" version="1.9.5" tag="1.9.5" url="https://github.com/GorgonMeducer/perf_counter/raw/734e2ac7e00ad71a591aeef37f47001543de4d6e/cmsis-pack/GorgonMeducer.perf_counter.1.9.5.pack">
       - Add support for Cortex-M85, Star-MC1 and all other Armv8.1-M processors
       - Update Readme
     </release>
-    <release date="2022-04-13" version="1.9.4" url="https://github.com/GorgonMeducer/perf_counter/raw/37dd7f759b6a7d03011ecd6804dc9f702d7ce03f/cmsis-pack/GorgonMeducer.perf_counter.1.9.4.pack">
+    <release date="2022-04-13" version="1.9.4" tag="1.9.4" url="https://github.com/GorgonMeducer/perf_counter/raw/37dd7f759b6a7d03011ecd6804dc9f702d7ce03f/cmsis-pack/GorgonMeducer.perf_counter.1.9.4.pack">
       - Mitigate some clang warnings
       - Minor update for RTOS support
     </release>
-    <release date="2022-02-26" version="1.9.3" url="https://github.com/GorgonMeducer/perf_counter/raw/46c4b7057968fae0c0285c8e3a31d6be9fb98ee0/cmsis-pack/GorgonMeducer.perf_counter.1.9.3.pack">
+    <release date="2022-02-26" version="1.9.3" tag="1.9.3" url="https://github.com/GorgonMeducer/perf_counter/raw/46c4b7057968fae0c0285c8e3a31d6be9fb98ee0/cmsis-pack/GorgonMeducer.perf_counter.1.9.3.pack">
       - Fix CONNECT macro cannot connect two parameters issue.
       - Add UNUSED_PARAM
       - Add support for C++ env
       - Other minor updates
     </release>
-    <release date="2022-02-14" version="1.9.2" url="https://github.com/GorgonMeducer/perf_counter/raw/46b3f8bde2a42e253951a395370d6bed965bb2b1/cmsis-pack/GorgonMeducer.perf_counter.1.9.2.pack">
+    <release date="2022-02-14" version="1.9.2" tag="1.9.2" url="https://github.com/GorgonMeducer/perf_counter/raw/46b3f8bde2a42e253951a395370d6bed965bb2b1/cmsis-pack/GorgonMeducer.perf_counter.1.9.2.pack">
       - Add API get_system_ms() to avoid int64_t divide operation.
       - Add API delay_ms()
     </release>
-    <release date="2022-02-13" version="1.9.1" url="https://github.com/GorgonMeducer/perf_counter/raw/1f4bf7fcab579d5a3018798ec0f072d8588b2886/cmsis-pack/GorgonMeducer.perf_counter.1.9.1.pack">
+    <release date="2022-02-13" version="1.9.1" tag="1.9.1" url="https://github.com/GorgonMeducer/perf_counter/raw/1f4bf7fcab579d5a3018798ec0f072d8588b2886/cmsis-pack/GorgonMeducer.perf_counter.1.9.1.pack">
       - Add preprocessing in perf_counter.h to detect whether GNU extension is enabled or not.
       - Enhance RTOS support
       - Add macro __PERF_COUNTER__ in RTE_Components.h for compile-time detection.
     </release>
-    <release date="2022-01-29" version="1.8.2" url="https://github.com/GorgonMeducer/perf_counter/raw/1607c021f50d0305394870ca34b5412d949aaa4f/cmsis-pack/GorgonMeducer.perf_counter.1.8.2.pack">
+    <release date="2022-01-29" version="1.8.2" tag="1.8.2" url="https://github.com/GorgonMeducer/perf_counter/raw/1607c021f50d0305394870ca34b5412d949aaa4f/cmsis-pack/GorgonMeducer.perf_counter.1.8.2.pack">
       - Fix a bug found in __cycleof__. The __cycle_counter__ was not updated with the measure result.
       - Add macros for version info.
     </release>
