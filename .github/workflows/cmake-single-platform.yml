@@ -21,6 +21,10 @@ jobs:
         run: |
           git fetch --tags --force
 
+      - name: get pico-sdk
+        run: |
+          git submodule update --init
+
       - uses: Open-CMSIS-Pack/gen-pack-action@main
         with:
           doxygen-version: 1.9.2
