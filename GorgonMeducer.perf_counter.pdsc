@@ -278,11 +278,11 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
-                <file category="header"     name="perf_counter.h"/>
-                <file category="source"     name="perf_counter.c" />
-                <file category="source"     name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE"/>
-                <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
-                <file category="source"     name="systick_wrapper_gnu.s"        condition="Armv8-M Arm Compiler CMSIS-CORE"/>
+                <file category="header"         name="perf_counter.h"/>
+                <file category="sourceC"        name="perf_counter.c" />
+                <file category="sourceAsm"      name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE"/>
+                <file category="sourceAsm"      name="systick_wrapper_gcc.S"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
+                <file category="sourceAsm"      name="systick_wrapper_gnu.s"        condition="Armv8-M Arm Compiler CMSIS-CORE"/>
               </files>
               <RTE_Components_h>
 
@@ -298,15 +298,15 @@
             <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.1" condition="perf_counter">
               <description>Coremark</description>
               <files>
-                <file category="source"     name="benchmark/coremark_port/core_main.c"/>
-                <file category="source"     name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.0" />
+                <file category="sourceC"    name="benchmark/coremark_port/core_main.c"/>
+                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.0" />
                 <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.1" />
                 
                 <file category="include"    name="benchmark/coremark/" />
-                <file category="source"     name="benchmark/coremark/core_list_join.c"/>
-                <file category="source"     name="benchmark/coremark/core_matrix.c"/>
-                <file category="source"     name="benchmark/coremark/core_state.c"/>
-                <file category="source"     name="benchmark/coremark/core_util.c"/>
+                <file category="sourceC"    name="benchmark/coremark/core_list_join.c"/>
+                <file category="sourceC"    name="benchmark/coremark/core_matrix.c"/>
+                <file category="sourceC"    name="benchmark/coremark/core_state.c"/>
+                <file category="sourceC"    name="benchmark/coremark/core_util.c"/>
               </files>
               <Pre_Include_Global_h>
               
@@ -333,7 +333,7 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
-                <file category="source"     name="os/perf_os_patch_freertos.c"/>
+                <file category="sourceC"    name="os/perf_os_patch_freertos.c"/>
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
@@ -356,7 +356,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
-                <file category="source"     name="os/perf_os_patch_rt_thread.c"/>
+                <file category="sourceC"    name="os/perf_os_patch_rt_thread.c"/>
               </files>
               <Pre_Include_Global_h>
               
@@ -374,7 +374,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
-                <file category="source"     name="os/perf_os_patch_threadx.c"/>
+                <file category="sourceC"    name="os/perf_os_patch_threadx.c"/>
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
