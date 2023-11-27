@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<package schemaVersion="1.7.7" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.7/schema/PACK.xsd">
+<package schemaVersion="1.7.28" xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:noNamespaceSchemaLocation="https://raw.githubusercontent.com/Open-CMSIS-Pack/Open-CMSIS-Pack-Spec/v1.7.28/schema/PACK.xsd">
   <vendor>GorgonMeducer</vendor>
   <name>perf_counter</name>
   <description>A dedicated performance counter for the Cortex-M Systick. It shares the SysTick with users' original SysTick function without interfering with it. This library will bring new functionalities, such as performance counter, APIs for delay, clock() defined in time.h etc.</description>
@@ -16,6 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <!--automatically generated content, please do not modify -->
+    <release version="9.9.9" tag="9.9.9">
+      Active development ...
+    </release>
     <release date="2023-10-19" version="2.2.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.4.pack">
       - Add support for RT-Thread-nano
       - Add an API for checking stack overflow
@@ -256,7 +260,7 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
-                <file category="header"     name="lib/perf_counter.h"/>
+                <file category="header"     name="perf_counter.h"/>
                 <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
                 <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
               </files>
@@ -274,7 +278,7 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
-                <file category="header"     name="lib/perf_counter.h"/>
+                <file category="header"     name="perf_counter.h"/>
                 <file category="source"     name="perf_counter.c" />
                 <file category="source"     name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE"/>
                 <file category="source"     name="systick_wrapper_gcc.s"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
@@ -317,7 +321,7 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
-                <file category="source"     name="lib/perf_os_patch_rtx5.c"/>
+                <file category="source"     name="os/perf_os_patch_rtx5.c"/>
               </files>
               <Pre_Include_Global_h>
               
@@ -329,7 +333,7 @@
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
-                <file category="source"     name="lib/perf_os_patch_freertos.c"/>
+                <file category="source"     name="os/perf_os_patch_freertos.c"/>
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
@@ -352,7 +356,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
-                <file category="source"     name="lib/perf_os_patch_rt_thread.c"/>
+                <file category="source"     name="os/perf_os_patch_rt_thread.c"/>
               </files>
               <Pre_Include_Global_h>
               
@@ -370,7 +374,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
             <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
-                <file category="source"     name="lib/perf_os_patch_threadx.c"/>
+                <file category="source"     name="os/perf_os_patch_threadx.c"/>
               </files>
               <Pre_Include_Global_h>
 //! \brief Enable RTOS Patch for perf_counter
