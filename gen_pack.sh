@@ -43,7 +43,7 @@ DEFAULT_ARGS=(-c "v")
    perf_counter.c
    perf_counter.h
    README.md
-   systick_wrapper_gcc.s
+   systick_wrapper_gcc.S
    systick_wrapper_gnu.s
    systick_wrapper_ual.s
  "

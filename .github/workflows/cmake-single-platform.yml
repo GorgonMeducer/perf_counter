@@ -21,7 +21,7 @@ jobs:
         run: |
           git fetch --tags --force
 
-      - name: get pico-sdk
+      - name: get submodules
         run: |
           git submodule update --init
 
