@@ -257,7 +257,7 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"     name="perf_counter.h"/>
@@ -275,7 +275,7 @@
 #define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"         name="perf_counter.h"/>
@@ -294,6 +294,19 @@
 #define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
               </Pre_Include_Global_h>
             </component>
+
+            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
+              <description>A dedicated performance counter for Cortex-M systick.</description>
+              <files>
+                <file category="header"         name="perf_counter.h"/>
+                <file category="sourceC"        name="perf_counter.c" />
+              </files>
+              <RTE_Components_h>
+
+#define __PERF_COUNTER__ 1
+              </RTE_Components_h>
+            </component>
+
 
             <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.1" condition="perf_counter">
               <description>Coremark</description>
