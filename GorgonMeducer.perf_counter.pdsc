@@ -308,12 +308,12 @@
             </component>
 
 
-            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.1" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.2" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="sourceC"    name="benchmark/coremark_port/core_main.c"/>
-                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.0" />
-                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.1" />
+                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.2" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.2" />
                 
                 <file category="include"    name="benchmark/coremark/" />
                 <file category="sourceC"    name="benchmark/coremark/core_list_join.c"/>
