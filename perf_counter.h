@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2024 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -35,9 +35,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         4
+#define __PERF_COUNTER_VER_REVISE__         5
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -133,6 +133,25 @@ extern "C" {
 #ifndef UNUSED_PARAM
 #   define UNUSED_PARAM(__VAR)     (void)(__VAR)
 #endif
+
+/*!
+ * \brief an attribute for static variables that no initialisation is required 
+ *        in the C startup process.
+ */
+#ifndef PERF_NOINIT
+#   if     defined(__IS_COMPILER_ARM_COMPILER_5__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit"),zero_init))
+#   elif   defined(__IS_COMPILER_ARM_COMPILER_6__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   elif   defined(__IS_COMPILER_IAR__)
+#       define PERF_NOINIT   __no_init
+#   elif   (defined(__IS_COMPILER_GCC__) || defined(__IS_COMPILER_LLVM__)) && !defined(__APPLE__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   else
+#       define PERF_NOINIT
+#   endif
+#endif
+
 
 #undef __CONNECT2
 #undef __CONNECT3
