@@ -180,12 +180,7 @@ volatile static int32_t s_nSystemUS = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
 
-PERF_NOINIT
-volatile static int64_t s_lNoInitTimestamp;
-
-
 /*============================ PROTOTYPES ====================================*/
-static int64_t get_no_init_timestamp(void);
 
 /*============================ IMPLEMENTATION ================================*/
 /*============================ INCLUDES ======================================*/
@@ -215,7 +210,6 @@ void user_code_insert_to_systick_handler(void)
 {
     uint32_t wLoad = SysTick->LOAD + 1;
     s_lSystemClockCounts += wLoad;
-    s_lNoInitTimestamp += wLoad;
 
     // update system ms counter
     do {
@@ -319,7 +313,7 @@ void before_cycle_counter_reconfiguration(void)
 
         }
         s_lSystemClockCounts = get_system_ticks();                              /* get the final cycle counter value */
-        s_lNoInitTimestamp = get_no_init_timestamp();
+
         SysTick->LOAD = 0UL;
         SysTick->VAL = 0UL;                                                     /* clear the Current Value Register */
     }
@@ -391,17 +385,6 @@ int64_t get_system_ticks(void)
         } else {
             s_lOldTimestamp = lTemp;
         }
-    }
-
-    return lTemp;
-}
-
-static int64_t get_no_init_timestamp(void)
-{
-    int64_t lTemp = 0;
-
-    __IRQ_SAFE {
-        lTemp = check_systick() + s_lNoInitTimestamp;
     }
 
     return lTemp;
@@ -514,7 +497,6 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
 uint32_t EventRecorderTimerSetup (void)
 {
     /* doing nothing at all */
-    s_lNoInitTimestamp = 0;
     return 1;
 }
 
@@ -529,7 +511,7 @@ uint32_t EventRecorderTimerGetFreq (void)
 /// \return       timer count (32-bit)
 uint32_t EventRecorderTimerGetCount (void)
 {
-    return get_no_init_timestamp();
+    return get_system_ticks();
 }
 
 
