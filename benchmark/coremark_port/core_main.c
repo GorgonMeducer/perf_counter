@@ -104,6 +104,9 @@ char *mem_name[3] = { "Static", "Heap", "Stack" };
 
 */
 
+__attribute__((used))
+volatile float fCoremarkScore = 0.0f;
+
 #if MAIN_HAS_NOARGC
 MAIN_RETURN_TYPE
 coremark_main(void)
@@ -409,6 +412,8 @@ for (i = 0; i < MULTITHREAD; i++)
             double dfResult = (double)((double)1000000 
                             * (double)default_num_contexts*results[0].iterations
                             / (double)total_time);
+            fCoremarkScore = (float)dfResult;
+
             ee_printf(  "CoreMark 1.0 : %f / %s %s", 
                         dfResult,
                         COMPILER_VERSION,
