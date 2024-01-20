@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2024 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -22,7 +22,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "cmsis_compiler.h"
+
+#ifndef __PERFC_CFG_PORTING_INCLUDE__
+#   include "perfc_port_default.h"
+#else
+#   include __PERFC_CFG_PORTING_INCLUDE__
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,10 +39,10 @@ extern "C" {
  * @{
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
-#define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         4
+#define __PERF_COUNTER_VER_MINOR__          3
+#define __PERF_COUNTER_VER_REVISE__         0
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -133,6 +138,33 @@ extern "C" {
 #ifndef UNUSED_PARAM
 #   define UNUSED_PARAM(__VAR)     (void)(__VAR)
 #endif
+
+#ifndef MIN
+#   define MIN(__a, __b)  ((__a) <= (__b) ? (__a) : (__b))
+#endif
+
+#ifndef MAX
+#   define MAX(__a, __b)  ((__a) >= (__b) ? (__a) : (__b))
+#endif
+
+/*!
+ * \brief an attribute for static variables that no initialisation is required 
+ *        in the C startup process.
+ */
+#ifndef PERF_NOINIT
+#   if     defined(__IS_COMPILER_ARM_COMPILER_5__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit"),zero_init))
+#   elif   defined(__IS_COMPILER_ARM_COMPILER_6__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   elif   defined(__IS_COMPILER_IAR__)
+#       define PERF_NOINIT   __no_init
+#   elif   (defined(__IS_COMPILER_GCC__) || defined(__IS_COMPILER_LLVM__)) && !defined(__APPLE__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   else
+#       define PERF_NOINIT
+#   endif
+#endif
+
 
 #undef __CONNECT2
 #undef __CONNECT3
@@ -265,20 +297,16 @@ extern "C" {
 
 #ifndef safe_atom_code
 #   define safe_atom_code()                                                     \
-            using(  uint32_t SAFE_NAME(temp) =                                  \
-                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
-                            __disable_irq();                                    \
-                            SAFE_NAME(temp2);}),                                \
-                        __set_PRIMASK(SAFE_NAME(temp)))
+            using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =           \
+                        perfc_port_disable_global_interrupt(),                  \
+                    perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
 #endif
 
 #ifndef __IRQ_SAFE
 #   define __IRQ_SAFE                                                           \
-            using(  uint32_t SAFE_NAME(temp) =                                  \
-                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
-                            __disable_irq();                                    \
-                            SAFE_NAME(temp2);}),                                \
-                        __set_PRIMASK(SAFE_NAME(temp)))
+            using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =           \
+                        perfc_port_disable_global_interrupt(),                  \
+                    perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
 #endif
 
 #ifndef __perf_counter_printf__
@@ -555,7 +583,6 @@ extern volatile int32_t g_nOffset;
 /*============================ PROTOTYPES ====================================*/
 
 
-
 /*!
  * \addtogroup gBasicTicks 1.1 Ticks APIs
  * \ingroup gBasic
@@ -601,7 +628,7 @@ extern int64_t clock(void);
 /*!
  * \brief try to set a start pointer for the performance counter
  */
-__STATIC_INLINE
+static inline
 void start_cycle_counter(void)
 {
     g_lLastTimeStamp = get_system_ticks();
@@ -612,7 +639,7 @@ void start_cycle_counter(void)
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
-__STATIC_INLINE
+static inline
 int64_t stop_cycle_counter(void)
 {
     int64_t lTemp = (get_system_ticks() - g_lLastTimeStamp);
@@ -634,29 +661,29 @@ int64_t stop_cycle_counter(void)
 
 /*!
  * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int32_t the elapsed milliseconds
+ * \return uint32_t the elapsed milliseconds
  */
-extern int32_t get_system_ms(void);
+extern uint32_t get_system_ms(void);
 
 /*!
  * \brief get the elapsed microsecond since perf_counter is initialised
- * \return int32_t the elapsed microsecond
+ * \return uint32_t the elapsed microsecond
  */
-extern int32_t get_system_us(void);
+extern uint32_t get_system_us(void);
 
 
 
 /*!
  * \brief delay specified time in microsecond
- * \param[in] nUs time in microsecond
+ * \param[in] wUs time in microsecond
  */
-extern void delay_us(int32_t nUs);
+extern void delay_us(uint32_t wUs);
 
 /*!
  * \brief delay specified time in millisecond
- * \param[in] nMs time in millisecond
+ * \param[in] wMs time in millisecond
  */
-extern void delay_ms(int32_t nMs);
+extern void delay_ms(uint32_t nMs);
 
 /*!
  * \brief convert ticks of a reference timer to millisecond
@@ -943,5 +970,4 @@ void coremark_main(void);
 #ifdef __cplusplus
 }
 #endif
-
 #endif

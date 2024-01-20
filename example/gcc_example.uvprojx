@@ -403,6 +403,16 @@
               <FileType>4</FileType>
               <FilePath>..\lib\libperf_counter_gcc.a</FilePath>
             </File>
+            <File>
+              <FileName>perfc_port_default.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\perfc_port_default.c</FilePath>
+            </File>
+            <File>
+              <FileName>perfc_port_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\perfc_port_default.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -851,6 +861,16 @@
                 </CommonProperty>
                 <FileArm/>
               </FileOption>
+            </File>
+            <File>
+              <FileName>perfc_port_default.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\perfc_port_default.c</FilePath>
+            </File>
+            <File>
+              <FileName>perfc_port_default.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\perfc_port_default.h</FilePath>
             </File>
           </Files>
         </Group>
