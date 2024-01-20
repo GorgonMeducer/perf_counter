@@ -257,24 +257,6 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
-              <description>A dedicated performance counter for Cortex-M systick.</description>
-              <files>
-                <file category="header"     name="perf_counter.h"/>
-                <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
-                <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
-              </files>
-              <RTE_Components_h>
-
-#define __PERF_COUNTER__ 1
-              </RTE_Components_h>
-
-
-              <Pre_Include_Global_h>
-
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
-              </Pre_Include_Global_h>
-            </component>
             <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
