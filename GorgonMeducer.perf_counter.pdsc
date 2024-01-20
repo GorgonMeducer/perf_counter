@@ -313,7 +313,7 @@
               <description>A user define system timer</description>
               <files>
                 <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.1"/>
-                <file category="Header"         name="template/perfc_port_user.h" attr="config"  version="1.0.1"/>
+                <file category="header"         name="template/perfc_port_user.h" attr="config"  version="1.0.1"/>
               </files>
 
               <Pre_Include_Global_h>
