@@ -15,18 +15,17 @@
 ;*                                                                           *
 ;****************************************************************************/
 
-
-    .syntax	unified
-    .arch	armv6-m
-
+#if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
+    .syntax unified
+    .arch   armv6-m
 
     .eabi_attribute Tag_ABI_align_preserved, 1
     .text
     .thumb
     .thumb_func
-    .align	2
-    .globl	$Sub$$SysTick_Handler
-    .type	$Sub$$SysTick_Handler, %function
+    .align  2
+    .globl  $Sub$$SysTick_Handler
+    .type   $Sub$$SysTick_Handler, %function
 
 $Sub$$SysTick_Handler:
     push    {r4, r5}
@@ -38,10 +37,10 @@ $Sub$$SysTick_Handler:
     pop     {r4, r5}
     ldr     R0, =$Super$$SysTick_Handler
     bx      R0
-                
 
-    .globl	__ensure_systick_wrapper
-    .type	__ensure_systick_wrapper, %function
+    .globl  __ensure_systick_wrapper
+    .type   __ensure_systick_wrapper, %function
 
 __ensure_systick_wrapper:
     bx      lr
+#endif
