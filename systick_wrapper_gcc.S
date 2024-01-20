@@ -15,6 +15,7 @@
 ;*                                                                           *
 ;****************************************************************************/
 
+#if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax	unified
     .arch	armv6-m
 
@@ -42,3 +43,4 @@ __wrap_SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
+#endif
