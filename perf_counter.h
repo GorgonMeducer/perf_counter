@@ -134,6 +134,14 @@ extern "C" {
 #   define UNUSED_PARAM(__VAR)     (void)(__VAR)
 #endif
 
+#ifndef MIN
+#   define MIN(__a, __b)  ((__a) <= (__b) ? (__a) : (__b))
+#endif
+
+#ifndef MAX
+#   define MAX(__a, __b)  ((__a) >= (__b) ? (__a) : (__b))
+#endif
+
 /*!
  * \brief an attribute for static variables that no initialisation is required 
  *        in the C startup process.
