@@ -661,17 +661,15 @@ int64_t stop_cycle_counter(void)
 
 /*!
  * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return uint32_t the elapsed milliseconds
+ * \return int64_t the elapsed milliseconds
  */
-extern uint32_t get_system_ms(void);
+extern int64_t get_system_ms(void);
 
 /*!
  * \brief get the elapsed microsecond since perf_counter is initialised
- * \return uint32_t the elapsed microsecond
+ * \return int64_t the elapsed microsecond
  */
-extern uint32_t get_system_us(void);
-
-
+extern int64_t get_system_us(void);
 
 /*!
  * \brief delay specified time in microsecond

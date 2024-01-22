@@ -160,8 +160,12 @@ extern uint32_t SystemCoreClock;
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
 __WEAK 
-void perfc_port_init_system_timer(void)
+void perfc_port_init_system_timer(bool bTimerOccupied)
 {
+    if (bTimerOccupied) {
+        return ;
+    }
+
     __IRQ_SAFE {
         SysTick->CTRL  = 0;
 
@@ -188,15 +192,15 @@ bool perfc_port_is_system_timer_ovf_pending(void)
 }
 
 __WEAK
-uint32_t perfc_port_get_system_timer_top(void)
+int64_t perfc_port_get_system_timer_top(void)
 {
     return SysTick->LOAD;
 }
 
 __WEAK
-uint32_t perfc_port_get_system_timer_elapsed(void)
+int64_t perfc_port_get_system_timer_elapsed(void)
 {
-    return (uint32_t)SysTick->LOAD - (uint32_t)SysTick->VAL;
+    return (int64_t)SysTick->LOAD - (uint32_t)SysTick->VAL;
 }
 
 __WEAK

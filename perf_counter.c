@@ -71,8 +71,8 @@ volatile static uint32_t s_wUSUnit = 1;
 volatile static uint32_t s_wMSUnit = 1;
 volatile static uint32_t s_wMSResidule = 0;
 volatile static uint32_t s_wUSResidule = 0;
-volatile static uint32_t s_wSystemMS = 0;
-volatile static uint32_t s_wSystemUS = 0;
+volatile static int64_t s_lSystemMS = 0;
+volatile static int64_t s_lSystemUS = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
 
@@ -82,13 +82,13 @@ volatile static int64_t s_lSystemClockCounts = 0;
 extern
 uint32_t perfc_port_get_system_freq(void);
 extern
-uint32_t perfc_port_get_system_timer_top(void);
+int64_t perfc_port_get_system_timer_top(void);
 extern
 bool perfc_port_is_system_timer_ovf_pending(void);
 extern
-void perfc_port_init_system_timer(void);
+void perfc_port_init_system_timer(bool bTimerOccupied);
 extern
-uint32_t perfc_port_get_system_timer_elapsed(void);
+int64_t perfc_port_get_system_timer_elapsed(void);
 extern
 void perfc_port_clear_system_timer_ovf_pending(void);
 extern
@@ -101,23 +101,28 @@ void perfc_port_clear_system_timer_counter(void);
 
 void user_code_insert_to_systick_handler(void)
 {
-    uint32_t wLoad = perfc_port_get_system_timer_top() + 1;
-    s_lSystemClockCounts += wLoad;
+    int64_t lLoad = perfc_port_get_system_timer_top() + 1;
+    s_lSystemClockCounts += lLoad;
 
     // update system ms counter
     do {
-        s_wMSResidule += wLoad;
-        uint32_t wMS = s_wMSResidule / s_wMSUnit;
-        s_wMSResidule -= wMS * s_wMSUnit;
-        s_wSystemMS += wMS;
+        int64_t lTemp = s_wMSResidule + lLoad;
+        
+        int64_t lMS = lTemp / s_wMSUnit;
+        s_lSystemMS += lMS;
+        s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
+
     } while(0);
 
     // update system us counter
     do {
-        s_wUSResidule += wLoad;
-        uint32_t wUS = s_wUSResidule / s_wUSUnit;
-        s_wUSResidule -= wUS * s_wUSUnit;
-        s_wSystemUS += wUS;
+        int64_t lTemp = s_wUSResidule + lLoad;
+        
+        int64_t lUS = lTemp / s_wUSUnit;
+        s_lSystemUS += lUS;
+
+        s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
+
     } while(0);
 
 }
@@ -143,16 +148,14 @@ void update_perf_counter(void)
 void init_cycle_counter(bool bIsSysTickOccupied)
 {
     __IRQ_SAFE {
-        if (!bIsSysTickOccupied) {
-            perfc_port_init_system_timer();                                     // use the longest period
-        }
+        perfc_port_init_system_timer(bIsSysTickOccupied);                   // use the longest period
         perfc_port_clear_system_timer_ovf_pending();
     }
     
     update_perf_counter();
     s_lSystemClockCounts = 0;                       // reset system cycle counter
-    s_wSystemMS = 0;                                // reset system millisecond counter
-    s_wSystemUS = 0;                                // reset system microsecond counter
+    s_lSystemMS = 0;                                // reset system millisecond counter
+    s_lSystemUS = 0;                                // reset system microsecond counter
 
     __perf_os_patch_init();
 }
@@ -161,10 +164,10 @@ void init_cycle_counter(bool bIsSysTickOccupied)
  *        hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
  *        won't change.
  */
-__STATIC_INLINE uint32_t check_systick(void)
+__STATIC_INLINE int64_t check_systick(void)
 {
-    uint32_t wLoad = perfc_port_get_system_timer_top() + 1;
-    uint32_t wTemp = perfc_port_get_system_timer_elapsed();
+    int64_t lLoad = perfc_port_get_system_timer_top() + 1;
+    int64_t lTemp = perfc_port_get_system_timer_elapsed();
 
     /*        Since we cannot stop counting temporarily, there are several
      *        conditions which we should take into consideration:
@@ -187,12 +190,12 @@ __STATIC_INLINE uint32_t check_systick(void)
      *        The following code implements an equivalent logic.
      */
     if (perfc_port_is_system_timer_ovf_pending()){
-        if ((wLoad - wTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
-            wTemp += wLoad;
+        if ((lLoad - lTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
+            lTemp += lLoad;
         }
     }
 
-    return wTemp;
+    return lTemp;
 }
 
 void before_cycle_counter_reconfiguration(void)
@@ -311,26 +314,26 @@ int64_t clock(void)
     return get_system_ticks();
 }
 
-uint32_t get_system_ms(void)
+int64_t get_system_ms(void)
 {
-    uint32_t nTemp = 0;
+    int64_t lTemp = 0;
 
     __IRQ_SAFE {
-        nTemp = s_wSystemMS + (check_systick() + s_wMSResidule) / s_wMSUnit;
+        lTemp = s_lSystemMS + ((check_systick() + (int64_t)s_wMSResidule) / s_wMSUnit);
     }
 
-    return nTemp;
+    return lTemp;
 }
 
-uint32_t get_system_us(void)
+int64_t get_system_us(void)
 {
-    uint32_t wTemp = 0;
+    int64_t lTemp = 0;
 
     __IRQ_SAFE {
-        wTemp = s_wSystemUS + (check_systick() + s_wUSResidule) / s_wUSUnit;
+        lTemp = s_lSystemUS + ((check_systick() + (int64_t)s_wUSResidule) / s_wUSUnit);
     }
 
-    return wTemp;
+    return lTemp;
 }
 
 int64_t perfc_convert_ticks_to_ms(int64_t lTick)

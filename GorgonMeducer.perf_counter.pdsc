@@ -294,8 +294,8 @@
             <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" isDefaultVariant="true" condition="perf_counter">
               <description>A user define system timer</description>
               <files>
-                <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.1"/>
-                <file category="header"         name="template/perfc_port_user.h" attr="config"  version="1.0.1"/>
+                <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.2"/>
+                <file category="header"         name="template/perfc_port_user.h" attr="config"  version="1.0.2"/>
               </files>
 
               <Pre_Include_Global_h>

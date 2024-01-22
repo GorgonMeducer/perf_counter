@@ -49,8 +49,12 @@
 
 #if __PERFC_USE_USER_CUSTOM_PORTING__
  
-void perfc_port_init_system_timer(void)
+void perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
+    if (bIsTimeOccupied) {
+        return ;
+    }
+
     __IRQ_SAFE {
         /* Configure the system timer count with the longest possible period
          * clear counter 
@@ -73,13 +77,13 @@ bool perfc_port_is_system_timer_ovf_pending(void)
     return false;
 }
 
-uint32_t perfc_port_get_system_timer_top(void)
+int64_t perfc_port_get_system_timer_top(void)
 {
     /* the top value of the counting */
     return 0;
 }
 
-uint32_t perfc_port_get_system_timer_elapsed(void)
+int64_t perfc_port_get_system_timer_elapsed(void)
 {
     /* the elapsed count number since last overflow */
     return 0;
