@@ -45,6 +45,8 @@ DEFAULT_ARGS=(-c "v")
    perf_counter.h
    perfc_port_default.c
    perfc_port_default.h
+   perfc_port_pmu.c
+   perfc_port_pmu.h
    README.md
    systick_wrapper_gcc.S
    systick_wrapper_gnu.s
