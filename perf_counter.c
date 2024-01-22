@@ -255,10 +255,7 @@ void delay_ms(uint32_t wMs)
     lMs -= iCompensate;
 
     lMs += get_system_ticks();
-    do {
-        observer = get_system_ticks();
-    } while(observer < lMs);
-    //while(get_system_ticks() < lUs);
+    while(get_system_ticks() < lMs);
 }
 
 __attribute__((noinline))
