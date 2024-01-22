@@ -44,6 +44,24 @@
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+/* low level interface for porting */
+extern
+uint32_t perfc_port_get_system_freq(void);
+extern
+int64_t perfc_port_get_system_timer_top(void);
+extern
+bool perfc_port_is_system_timer_ovf_pending(void);
+extern
+void perfc_port_init_system_timer(bool bTimerOccupied);
+extern
+int64_t perfc_port_get_system_timer_elapsed(void);
+extern
+void perfc_port_clear_system_timer_ovf_pending(void);
+extern
+void perfc_port_stop_system_timer_counting(void);
+extern
+void perfc_port_clear_system_timer_counter(void);
+
 /*============================ IMPLEMENTATION ================================*/
 /*============================ INCLUDES ======================================*/
 

@@ -297,6 +297,10 @@
                 <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.2"/>
                 <file category="header"         name="template/perfc_port_user.h" attr="config"  version="1.0.2"/>
               </files>
+              <RTE_Components_h>
+
+#define __RTE_PERFC_PORTING_USER_DEFINED__ 1
+              </RTE_Components_h>
 
               <Pre_Include_Global_h>
 

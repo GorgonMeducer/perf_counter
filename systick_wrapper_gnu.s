@@ -14,6 +14,11 @@
 ;*  limitations under the License.                                           *
 ;*                                                                           *
 ;****************************************************************************/
+#if defined(_RTE_)
+#   include "RTE_Components.h"
+#endif
+
+#if !defined(__RTE_PERFC_PORTING_USER_DEFINED__)
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax unified
@@ -43,4 +48,6 @@ $Sub$$SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
+#endif
+
 #endif
