@@ -73,6 +73,7 @@ volatile static uint32_t s_wMSResidule = 0;
 volatile static uint32_t s_wUSResidule = 0;
 volatile static int64_t s_lSystemMS = 0;
 volatile static int64_t s_lSystemUS = 0;
+volatile static int64_t s_lEventRecorderOffset = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
 
@@ -239,22 +240,25 @@ void delay_us(uint32_t wUs)
     while(get_system_ticks() < lUs);
 }
 
-
+volatile int64_t observer;
 void delay_ms(uint32_t wMs)
 {
-    int64_t lUs = (int64_t)wMs * (int64_t)s_wMSUnit;
+    int64_t lMs = (int64_t)wMs * (int64_t)s_wMSUnit;
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
 
-    if (lUs <= iCompensate) {
+    if (lMs <= iCompensate) {
         return ;
     }
 
-    lUs -= iCompensate;
+    lMs -= iCompensate;
 
-    lUs += get_system_ticks();
-    while(get_system_ticks() < lUs);
+    lMs += get_system_ticks();
+    do {
+        observer = get_system_ticks();
+    } while(observer < lMs);
+    //while(get_system_ticks() < lUs);
 }
 
 __attribute__((noinline))
@@ -391,6 +395,7 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
 uint32_t EventRecorderTimerSetup (void)
 {
     /* doing nothing at all */
+    s_lEventRecorderOffset = get_system_ticks();
     return 1;
 }
 
@@ -405,7 +410,7 @@ uint32_t EventRecorderTimerGetFreq (void)
 /// \return       timer count (32-bit)
 uint32_t EventRecorderTimerGetCount (void)
 {
-    return get_system_ticks();
+    return get_system_ticks() - s_lEventRecorderOffset;
 }
 
 

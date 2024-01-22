@@ -18,7 +18,7 @@
 #   include "RTE_Components.h"
 #endif
 
-#if !defined(__RTE_PERFC_PORTING_USER_DEFINED__)
+#if !defined(__RTE_PERFC_PORTING_USER_DEFINED__) && !defined(__PERFC_USE_PMU_PORTING__)
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax unified
