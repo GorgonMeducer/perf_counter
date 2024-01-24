@@ -73,7 +73,6 @@ volatile static uint32_t s_wMSResidule = 0;
 volatile static uint32_t s_wUSResidule = 0;
 volatile static int64_t s_lSystemMS = 0;
 volatile static int64_t s_lSystemUS = 0;
-volatile static int64_t s_lEventRecorderOffset = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
 
@@ -81,7 +80,7 @@ volatile static int64_t s_lSystemClockCounts = 0;
 
 /* low level interface for porting */
 extern
-uint32_t perfc_port_get_system_freq(void);
+uint32_t perfc_port_get_system_timer_freq(void);
 extern
 int64_t perfc_port_get_system_timer_top(void);
 extern
@@ -136,7 +135,7 @@ void __perf_os_patch_init(void)
 
 void update_perf_counter(void)
 {
-    uint32_t wSystemFrequency = perfc_port_get_system_freq();
+    uint32_t wSystemFrequency = perfc_port_get_system_timer_freq();
     s_wUSUnit = wSystemFrequency / 1000000ul;
     s_wMSUnit = wSystemFrequency / 1000ul;
     
@@ -392,7 +391,6 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
 uint32_t EventRecorderTimerSetup (void)
 {
     /* doing nothing at all */
-    s_lEventRecorderOffset = get_system_ticks();
     return 1;
 }
 
@@ -400,14 +398,14 @@ uint32_t EventRecorderTimerSetup (void)
 /// \return       timer frequency in Hz
 uint32_t EventRecorderTimerGetFreq (void)
 {
-    return perfc_port_get_system_freq();
+    return perfc_port_get_system_timer_freq();
 }
 
 /// Get timer count.
 /// \return       timer count (32-bit)
 uint32_t EventRecorderTimerGetCount (void)
 {
-    return get_system_ticks() - s_lEventRecorderOffset;
+    return get_system_ticks();
 }
 
 

@@ -46,7 +46,7 @@
 /*============================ PROTOTYPES ====================================*/
 /* low level interface for porting */
 extern
-uint32_t perfc_port_get_system_freq(void);
+uint32_t perfc_port_get_system_timer_freq(void);
 extern
 int64_t perfc_port_get_system_timer_top(void);
 extern
@@ -83,7 +83,7 @@ void perfc_port_init_system_timer(bool bIsTimeOccupied)
     }
 }
 
-uint32_t perfc_port_get_system_freq(void)
+uint32_t perfc_port_get_system_timer_freq(void)
 {
     /* return the system timer frequency */
     return 0;
