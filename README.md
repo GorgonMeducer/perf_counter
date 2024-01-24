@@ -1,4 +1,4 @@
-# perf_counter (v2.2.4)
+# perf_counter (v2.3.0-dev)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -12,8 +12,13 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
 - **Easy to use**
   - Helper macros: `__cycleof__()` , `__super_loop_monitor__()` etc.
   - Helper functions: `start_cycle_counter()`, `stop_cycle_counter()` etc.
-- **Support ALL Cortex-M processors**
-  - Including **Cortex-M85** and Star-MC1
+- Enable a broader processor architecture support
+  - **Support ALL Cortex-M processors**
+    - SysTick
+    - **[new]**Performance Monitor Unit (PMU)
+
+  - **[new]**Easy to port to different architectures with a porting template
+
 - **Provide Free Services**
   - Do **NOT** interfer with existing SysTick based applications
 - **Support ALL arm compilers**
@@ -26,13 +31,12 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - **CMSIS-Pack is available**
   - **RT-Thread package is avaialble**
 - **Time based services**
-  - `delay_us()` and `delay_ms()`
+  - **[new]**`delay_us()` and `delay_ms()` with **64bit return value**.
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
   - Support SysTick Reconfiguration
   - Support changing System Frequency
-  - **[new]** Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
-  
+  - Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macro to create atomicity for specified code block, i.e. `__IRQ_SAFE{...}`
@@ -250,7 +254,10 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 ```
 
 2. Add including path for `perf_counter` folder
-3. Add `perf_counter.c` to your compilation 
+3. Add `perf_counter.c` to your compilation. 
+
+> **NOTE**: Please do **NOT** add any assembly source files of this `perf_counter` library to your compilation, i.e. `systick_wrapper_gcc.S`, `systick_wrapper_gnu.s` or `systick_wrapper_ual.s`.
+
 4. Include `perf_counter.h` in corresponding c source file:
 
 ```c
