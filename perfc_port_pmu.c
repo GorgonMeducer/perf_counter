@@ -55,16 +55,6 @@
 #define     __OM     volatile            /*! Defines 'write only' structure member permissions */
 #define     __IOM    volatile            /*! Defines 'read / write' structure member permissions */
 
-/**
-  \ingroup  CMSIS_core_register
-  \defgroup CMSIS_PMU     Performance Monitoring Unit (PMU)
-  \brief    Type definitions for the Performance Monitoring Unit (PMU)
-  @{
- */
-
-#define PMU_BASE          (0xE0003000UL)                                                   /*!< PMU Base Address */
-#define PMU               ((PMU_Type       *)     PMU_BASE         )                       /*!< PMU configuration struct */
-
 /** \brief PMU Event Counter Registers (0-30) Definitions  */
 #define PMU_EVCNTR_CNT_Pos                    0U                                           /*!< PMU EVCNTR: Counter Position */
 #define PMU_EVCNTR_CNT_Msk                   (0xFFFFUL /*<< PMU_EVCNTRx_CNT_Pos*/)         /*!< PMU EVCNTR: Counter Mask */
@@ -809,7 +799,184 @@
 #define PMU_AUTHSTATUS_SUNID_Pos              22U                                          /*!< PMU AUTHSTATUS: Secure Unprivileged Non-invasive Debug Position */
 #define PMU_AUTHSTATUS_SUNID_Msk             (0x3UL << PMU_AUTHSTATUS_SUNID_Pos)           /*!< PMU AUTHSTATUS: Secure Unprivileged Non-invasive Debug Mask */
 
-/*@} end of group CMSIS_PMU */
+
+/** \brief DCB Debug Halting Control and Status Register Definitions */
+#define DCB_DHCSR_DBGKEY_Pos               16U                                            /*!< DCB DHCSR: Debug key Position */
+#define DCB_DHCSR_DBGKEY_Msk               (0xFFFFUL << DCB_DHCSR_DBGKEY_Pos)             /*!< DCB DHCSR: Debug key Mask */
+
+#define DCB_DHCSR_S_RESTART_ST_Pos         26U                                            /*!< DCB DHCSR: Restart sticky status Position */
+#define DCB_DHCSR_S_RESTART_ST_Msk         (1UL << DCB_DHCSR_S_RESTART_ST_Pos)            /*!< DCB DHCSR: Restart sticky status Mask */
+
+#define DCB_DHCSR_S_RESET_ST_Pos           25U                                            /*!< DCB DHCSR: Reset sticky status Position */
+#define DCB_DHCSR_S_RESET_ST_Msk           (1UL << DCB_DHCSR_S_RESET_ST_Pos)              /*!< DCB DHCSR: Reset sticky status Mask */
+
+#define DCB_DHCSR_S_RETIRE_ST_Pos          24U                                            /*!< DCB DHCSR: Retire sticky status Position */
+#define DCB_DHCSR_S_RETIRE_ST_Msk          (1UL << DCB_DHCSR_S_RETIRE_ST_Pos)             /*!< DCB DHCSR: Retire sticky status Mask */
+
+#define DCB_DHCSR_S_FPD_Pos                23U                                            /*!< DCB DHCSR: Floating-point registers Debuggable Position */
+#define DCB_DHCSR_S_FPD_Msk                (1UL << DCB_DHCSR_S_FPD_Pos)                   /*!< DCB DHCSR: Floating-point registers Debuggable Mask */
+
+#define DCB_DHCSR_S_SUIDE_Pos              22U                                            /*!< DCB DHCSR: Secure unprivileged halting debug enabled Position */
+#define DCB_DHCSR_S_SUIDE_Msk              (1UL << DCB_DHCSR_S_SUIDE_Pos)                 /*!< DCB DHCSR: Secure unprivileged halting debug enabled Mask */
+
+#define DCB_DHCSR_S_NSUIDE_Pos             21U                                            /*!< DCB DHCSR: Non-secure unprivileged halting debug enabled Position */
+#define DCB_DHCSR_S_NSUIDE_Msk             (1UL << DCB_DHCSR_S_NSUIDE_Pos)                /*!< DCB DHCSR: Non-secure unprivileged halting debug enabled Mask */
+
+#define DCB_DHCSR_S_SDE_Pos                20U                                            /*!< DCB DHCSR: Secure debug enabled Position */
+#define DCB_DHCSR_S_SDE_Msk                (1UL << DCB_DHCSR_S_SDE_Pos)                   /*!< DCB DHCSR: Secure debug enabled Mask */
+
+#define DCB_DHCSR_S_LOCKUP_Pos             19U                                            /*!< DCB DHCSR: Lockup status Position */
+#define DCB_DHCSR_S_LOCKUP_Msk             (1UL << DCB_DHCSR_S_LOCKUP_Pos)                /*!< DCB DHCSR: Lockup status Mask */
+
+#define DCB_DHCSR_S_SLEEP_Pos              18U                                            /*!< DCB DHCSR: Sleeping status Position */
+#define DCB_DHCSR_S_SLEEP_Msk              (1UL << DCB_DHCSR_S_SLEEP_Pos)                 /*!< DCB DHCSR: Sleeping status Mask */
+
+#define DCB_DHCSR_S_HALT_Pos               17U                                            /*!< DCB DHCSR: Halted status Position */
+#define DCB_DHCSR_S_HALT_Msk               (1UL << DCB_DHCSR_S_HALT_Pos)                  /*!< DCB DHCSR: Halted status Mask */
+
+#define DCB_DHCSR_S_REGRDY_Pos             16U                                            /*!< DCB DHCSR: Register ready status Position */
+#define DCB_DHCSR_S_REGRDY_Msk             (1UL << DCB_DHCSR_S_REGRDY_Pos)                /*!< DCB DHCSR: Register ready status Mask */
+
+#define DCB_DHCSR_C_PMOV_Pos                6U                                            /*!< DCB DHCSR: Halt on PMU overflow control Position */
+#define DCB_DHCSR_C_PMOV_Msk               (1UL << DCB_DHCSR_C_PMOV_Pos)                  /*!< DCB DHCSR: Halt on PMU overflow control Mask */
+
+#define DCB_DHCSR_C_SNAPSTALL_Pos           5U                                            /*!< DCB DHCSR: Snap stall control Position */
+#define DCB_DHCSR_C_SNAPSTALL_Msk          (1UL << DCB_DHCSR_C_SNAPSTALL_Pos)             /*!< DCB DHCSR: Snap stall control Mask */
+
+#define DCB_DHCSR_C_MASKINTS_Pos            3U                                            /*!< DCB DHCSR: Mask interrupts control Position */
+#define DCB_DHCSR_C_MASKINTS_Msk           (1UL << DCB_DHCSR_C_MASKINTS_Pos)              /*!< DCB DHCSR: Mask interrupts control Mask */
+
+#define DCB_DHCSR_C_STEP_Pos                2U                                            /*!< DCB DHCSR: Step control Position */
+#define DCB_DHCSR_C_STEP_Msk               (1UL << DCB_DHCSR_C_STEP_Pos)                  /*!< DCB DHCSR: Step control Mask */
+
+#define DCB_DHCSR_C_HALT_Pos                1U                                            /*!< DCB DHCSR: Halt control Position */
+#define DCB_DHCSR_C_HALT_Msk               (1UL << DCB_DHCSR_C_HALT_Pos)                  /*!< DCB DHCSR: Halt control Mask */
+
+#define DCB_DHCSR_C_DEBUGEN_Pos             0U                                            /*!< DCB DHCSR: Debug enable control Position */
+#define DCB_DHCSR_C_DEBUGEN_Msk            (1UL /*<< DCB_DHCSR_C_DEBUGEN_Pos*/)           /*!< DCB DHCSR: Debug enable control Mask */
+
+/** \brief DCB Debug Core Register Selector Register Definitions */
+#define DCB_DCRSR_REGWnR_Pos               16U                                            /*!< DCB DCRSR: Register write/not-read Position */
+#define DCB_DCRSR_REGWnR_Msk               (1UL << DCB_DCRSR_REGWnR_Pos)                  /*!< DCB DCRSR: Register write/not-read Mask */
+
+#define DCB_DCRSR_REGSEL_Pos                0U                                            /*!< DCB DCRSR: Register selector Position */
+#define DCB_DCRSR_REGSEL_Msk               (0x7FUL /*<< DCB_DCRSR_REGSEL_Pos*/)           /*!< DCB DCRSR: Register selector Mask */
+
+/** \brief DCB Debug Core Register Data Register Definitions */
+#define DCB_DCRDR_DBGTMP_Pos                0U                                            /*!< DCB DCRDR: Data temporary buffer Position */
+#define DCB_DCRDR_DBGTMP_Msk               (0xFFFFFFFFUL /*<< DCB_DCRDR_DBGTMP_Pos*/)     /*!< DCB DCRDR: Data temporary buffer Mask */
+
+/** \brief DCB Debug Exception and Monitor Control Register Definitions */
+#define DCB_DEMCR_TRCENA_Pos               24U                                            /*!< DCB DEMCR: Trace enable Position */
+#define DCB_DEMCR_TRCENA_Msk               (1UL << DCB_DEMCR_TRCENA_Pos)                  /*!< DCB DEMCR: Trace enable Mask */
+
+#define DCB_DEMCR_MONPRKEY_Pos             23U                                            /*!< DCB DEMCR: Monitor pend req key Position */
+#define DCB_DEMCR_MONPRKEY_Msk             (1UL << DCB_DEMCR_MONPRKEY_Pos)                /*!< DCB DEMCR: Monitor pend req key Mask */
+
+#define DCB_DEMCR_UMON_EN_Pos              21U                                            /*!< DCB DEMCR: Unprivileged monitor enable Position */
+#define DCB_DEMCR_UMON_EN_Msk              (1UL << DCB_DEMCR_UMON_EN_Pos)                 /*!< DCB DEMCR: Unprivileged monitor enable Mask */
+
+#define DCB_DEMCR_SDME_Pos                 20U                                            /*!< DCB DEMCR: Secure DebugMonitor enable Position */
+#define DCB_DEMCR_SDME_Msk                 (1UL << DCB_DEMCR_SDME_Pos)                    /*!< DCB DEMCR: Secure DebugMonitor enable Mask */
+
+#define DCB_DEMCR_MON_REQ_Pos              19U                                            /*!< DCB DEMCR: Monitor request Position */
+#define DCB_DEMCR_MON_REQ_Msk              (1UL << DCB_DEMCR_MON_REQ_Pos)                 /*!< DCB DEMCR: Monitor request Mask */
+
+#define DCB_DEMCR_MON_STEP_Pos             18U                                            /*!< DCB DEMCR: Monitor step Position */
+#define DCB_DEMCR_MON_STEP_Msk             (1UL << DCB_DEMCR_MON_STEP_Pos)                /*!< DCB DEMCR: Monitor step Mask */
+
+#define DCB_DEMCR_MON_PEND_Pos             17U                                            /*!< DCB DEMCR: Monitor pend Position */
+#define DCB_DEMCR_MON_PEND_Msk             (1UL << DCB_DEMCR_MON_PEND_Pos)                /*!< DCB DEMCR: Monitor pend Mask */
+
+#define DCB_DEMCR_MON_EN_Pos               16U                                            /*!< DCB DEMCR: Monitor enable Position */
+#define DCB_DEMCR_MON_EN_Msk               (1UL << DCB_DEMCR_MON_EN_Pos)                  /*!< DCB DEMCR: Monitor enable Mask */
+
+#define DCB_DEMCR_VC_SFERR_Pos             11U                                            /*!< DCB DEMCR: Vector Catch SecureFault Position */
+#define DCB_DEMCR_VC_SFERR_Msk             (1UL << DCB_DEMCR_VC_SFERR_Pos)                /*!< DCB DEMCR: Vector Catch SecureFault Mask */
+
+#define DCB_DEMCR_VC_HARDERR_Pos           10U                                            /*!< DCB DEMCR: Vector Catch HardFault errors Position */
+#define DCB_DEMCR_VC_HARDERR_Msk           (1UL << DCB_DEMCR_VC_HARDERR_Pos)              /*!< DCB DEMCR: Vector Catch HardFault errors Mask */
+
+#define DCB_DEMCR_VC_INTERR_Pos             9U                                            /*!< DCB DEMCR: Vector Catch interrupt errors Position */
+#define DCB_DEMCR_VC_INTERR_Msk            (1UL << DCB_DEMCR_VC_INTERR_Pos)               /*!< DCB DEMCR: Vector Catch interrupt errors Mask */
+
+#define DCB_DEMCR_VC_BUSERR_Pos             8U                                            /*!< DCB DEMCR: Vector Catch BusFault errors Position */
+#define DCB_DEMCR_VC_BUSERR_Msk            (1UL << DCB_DEMCR_VC_BUSERR_Pos)               /*!< DCB DEMCR: Vector Catch BusFault errors Mask */
+
+#define DCB_DEMCR_VC_STATERR_Pos            7U                                            /*!< DCB DEMCR: Vector Catch state errors Position */
+#define DCB_DEMCR_VC_STATERR_Msk           (1UL << DCB_DEMCR_VC_STATERR_Pos)              /*!< DCB DEMCR: Vector Catch state errors Mask */
+
+#define DCB_DEMCR_VC_CHKERR_Pos             6U                                            /*!< DCB DEMCR: Vector Catch check errors Position */
+#define DCB_DEMCR_VC_CHKERR_Msk            (1UL << DCB_DEMCR_VC_CHKERR_Pos)               /*!< DCB DEMCR: Vector Catch check errors Mask */
+
+#define DCB_DEMCR_VC_NOCPERR_Pos            5U                                            /*!< DCB DEMCR: Vector Catch NOCP errors Position */
+#define DCB_DEMCR_VC_NOCPERR_Msk           (1UL << DCB_DEMCR_VC_NOCPERR_Pos)              /*!< DCB DEMCR: Vector Catch NOCP errors Mask */
+
+#define DCB_DEMCR_VC_MMERR_Pos              4U                                            /*!< DCB DEMCR: Vector Catch MemManage errors Position */
+#define DCB_DEMCR_VC_MMERR_Msk             (1UL << DCB_DEMCR_VC_MMERR_Pos)                /*!< DCB DEMCR: Vector Catch MemManage errors Mask */
+
+#define DCB_DEMCR_VC_CORERESET_Pos          0U                                            /*!< DCB DEMCR: Vector Catch Core reset Position */
+#define DCB_DEMCR_VC_CORERESET_Msk         (1UL /*<< DCB_DEMCR_VC_CORERESET_Pos*/)        /*!< DCB DEMCR: Vector Catch Core reset Mask */
+
+/** \brief DCB Debug Set Clear Exception and Monitor Control Register Definitions */
+#define DCB_DSCEMCR_CLR_MON_REQ_Pos        19U                                            /*!< DCB DSCEMCR: Clear monitor request Position */
+#define DCB_DSCEMCR_CLR_MON_REQ_Msk        (1UL << DCB_DSCEMCR_CLR_MON_REQ_Pos)           /*!< DCB DSCEMCR: Clear monitor request Mask */
+
+#define DCB_DSCEMCR_CLR_MON_PEND_Pos       17U                                            /*!< DCB DSCEMCR: Clear monitor pend Position */
+#define DCB_DSCEMCR_CLR_MON_PEND_Msk       (1UL << DCB_DSCEMCR_CLR_MON_PEND_Pos)          /*!< DCB DSCEMCR: Clear monitor pend Mask */
+
+#define DCB_DSCEMCR_SET_MON_REQ_Pos         3U                                            /*!< DCB DSCEMCR: Set monitor request Position */
+#define DCB_DSCEMCR_SET_MON_REQ_Msk        (1UL << DCB_DSCEMCR_SET_MON_REQ_Pos)           /*!< DCB DSCEMCR: Set monitor request Mask */
+
+#define DCB_DSCEMCR_SET_MON_PEND_Pos        1U                                            /*!< DCB DSCEMCR: Set monitor pend Position */
+#define DCB_DSCEMCR_SET_MON_PEND_Msk       (1UL << DCB_DSCEMCR_SET_MON_PEND_Pos)          /*!< DCB DSCEMCR: Set monitor pend Mask */
+
+/** \brief DCB Debug Authentication Control Register Definitions */
+#define DCB_DAUTHCTRL_UIDEN_Pos            10U                                            /*!< DCB DAUTHCTRL: Unprivileged Invasive Debug Enable Position */
+#define DCB_DAUTHCTRL_UIDEN_Msk            (1UL << DCB_DAUTHCTRL_UIDEN_Pos)               /*!< DCB DAUTHCTRL: Unprivileged Invasive Debug Enable Mask */
+
+#define DCB_DAUTHCTRL_UIDAPEN_Pos           9U                                            /*!< DCB DAUTHCTRL: Unprivileged Invasive DAP Access Enable Position */
+#define DCB_DAUTHCTRL_UIDAPEN_Msk          (1UL << DCB_DAUTHCTRL_UIDAPEN_Pos)             /*!< DCB DAUTHCTRL: Unprivileged Invasive DAP Access Enable Mask */
+
+#define DCB_DAUTHCTRL_FSDMA_Pos             8U                                            /*!< DCB DAUTHCTRL: Force Secure DebugMonitor Allowed Position */
+#define DCB_DAUTHCTRL_FSDMA_Msk            (1UL << DCB_DAUTHCTRL_FSDMA_Pos)               /*!< DCB DAUTHCTRL: Force Secure DebugMonitor Allowed Mask */
+
+#define DCB_DAUTHCTRL_INTSPNIDEN_Pos        3U                                            /*!< DCB DAUTHCTRL: Internal Secure non-invasive debug enable Position */
+#define DCB_DAUTHCTRL_INTSPNIDEN_Msk       (1UL << DCB_DAUTHCTRL_INTSPNIDEN_Pos)          /*!< DCB DAUTHCTRL: Internal Secure non-invasive debug enable Mask */
+
+#define DCB_DAUTHCTRL_SPNIDENSEL_Pos        2U                                            /*!< DCB DAUTHCTRL: Secure non-invasive debug enable select Position */
+#define DCB_DAUTHCTRL_SPNIDENSEL_Msk       (1UL << DCB_DAUTHCTRL_SPNIDENSEL_Pos)          /*!< DCB DAUTHCTRL: Secure non-invasive debug enable select Mask */
+
+#define DCB_DAUTHCTRL_INTSPIDEN_Pos         1U                                            /*!< DCB DAUTHCTRL: Internal Secure invasive debug enable Position */
+#define DCB_DAUTHCTRL_INTSPIDEN_Msk        (1UL << DCB_DAUTHCTRL_INTSPIDEN_Pos)           /*!< DCB DAUTHCTRL: Internal Secure invasive debug enable Mask */
+
+#define DCB_DAUTHCTRL_SPIDENSEL_Pos         0U                                            /*!< DCB DAUTHCTRL: Secure invasive debug enable select Position */
+#define DCB_DAUTHCTRL_SPIDENSEL_Msk        (1UL /*<< DCB_DAUTHCTRL_SPIDENSEL_Pos*/)       /*!< DCB DAUTHCTRL: Secure invasive debug enable select Mask */
+
+/** \brief DCB Debug Security Control and Status Register Definitions */
+#define DCB_DSCSR_CDSKEY_Pos               17U                                            /*!< DCB DSCSR: CDS write-enable key Position */
+#define DCB_DSCSR_CDSKEY_Msk               (1UL << DCB_DSCSR_CDSKEY_Pos)                  /*!< DCB DSCSR: CDS write-enable key Mask */
+
+#define DCB_DSCSR_CDS_Pos                  16U                                            /*!< DCB DSCSR: Current domain Secure Position */
+#define DCB_DSCSR_CDS_Msk                  (1UL << DCB_DSCSR_CDS_Pos)                     /*!< DCB DSCSR: Current domain Secure Mask */
+
+#define DCB_DSCSR_SBRSEL_Pos                1U                                            /*!< DCB DSCSR: Secure banked register select Position */
+#define DCB_DSCSR_SBRSEL_Msk               (1UL << DCB_DSCSR_SBRSEL_Pos)                  /*!< DCB DSCSR: Secure banked register select Mask */
+
+#define DCB_DSCSR_SBRSELEN_Pos              0U                                            /*!< DCB DSCSR: Secure banked register select enable Position */
+#define DCB_DSCSR_SBRSELEN_Msk             (1UL /*<< DCB_DSCSR_SBRSELEN_Pos*/)            /*!< DCB DSCSR: Secure banked register select enable Mask */
+
+/** \brief SCB Debug Fault Status Register Definitions */
+#define SCB_DFSR_PMU_Pos                    5U                                            /*!< SCB DFSR: PMU Position */
+#define SCB_DFSR_PMU_Msk                   (1UL << SCB_DFSR_PMU_Pos)                      /*!< SCB DFSR: PMU Mask */
+
+#define SCS_BASE            (0xE000E000UL)                                      /*!< System Control Space Base Address */
+#define PMU_BASE        (0xE0003000UL)                                                    /*!< PMU Base Address */
+#define PMU             ((PMU_Type       *)     PMU_BASE         )                        /*!< PMU configuration struct */
+#define DCB_BASE        (0xE000EDF0UL)                                                    /*!< DCB Base Address */
+#define DCB             ((DCB_Type       *)     DCB_BASE         )                        /*!< DCB configuration struct */
+#define SCB_BASE        (SCS_BASE +  0x0D00UL)                                            /*!< System Control Block Base Address */
+#define SCB             ((SCB_Type       *)     SCB_BASE      )                           /*!< SCB configuration struct */
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
@@ -848,6 +1015,48 @@ typedef struct
   __IOM uint32_t DEVTYPE;                           /*!< Offset: 0xFCC (R/W)  Device Type Register */
 } PMU_Type;
 
+/**
+  \brief  Structure type to access the Debug Control Block Registers (DCB).
+ */
+typedef struct
+{
+  __IOM uint32_t DHCSR;                  /*!< Offset: 0x000 (R/W)  Debug Halting Control and Status Register */
+  __OM  uint32_t DCRSR;                  /*!< Offset: 0x004 ( /W)  Debug Core Register Selector Register */
+  __IOM uint32_t DCRDR;                  /*!< Offset: 0x008 (R/W)  Debug Core Register Data Register */
+  __IOM uint32_t DEMCR;                  /*!< Offset: 0x00C (R/W)  Debug Exception and Monitor Control Register */
+  __OM  uint32_t DSCEMCR;                /*!< Offset: 0x010 ( /W)  Debug Set Clear Exception and Monitor Control Register */
+  __IOM uint32_t DAUTHCTRL;              /*!< Offset: 0x014 (R/W)  Debug Authentication Control Register */
+  __IOM uint32_t DSCSR;                  /*!< Offset: 0x018 (R/W)  Debug Security Control and Status Register */
+} DCB_Type;
+
+/*!
+  \brief  Structure type to access the System Control Block (SCB).
+ */
+typedef struct
+{
+  __IM  uint32_t CPUID;                  /*!< Offset: 0x000 (R/ )  CPUID Base Register */
+  __IOM uint32_t ICSR;                   /*!< Offset: 0x004 (R/W)  Interrupt Control and State Register */
+  __IOM uint32_t VTOR;                   /*!< Offset: 0x008 (R/W)  Vector Table Offset Register */
+  __IOM uint32_t AIRCR;                  /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register */
+  __IOM uint32_t SCR;                    /*!< Offset: 0x010 (R/W)  System Control Register */
+  __IOM uint32_t CCR;                    /*!< Offset: 0x014 (R/W)  Configuration Control Register */
+  __IOM uint8_t  SHP[12U];               /*!< Offset: 0x018 (R/W)  System Handlers Priority Registers (4-7, 8-11, 12-15) */
+  __IOM uint32_t SHCSR;                  /*!< Offset: 0x024 (R/W)  System Handler Control and State Register */
+  __IOM uint32_t CFSR;                   /*!< Offset: 0x028 (R/W)  Configurable Fault Status Register */
+  __IOM uint32_t HFSR;                   /*!< Offset: 0x02C (R/W)  HardFault Status Register */
+  __IOM uint32_t DFSR;                   /*!< Offset: 0x030 (R/W)  Debug Fault Status Register */
+  __IOM uint32_t MMFAR;                  /*!< Offset: 0x034 (R/W)  MemManage Fault Address Register */
+  __IOM uint32_t BFAR;                   /*!< Offset: 0x038 (R/W)  BusFault Address Register */
+  __IOM uint32_t AFSR;                   /*!< Offset: 0x03C (R/W)  Auxiliary Fault Status Register */
+  __IM  uint32_t PFR[2U];                /*!< Offset: 0x040 (R/ )  Processor Feature Register */
+  __IM  uint32_t DFR;                    /*!< Offset: 0x048 (R/ )  Debug Feature Register */
+  __IM  uint32_t ADR;                    /*!< Offset: 0x04C (R/ )  Auxiliary Feature Register */
+  __IM  uint32_t MMFR[4U];               /*!< Offset: 0x050 (R/ )  Memory Model Feature Register */
+  __IM  uint32_t ISAR[5U];               /*!< Offset: 0x060 (R/ )  Instruction Set Attributes Register */
+        uint32_t RESERVED0[5U];
+  __IOM uint32_t CPACR;                  /*!< Offset: 0x088 (R/W)  Coprocessor Access Control Register */
+} SCB_Type;
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
@@ -881,9 +1090,21 @@ void perfc_port_clear_system_timer_counter(void);
 __USED
 void DebugMon_Handler(void)
 {
-
+    perfc_port_pmu_insert_debug_monitor_handler();
 }
 
+void perfc_port_pmu_insert_debug_monitor_handler(void)
+{
+    if (!(SCB->DFSR & SCB_DFSR_PMU_Msk)) {
+        return ;
+    }
+
+    if (perfc_port_is_system_timer_ovf_pending()) {
+        perfc_port_clear_system_timer_ovf_pending();
+        
+        user_code_insert_to_systick_handler();
+    }
+}
  
 bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
@@ -897,11 +1118,22 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
         ARM_PMU_Disable();
         
         perfc_port_stop_system_timer_counting();
+        
+        /* disable PMU Cycle Counter interrupt */
+        PMU->INTENCLR = PMU_INTENCLR_CYCCNT_ENABLE_Msk;
+        
+        
         perfc_port_clear_system_timer_counter();
         perfc_port_clear_system_timer_ovf_pending();
         
-        /* enable interrupt */
+        DCB->DEMCR |= DCB_DEMCR_UMON_EN_Msk         |
+                      DCB_DEMCR_SDME_Msk            |
+                      DCB_DEMCR_MON_EN_Msk          ;
+        
+        /* enable PMU Cycle Counter interrupt */
         PMU->INTENSET = PMU_INTENSET_CCYCNT_ENABLE_Msk;
+        
+        
 
         ARM_PMU_CNTR_Enable(PMU_CNTENSET_CCNTR_ENABLE_Msk);
         ARM_PMU_Enable();

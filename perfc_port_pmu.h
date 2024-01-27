@@ -29,6 +29,8 @@ typedef uint32_t perfc_global_interrupt_status_t;
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
+extern
+void perfc_port_pmu_insert_debug_monitor_handler(void);
 /*============================ IMPLEMENTATION ================================*/
 
 __STATIC_INLINE 
