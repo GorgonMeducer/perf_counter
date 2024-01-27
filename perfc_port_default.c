@@ -160,23 +160,27 @@ extern uint32_t SystemCoreClock;
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
 __WEAK 
-void perfc_port_init_system_timer(bool bTimerOccupied)
+bool perfc_port_init_system_timer(bool bTimerOccupied)
 {
-    if (bTimerOccupied) {
-        return ;
-    }
+    do {
+        if (bTimerOccupied) {
+            break;
+        }
 
-    __IRQ_SAFE {
-        SysTick->CTRL  = 0;
+        __IRQ_SAFE {
+            SysTick->CTRL  = 0;
 
-        SysTick->LOAD  = SysTick_LOAD_RELOAD_Msk;                               /* set reload register */
-        //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);     /* set Priority for Systick Interrupt */
-        SysTick->VAL   = 0UL;                                                   /* Load the SysTick Counter Value */
-        SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
-                           SysTick_CTRL_TICKINT_Msk   |
-                           SysTick_CTRL_ENABLE_Msk;                             /* Enable SysTick IRQ and SysTick Timer */
-        //SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
-    }
+            SysTick->LOAD  = SysTick_LOAD_RELOAD_Msk;                               /* set reload register */
+            //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);     /* set Priority for Systick Interrupt */
+            SysTick->VAL   = 0UL;                                                   /* Load the SysTick Counter Value */
+            SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
+                               SysTick_CTRL_TICKINT_Msk   |
+                               SysTick_CTRL_ENABLE_Msk;                             /* Enable SysTick IRQ and SysTick Timer */
+            //SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
+        }
+    } while(0);
+    
+    retun true;
 }
 
 __WEAK 

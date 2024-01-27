@@ -86,7 +86,7 @@ int64_t perfc_port_get_system_timer_top(void);
 extern
 bool perfc_port_is_system_timer_ovf_pending(void);
 extern
-void perfc_port_init_system_timer(bool bTimerOccupied);
+bool perfc_port_init_system_timer(bool bTimerOccupied);
 extern
 int64_t perfc_port_get_system_timer_elapsed(void);
 extern
@@ -145,10 +145,11 @@ void update_perf_counter(void)
     }
 }
 
-void init_cycle_counter(bool bIsSysTickOccupied)
+bool init_cycle_counter(bool bIsSysTickOccupied)
 {
+    bool bResult = false;
     __IRQ_SAFE {
-        perfc_port_init_system_timer(bIsSysTickOccupied);                   // use the longest period
+        bResult = perfc_port_init_system_timer(bIsSysTickOccupied);             // use the longest period
         perfc_port_clear_system_timer_ovf_pending();
     }
     
@@ -158,6 +159,8 @@ void init_cycle_counter(bool bIsSysTickOccupied)
     s_lSystemUS = 0;                                // reset system microsecond counter
 
     __perf_os_patch_init();
+    
+    return bResult;
 }
 
 /*! \note this function should only be called when irq is disabled

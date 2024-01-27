@@ -859,7 +859,7 @@ int64_t perfc_port_get_system_timer_top(void);
 extern
 bool perfc_port_is_system_timer_ovf_pending(void);
 extern
-void perfc_port_init_system_timer(bool bTimerOccupied);
+bool perfc_port_init_system_timer(bool bTimerOccupied);
 extern
 int64_t perfc_port_get_system_timer_elapsed(void);
 extern
@@ -878,9 +878,13 @@ void perfc_port_clear_system_timer_counter(void);
 
 #if __PERFC_USE_PMU_PORTING__
  
-void perfc_port_init_system_timer(bool bIsTimeOccupied)
+bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
     UNUSED_PARAM(bIsTimeOccupied);
+
+    if (!(PMU->TYPE & PMU_TYPE_CYCCNT_PRESENT_Msk)) {
+        return false;
+    }
 
     __IRQ_SAFE {
         ARM_PMU_Disable();
@@ -892,6 +896,8 @@ void perfc_port_init_system_timer(bool bIsTimeOccupied)
         ARM_PMU_CNTR_Enable(PMU_CNTENSET_CCNTR_ENABLE_Msk);
         ARM_PMU_Enable();
     }
+    
+    return true;
 }
 
 uint32_t perfc_port_get_system_timer_freq(void)

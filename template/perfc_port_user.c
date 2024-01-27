@@ -52,7 +52,7 @@ int64_t perfc_port_get_system_timer_top(void);
 extern
 bool perfc_port_is_system_timer_ovf_pending(void);
 extern
-void perfc_port_init_system_timer(bool bTimerOccupied);
+bool perfc_port_init_system_timer(bool bTimerOccupied);
 extern
 int64_t perfc_port_get_system_timer_elapsed(void);
 extern
@@ -67,20 +67,25 @@ void perfc_port_clear_system_timer_counter(void);
 
 #if __PERFC_USE_USER_CUSTOM_PORTING__
  
-void perfc_port_init_system_timer(bool bIsTimeOccupied)
+bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
-    if (bIsTimeOccupied) {
-        return ;
-    }
+    bool bResult = true;
+    do {
+        if (bIsTimeOccupied) {
+            break;
+        }
 
-    __IRQ_SAFE {
-        /* Configure the system timer count with the longest possible period
-         * clear counter 
-         * Clear overflow pending flag
-         * Enable interrupt if required
-         * start counting
-         */
-    }
+        __IRQ_SAFE {
+            /* Configure the system timer count with the longest possible period
+             * clear counter 
+             * Clear overflow pending flag
+             * Enable interrupt if required
+             * start counting
+             */
+        }
+    } while(0);
+    
+    return true;
 }
 
 uint32_t perfc_port_get_system_timer_freq(void)

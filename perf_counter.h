@@ -900,8 +900,12 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  *
  *  \param[in] bIsSysTickOccupied  A boolean value which indicates whether SysTick
  *           is already used by user application.
+ *
+ *  \return false Failed to initialize the timer counter, as the timer is not
+ *                available or IO error.
+ *  \return true initialization is successful.
  */
-extern void init_cycle_counter(bool bIsSysTickOccupied);
+extern bool init_cycle_counter(bool bIsSysTickOccupied);
 
 
 /*!
