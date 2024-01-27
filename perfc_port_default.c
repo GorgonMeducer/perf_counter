@@ -180,7 +180,7 @@ bool perfc_port_init_system_timer(bool bTimerOccupied)
         }
     } while(0);
     
-    retun true;
+    return true;
 }
 
 __WEAK 
