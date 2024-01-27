@@ -313,6 +313,10 @@ extern "C" {
 #   define __perf_counter_printf__      printf
 #endif
 
+/* deprecated macro for backward compatibility */
+#define user_code_insert_to_systick_handler                                     \
+            perfc_port_insert_to_system_timer_insert_ovf_handler
+
 #if __PLOOC_VA_NUM_ARGS() != 0
 #warning Please enable GNU extensions, it is required by __cycleof__() and \
 __super_loop_monitor__()
@@ -909,7 +913,7 @@ extern bool init_cycle_counter(bool bIsSysTickOccupied);
 
 
 /*!
- * \brief a system timer handler inserted to the SysTick_Handler
+ * \brief a system timer overflow handler
  *
  * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
  *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
@@ -922,7 +926,7 @@ extern bool init_cycle_counter(bool bIsSysTickOccupied);
  *        you do NOT have to insert this function into your SysTick_Handler,
  *        the systick_wrapper_ual.s will do the work for you.
  */
-extern void user_code_insert_to_systick_handler(void);
+extern void perfc_port_insert_to_system_timer_insert_ovf_handler(void);
 
 /*!
  * \brief update perf_counter as SystemCoreClock has been updated.

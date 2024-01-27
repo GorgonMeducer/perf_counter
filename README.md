@@ -266,13 +266,13 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 
 
 5. Make sure your system contains the CMSIS (with a version 5.7.0 or above) as `perf_counter.h` includes `cmsis_compiler.h`. 
-6. Call the function `user_code_insert_to_systick_handler()` in your `SysTick_Handler()`
+6. Call the function `perfc_port_insert_to_system_timer_insert_ovf_handler()` in your `SysTick_Handler()`
 
 ```c
 void SysTick_Handler(void)
 {
     ...
-    user_code_insert_to_systick_handler();
+    perfc_port_insert_to_system_timer_insert_ovf_handler();
     ...
 }
 ```

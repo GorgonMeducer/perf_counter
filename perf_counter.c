@@ -99,7 +99,7 @@ void perfc_port_clear_system_timer_counter(void);
 /*============================ IMPLEMENTATION ================================*/
 /*============================ INCLUDES ======================================*/
 
-void user_code_insert_to_systick_handler(void)
+void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 {
     int64_t lLoad = perfc_port_get_system_timer_top() + 1;
     s_lSystemClockCounts += lLoad;

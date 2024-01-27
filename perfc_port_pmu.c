@@ -1090,10 +1090,10 @@ void perfc_port_clear_system_timer_counter(void);
 __USED
 void DebugMon_Handler(void)
 {
-    perfc_port_pmu_insert_debug_monitor_handler();
+    perfc_port_pmu_insert_to_debug_monitor_handler();
 }
 
-void perfc_port_pmu_insert_debug_monitor_handler(void)
+void perfc_port_pmu_insert_to_debug_monitor_handler(void)
 {
     if (!(SCB->DFSR & SCB_DFSR_PMU_Msk)) {
         return ;
@@ -1102,7 +1102,7 @@ void perfc_port_pmu_insert_debug_monitor_handler(void)
     if (perfc_port_is_system_timer_ovf_pending()) {
         perfc_port_clear_system_timer_ovf_pending();
         
-        user_code_insert_to_systick_handler();
+        perfc_port_insert_to_system_timer_insert_ovf_handler();
     }
 }
  
