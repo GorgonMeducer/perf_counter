@@ -359,7 +359,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
                     __perf_counter_printf__(                                    \
                         "--------------------------------------------\r\n");    \
                     __perf_counter_printf__(                                    \
-                        __STR " total cycle count: %ld [%016lx]\r\n",           \
+                        __STR " total cycle count: %ld [%08lx]\r\n",            \
                             (long)_, (long)_);                                  \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
