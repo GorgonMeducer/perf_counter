@@ -877,6 +877,13 @@ void perfc_port_clear_system_timer_counter(void);
 
 
 #if __PERFC_USE_PMU_PORTING__
+
+__USED
+void DebugMon_Handler(void)
+{
+
+}
+
  
 bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
@@ -892,6 +899,9 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
         perfc_port_stop_system_timer_counting();
         perfc_port_clear_system_timer_counter();
         perfc_port_clear_system_timer_ovf_pending();
+        
+        /* enable interrupt */
+        PMU->INTENSET = PMU_INTENSET_CCYCNT_ENABLE_Msk;
 
         ARM_PMU_CNTR_Enable(PMU_CNTENSET_CCNTR_ENABLE_Msk);
         ARM_PMU_Enable();
