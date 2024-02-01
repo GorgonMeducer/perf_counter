@@ -242,7 +242,6 @@ void delay_us(uint32_t wUs)
     while(get_system_ticks() < lUs);
 }
 
-volatile int64_t observer;
 void delay_ms(uint32_t wMs)
 {
     int64_t lMs = (int64_t)wMs * (int64_t)s_wMSUnit;
