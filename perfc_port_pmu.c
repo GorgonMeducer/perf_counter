@@ -50,6 +50,10 @@
 #   include CMSIS_device_header
 #else
 
+#ifndef __PMU_NUM_EVENTCNT
+#   define __PMU_NUM_EVENTCNT   8
+#endif
+
 /* IO definitions (access restrictions to peripheral registers) */
 #ifdef __cplusplus
   #define   __I     volatile             /*!< Defines 'read only' permissions */
@@ -1128,7 +1132,6 @@
 
 #endif
 
-
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 
@@ -1210,8 +1213,23 @@ typedef struct
 } SCB_Type;
 #endif
 
+enum {
+    PMU_CNT_INSTRUCTION         = 0,
+    PMU_CNT_MEM_ACCESS          = 1,
+    PMU_CNT_L1_DCACHE_REFILL    = 2,
+};
+
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
+
+#if __PMU_NUM_EVENTCNT >= 6
+#   define __COUNTER_NUM__      (3 + (__PMU_NUM_EVENTCNT - 6))
+#else
+#   define __COUNTER_NUM__      (__PMU_NUM_EVENTCNT >> 1)
+#endif
+
+static volatile uint64_t s_dwEventCounter[__COUNTER_NUM__] = {0};
+
 /*============================ PROTOTYPES ====================================*/
 /* low level interface for porting */
 extern
@@ -1254,6 +1272,60 @@ void perfc_port_pmu_insert_to_debug_monitor_handler(void)
         
         perfc_port_insert_to_system_timer_insert_ovf_handler();
     }
+
+    /* get number of counters */
+    uint_fast8_t chCounter = PMU->TYPE & PMU_TYPE_NUM_CNTS_Msk;
+    chCounter = MIN(chCounter, __PMU_NUM_EVENTCNT);
+
+    do {
+        /* handle counter 1 */
+        if (chCounter < 2) {
+            break ;
+        }
+        if (PMU->OVSCLR & PMU_OVSCLR_CNT1_STATUS_Msk) {
+            PMU->OVSCLR = PMU_OVSCLR_CNT1_STATUS_Msk;
+
+            s_dwEventCounter[PMU_CNT_INSTRUCTION] += (uint64_t)0x100000000;
+        }
+
+
+        /* handle counter 3 */
+        if (chCounter < 4) {
+            break ;
+        }
+        if (PMU->OVSCLR & PMU_OVSCLR_CNT3_STATUS_Msk) {
+            PMU->OVSCLR = PMU_OVSCLR_CNT3_STATUS_Msk;
+
+            s_dwEventCounter[PMU_CNT_MEM_ACCESS] += (uint64_t)0x100000000;
+        }
+
+
+        /* handle counter 5 */
+        if (chCounter < 6) {
+            break ;
+        }
+        if (PMU->OVSCLR & PMU_OVSCLR_CNT5_STATUS_Msk) {
+            PMU->OVSCLR = PMU_OVSCLR_CNT5_STATUS_Msk;
+
+            s_dwEventCounter[PMU_CNT_L1_DCACHE_REFILL] += (uint64_t)0x100000000;
+        }
+
+        if (chCounter > 6) {
+            uint64_t dwCounterLoad 
+                = (uint64_t)1 << ((PMU->TYPE & PMU_TYPE_SIZE_CNTS_Msk) >> PMU_TYPE_SIZE_CNTS_Pos);
+
+            for (int_fast8_t n = 6; n < chCounter; n++) {
+                uint32_t wMask = (1<<n);
+                if (PMU->OVSSET & wMask) {
+                    /* counter overflow is detected */
+                    PMU->OVSCLR = wMask;                                            /* clear Overflow Flag */
+
+                    /* update corresponding counter */
+                    s_dwEventCounter[n - 3] += dwCounterLoad;
+                }
+            }
+        }
+    } while(0);
 }
  
 bool perfc_port_init_system_timer(bool bIsTimeOccupied)
@@ -1277,7 +1349,76 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 
         /* reset all event counter */
         PMU->CTRL |= PMU_CTRL_EVENTCNT_RESET_Msk;
-        
+
+        /* configure event counter */
+        do {
+            uint_fast8_t chCounter = PMU->TYPE & PMU_TYPE_NUM_CNTS_Msk;
+            chCounter = MIN(chCounter, __PMU_NUM_EVENTCNT);
+            
+            if (chCounter >= 2) {
+                /* 32 bit counter for instruction architecturally executed */
+                PMU->EVTYPER[0] = ARM_PMU_INST_RETIRED;
+                PMU->EVTYPER[1] = ARM_PMU_CHAIN;
+
+                /* clear counter 0/1 overflow flag */
+                PMU->OVSCLR = PMU_OVSCLR_CNT0_STATUS_Msk
+                            | PMU_OVSCLR_CNT1_STATUS_Msk;
+
+                /* enable counter 1 interrupt */
+                PMU->INTENSET = PMU_INTENSET_CNT1_ENABLE_Msk;
+
+                /* enable counter 0/1 */
+                PMU->CNTENSET = PMU_CNTENSET_CNT0_ENABLE_Msk
+                              | PMU_CNTENSET_CNT1_ENABLE_Msk;
+            }
+
+            if (chCounter >= 4) {
+                /* 32bit counter for all Data memory Accesses */
+                PMU->EVTYPER[2] = ARM_PMU_MEM_ACCESS;
+                PMU->EVTYPER[3] = ARM_PMU_CHAIN;
+
+                /* clear counter 2/3 overflow flag */
+                PMU->OVSCLR = PMU_OVSCLR_CNT2_STATUS_Msk
+                            | PMU_OVSCLR_CNT3_STATUS_Msk;
+
+                /* enable counter 3 interrupt */
+                PMU->INTENSET = PMU_INTENSET_CNT3_ENABLE_Msk;
+
+                /* enable counter 2/3 */
+                PMU->CNTENSET = PMU_CNTENSET_CNT2_ENABLE_Msk
+                              | PMU_CNTENSET_CNT3_ENABLE_Msk;
+            }
+
+            if (chCounter >= 6) {
+                /* 32bit counter for all Data memory Accesses */
+                PMU->EVTYPER[4] = ARM_PMU_L1D_CACHE_REFILL;
+                PMU->EVTYPER[5] = ARM_PMU_CHAIN;
+
+                /* clear counter 4/5 overflow flag */
+                PMU->OVSCLR = PMU_OVSCLR_CNT4_STATUS_Msk
+                            | PMU_OVSCLR_CNT5_STATUS_Msk;
+
+                /* enable counter 5 interrupt */
+                PMU->INTENSET = PMU_INTENSET_CNT5_ENABLE_Msk;
+
+                /* enable counter 4/5 */
+                PMU->CNTENSET = PMU_CNTENSET_CNT4_ENABLE_Msk
+                              | PMU_CNTENSET_CNT5_ENABLE_Msk;
+
+            }
+
+            if (chCounter > 6) {
+                for (int_fast8_t n = 6; n < chCounter; n++) {
+                    uint32_t wMask = (1<<n);
+
+                    PMU->OVSCLR = wMask;        /* clear overflow flag */
+                    PMU->INTENSET = wMask;      /* enable interrupt */
+                    PMU->CNTENSET = wMask;      /* enable counter */
+                }
+            }
+
+        } while(0);
+
         DCB->DEMCR |= DCB_DEMCR_UMON_EN_Msk         |
                       DCB_DEMCR_SDME_Msk            |
                       DCB_DEMCR_MON_EN_Msk          ;
@@ -1290,6 +1431,78 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
     }
     
     return true;
+}
+
+uint64_t perfc_pmu_get_instruction_count(void)
+{
+    uint32_t wHigh16, wLow16;
+    uint64_t dwResult;
+    bool bIsOverflow = false;
+    __IRQ_SAFE {
+        do {
+            wHigh16 = PMU->EVCNTR[1];
+            wLow16 = PMU->EVCNTR[0];
+        } while(wHigh16 < PMU->EVCNTR[1]);
+        dwResult = s_dwEventCounter[PMU_CNT_INSTRUCTION];
+        bIsOverflow = (0 != (PMU->OVSCLR & PMU_OVSCLR_CNT1_STATUS_Msk));
+    }
+
+    dwResult += wLow16 | (wHigh16 << 16);
+    
+    if (bIsOverflow) {
+        dwResult += (uint64_t)1<<32;
+    }
+
+    return dwResult;
+}
+
+uint64_t perfc_pmu_get_memory_access_count(void)
+{
+    uint32_t wHigh16, wLow16;
+    uint64_t dwResult;
+    bool bIsOverflow = false;
+
+    __IRQ_SAFE {
+        do {
+            wHigh16 = PMU->EVCNTR[3];
+            wLow16 = PMU->EVCNTR[2];
+        } while(wHigh16 < PMU->EVCNTR[3]);
+        dwResult = s_dwEventCounter[PMU_CNT_MEM_ACCESS];
+        bIsOverflow = (0 != (PMU->OVSCLR & PMU_OVSCLR_CNT3_STATUS_Msk));
+    }
+
+    dwResult += wLow16 | (wHigh16 << 16);
+    
+    if (bIsOverflow) {
+        dwResult += (uint64_t)1<<32;
+    }
+
+    return dwResult;
+}
+
+
+uint64_t perfc_pmu_get_L1_dcache_refill_count(void)
+{
+    uint32_t wHigh16, wLow16;
+    uint64_t dwResult;
+    bool bIsOverflow = false;
+
+    __IRQ_SAFE {
+        do {
+            wHigh16 = PMU->EVCNTR[5];
+            wLow16 = PMU->EVCNTR[4];
+        } while(wHigh16 < PMU->EVCNTR[5]);
+        dwResult = s_dwEventCounter[PMU_CNT_L1_DCACHE_REFILL];
+        bIsOverflow = (0 != (PMU->OVSCLR & PMU_OVSCLR_CNT5_STATUS_Msk));
+    }
+
+    dwResult += wLow16 | (wHigh16 << 16);
+    
+    if (bIsOverflow) {
+        dwResult += (uint64_t)1<<32;
+    }
+
+    return dwResult;
 }
 
 uint32_t perfc_port_get_system_timer_freq(void)

@@ -31,6 +31,16 @@ typedef uint32_t perfc_global_interrupt_status_t;
 /*============================ PROTOTYPES ====================================*/
 extern
 void perfc_port_pmu_insert_to_debug_monitor_handler(void);
+
+extern
+uint64_t perfc_pmu_get_instruction_count(void);
+
+extern
+uint64_t perfc_pmu_get_memory_access_count(void);
+
+extern
+uint64_t perfc_pmu_get_L1_dcache_refill_count(void);
+
 /*============================ IMPLEMENTATION ================================*/
 
 __STATIC_INLINE 
@@ -47,5 +57,8 @@ void perfc_port_resume_global_interrupt(perfc_global_interrupt_status_t tStatus)
 {
     __set_PRIMASK(tStatus);
 }
+
+
+
 
 #endif
