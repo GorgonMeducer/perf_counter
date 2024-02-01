@@ -42,8 +42,6 @@
 #endif
 
 
-
-
 /*============================ MACROS ========================================*/
 
 #if defined(CMSIS_device_header)
@@ -1311,8 +1309,6 @@ void perfc_port_pmu_insert_to_debug_monitor_handler(void)
         }
 
         if (chCounter > 6) {
-            uint64_t dwCounterLoad 
-                = (uint64_t)1 << ((PMU->TYPE & PMU_TYPE_SIZE_CNTS_Msk) >> PMU_TYPE_SIZE_CNTS_Pos);
 
             for (int_fast8_t n = 6; n < chCounter; n++) {
                 uint32_t wMask = (1<<n);
@@ -1321,7 +1317,7 @@ void perfc_port_pmu_insert_to_debug_monitor_handler(void)
                     PMU->OVSCLR = wMask;                                            /* clear Overflow Flag */
 
                     /* update corresponding counter */
-                    s_dwEventCounter[n - 3] += dwCounterLoad;
+                    s_dwEventCounter[n - 3] += 0x10000;
                 }
             }
         }
