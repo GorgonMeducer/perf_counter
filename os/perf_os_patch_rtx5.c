@@ -76,7 +76,7 @@ void EvrRtxThreadSwitched (osThreadId_t thread_id)
 {
     __on_context_switch((osRtxThread_t *)thread_id);
 
-#if defined(RTE_Compiler_EventRecorder)
+#if defined(RTE_Compiler_EventRecorder) || defined(RTE_CMSIS_View_EventRecorder)
 #   define EvtRtxThreadSwitched     \
         EventID(EventLevelOp,     EvtRtxThreadNo, 0x19U)
 

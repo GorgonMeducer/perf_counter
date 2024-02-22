@@ -1417,6 +1417,7 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 
         DCB->DEMCR |= DCB_DEMCR_UMON_EN_Msk         |
                       DCB_DEMCR_SDME_Msk            |
+                      DCB_DEMCR_TRCENA_Msk          |
                       DCB_DEMCR_MON_EN_Msk          ;
         
         /* enable PMU Cycle Counter interrupt */
