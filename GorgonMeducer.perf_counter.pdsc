@@ -6,7 +6,7 @@
   <description>A dedicated performance counter for the Cortex-M Systick. It shares the SysTick with users' original SysTick function without interfering with it. This library will bring new functionalities, such as performance counter, APIs for delay, clock() defined in time.h etc.</description>
   <url>https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/</url>
   <supportContact>https://github.com/GorgonMeducer/perf_counter/issues</supportContact>
-  <license>lib/LICENSE</license>
+  <license>LICENSE</license>
   <!-- optional license file -->
   <!-- 
   <license>
@@ -322,7 +322,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="1.0.0" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
+            <component Cclass="Utilities" Cversion="1.1.0" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
               <description>Using the Performande Monitor Unit</description>
               <files>
                 <file category="sourceC"        name="perfc_port_pmu.c"/>
@@ -343,12 +343,12 @@
             </component>
 
 
-            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.2" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.3" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="sourceC"    name="benchmark/coremark_port/core_main.c"/>
-                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.2" />
-                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.2" />
+                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.3" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.3" />
                 
                 <file category="include"    name="benchmark/coremark/" />
                 <file category="sourceC"    name="benchmark/coremark/core_list_join.c"/>

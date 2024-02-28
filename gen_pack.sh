@@ -32,7 +32,6 @@ DEFAULT_ARGS=(-c "v")
    benchmark
    documents
    os
-   lib
    template
  "
 
