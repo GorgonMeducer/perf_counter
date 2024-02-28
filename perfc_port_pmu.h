@@ -66,7 +66,7 @@
             __PERF_INFO__.fCPI = (float)(    (double)__PERF_INFO__.lCycles      \
                                        /    (double)__PERF_INFO__.dwNoInstr);   \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
-                printf( "\r\n"                                                  \
+                __perf_counter_printf__( "\r\n"                                 \
                         "[Report for " __str "]\r\n"                            \
                         "-----------------------------------------\r\n"         \
                         "Instruction executed: %lld\r\n"                        \
@@ -78,10 +78,10 @@
                         ,                                                       \
                         __PERF_INFO__.dwNoInstr,                                \
                         __PERF_INFO__.lCycles,                                  \
-                        __PERF_INFO__.fCPI,                                     \
+                        (double)__PERF_INFO__.fCPI,                             \
                         __PERF_INFO__.dwNoMemAccess,                            \
                         __PERF_INFO__.dwNoL1DCacheRefill,                       \
-                        __PERF_INFO__.fDCacheMissRate                           \
+                        (double)__PERF_INFO__.fDCacheMissRate                   \
                         );                                                      \
              } else {                                                           \
                 __VA_ARGS__                                                     \
