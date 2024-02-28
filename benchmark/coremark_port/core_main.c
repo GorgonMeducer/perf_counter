@@ -22,6 +22,15 @@ Original Author: Shay Gal-on
 */
 #include "coremark.h"
 
+#if defined(__clang__)
+#   pragma clang diagnostic ignored "-Wunknown-warning-option"
+#   pragma clang diagnostic ignored "-Wreserved-identifier"
+#   pragma clang diagnostic ignored "-Wconditional-uninitialized"
+#   pragma clang diagnostic ignored "-Wsign-conversion"
+#   pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#endif
+
+
 /* Function: iterate
         Run the benchmark for a specified number of iterations.
 
