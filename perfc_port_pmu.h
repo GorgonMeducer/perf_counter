@@ -27,20 +27,43 @@
     using(                                                                      \
         struct {                                                                \
             uint64_t dwNoInstr;                                                 \
+            uint64_t dwNoMemAccess;                                             \
+            uint64_t dwNoCacheMiss;                                             \
+            uint64_t dwNoL1DCacheRefill;                                        \
             int64_t lCycles;                                                    \
-            uint32_t wCalib;                                                    \
+            uint32_t wInstrCalib;                                               \
+            uint32_t wMemAccessCalib;                                           \
             float fCPI;                                                         \
+            float fDCacheMissRate;                                              \
         } __PERF_INFO__ = {0},                                                  \
         ({                                                                      \
             __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
-            __PERF_INFO__.wCalib = perfc_pmu_get_instruction_count()            \
+            __PERF_INFO__.dwNoMemAccess = perfc_pmu_get_memory_access_count();  \
+            __PERF_INFO__.wInstrCalib = perfc_pmu_get_instruction_count()       \
                                 - __PERF_INFO__.dwNoInstr;                      \
+            __PERF_INFO__.wMemAccessCalib = perfc_pmu_get_memory_access_count() \
+                                          - __PERF_INFO__.dwNoMemAccess;        \
+            __PERF_INFO__.dwNoL1DCacheRefill                                    \
+                = perfc_pmu_get_L1_dcache_refill_count();                       \
             __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
+            __PERF_INFO__.dwNoMemAccess = perfc_pmu_get_memory_access_count();  \
         }),                                                                     \
         ({                                                                      \
             __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count()         \
-                              - __PERF_INFO__.dwNoInstr                         \
-                              - __PERF_INFO__.wCalib;                           \
+                                    - __PERF_INFO__.dwNoInstr                   \
+                                    - __PERF_INFO__.wInstrCalib;                \
+            __PERF_INFO__.dwNoMemAccess = perfc_pmu_get_memory_access_count()   \
+                                        - __PERF_INFO__.dwNoMemAccess           \
+                                        - __PERF_INFO__.wMemAccessCalib;        \
+            __PERF_INFO__.dwNoL1DCacheRefill                                    \
+                = perfc_pmu_get_L1_dcache_refill_count()                        \
+                - __PERF_INFO__.dwNoL1DCacheRefill;                             \
+                                                                                \
+            __PERF_INFO__.fDCacheMissRate                                       \
+                        = (float)( (double)__PERF_INFO__.dwNoL1DCacheRefill     \
+                                 / (double)__PERF_INFO__.dwNoMemAccess)         \
+                        * 100.0f;                                               \
+                                                                                \
             __PERF_INFO__.fCPI = (float)(    (double)__PERF_INFO__.lCycles      \
                                        /    (double)__PERF_INFO__.dwNoInstr);   \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
@@ -49,10 +72,18 @@
                         "-----------------------------------------\r\n"         \
                         "Instruction executed: %lld\r\n"                        \
                         "Cycle Used: %lld\r\n"                                  \
-                        "Cycles per Instructions: %3.3f \r\n",                  \
+                        "Cycles per Instructions: %3.3f \r\n\r\n"               \
+                        "Memory Access Count: %lld\r\n"                         \
+                        "L1 DCache Refill Count: %lld\r\n"                      \
+                        "L1 DCache Miss Rate: %3.4f %% \r\n"                    \
+                        ,                                                       \
                         __PERF_INFO__.dwNoInstr,                                \
                         __PERF_INFO__.lCycles,                                  \
-                        __PERF_INFO__.fCPI);                                    \
+                        __PERF_INFO__.fCPI,                                     \
+                        __PERF_INFO__.dwNoMemAccess,                            \
+                        __PERF_INFO__.dwNoL1DCacheRefill,                       \
+                        __PERF_INFO__.fDCacheMissRate                           \
+                        );                                                      \
              } else {                                                           \
                 __VA_ARGS__                                                     \
              }                                                                  \
