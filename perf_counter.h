@@ -387,11 +387,11 @@ __asm(".global __ensure_systick_wrapper\n\t");
         }
     \endcode
  */
-#define __cpu_usage__(__CNT, ...)                                                \
+#define __cpu_usage__(__CNT, ...)                                               \
     static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
-    static uint32_t s_wLoopCounter = (__CNT);                                   \
+    static uint32_t SAFE_NAME(s_wLoopCounter) = (__CNT);                        \
     using(float __usage__ = 0, ({                                               \
-    if (0 == s_wLoopCounter) {                                                  \
+    if (0 == SAFE_NAME(s_wLoopCounter)) {                                       \
         __usage__ = (float)((double)SAFE_NAME(s_lTotal)                         \
                         / (double)(     get_system_ticks()                      \
                                   -     SAFE_NAME(s_lTimestamp)));              \
@@ -399,18 +399,18 @@ __asm(".global __ensure_systick_wrapper\n\t");
         SAFE_NAME(s_lTimestamp) = 0;                                            \
         SAFE_NAME(s_lTotal) = 0;                                                \
         if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                            \
-            __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);                 \
+            __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);\
         } else {                                                                \
             __VA_ARGS__                                                         \
         }                                                                       \
     }                                                                           \
     if (0 == SAFE_NAME(s_lTimestamp)) {                                         \
         SAFE_NAME(s_lTimestamp) = get_system_ticks();                           \
-        s_wLoopCounter = (__CNT);                                               \
+        SAFE_NAME(s_wLoopCounter) = (__CNT);                                    \
     }                                                                           \
     start_task_cycle_counter();}),                                              \
     ({SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                         \
-    s_wLoopCounter--;}))
+    SAFE_NAME(s_wLoopCounter)--;}))
 
 #define __cpu_time__    __cpu_usage__
 
