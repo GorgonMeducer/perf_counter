@@ -15,6 +15,7 @@
 ;*                                                                           *
 ;****************************************************************************/
 
+#if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax	unified
     .arch	armv6-m
 
@@ -28,7 +29,7 @@
 __wrap_SysTick_Handler:
     push    {r4, r5}
     push    {r4, lr}
-    ldr     R0, =user_code_insert_to_systick_handler
+    ldr     R0, =perfc_port_insert_to_system_timer_insert_ovf_handler
     blx     R0
     pop     {r4, r5}
     mov     lr, r5
@@ -42,3 +43,4 @@ __wrap_SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
+#endif

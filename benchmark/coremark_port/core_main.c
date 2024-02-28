@@ -22,6 +22,15 @@ Original Author: Shay Gal-on
 */
 #include "coremark.h"
 
+#if defined(__clang__)
+#   pragma clang diagnostic ignored "-Wunknown-warning-option"
+#   pragma clang diagnostic ignored "-Wreserved-identifier"
+#   pragma clang diagnostic ignored "-Wconditional-uninitialized"
+#   pragma clang diagnostic ignored "-Wsign-conversion"
+#   pragma clang diagnostic ignored "-Wimplicit-int-conversion"
+#endif
+
+
 /* Function: iterate
         Run the benchmark for a specified number of iterations.
 
@@ -103,6 +112,9 @@ char *mem_name[3] = { "Static", "Heap", "Stack" };
    the benchmark will run between 10 to 100 secs
 
 */
+
+__attribute__((used))
+volatile double dfCoremarkScore = 0.0f;
 
 #if MAIN_HAS_NOARGC
 MAIN_RETURN_TYPE
@@ -409,6 +421,8 @@ for (i = 0; i < MULTITHREAD; i++)
             double dfResult = (double)((double)1000000 
                             * (double)default_num_contexts*results[0].iterations
                             / (double)total_time);
+            dfCoremarkScore = dfResult;
+
             ee_printf(  "CoreMark 1.0 : %f / %s %s", 
                         dfResult,
                         COMPILER_VERSION,

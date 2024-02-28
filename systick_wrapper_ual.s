@@ -22,11 +22,11 @@
 
 |$Sub$$SysTick_Handler|   PROC
                 EXPORT  |$Sub$$SysTick_Handler|
-                IMPORT  user_code_insert_to_systick_handler
+                IMPORT  perfc_port_insert_to_system_timer_insert_ovf_handler
                 IMPORT  |$Super$$SysTick_Handler|
                 push    {r4, r5}
                 push	    {r4, lr}
-                LDR      R0, =user_code_insert_to_systick_handler
+                LDR      R0, =perfc_port_insert_to_system_timer_insert_ovf_handler
                 BLX      R0
                 pop         {r4, r5}
                 mov     lr, r5

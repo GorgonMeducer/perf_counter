@@ -190,14 +190,25 @@ int main (void)
 #endif
 
     while (1) {
-        if (perfc_is_time_out_ms(1000)) {
-            printf("\r[%010d]", get_system_ms());
+        if (perfc_is_time_out_ms(10000)) {
+            printf("\r[%010lld]", get_system_ms());
         }
 
-        __cpu_time__(10) {
+        __cpu_usage__(10) {
             delay_us(30000);
         }
-        delay_us(70000);
+        
+        float fUsage = 0;
+        __cpu_usage__(10, {
+            fUsage = __usage__;
+            printf("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+        }) {
+            delay_us(50000);
+        }
+        
+        
+        
+        delay_us(20000);
 
     }
 }

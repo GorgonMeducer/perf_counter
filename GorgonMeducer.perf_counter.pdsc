@@ -6,7 +6,7 @@
   <description>A dedicated performance counter for the Cortex-M Systick. It shares the SysTick with users' original SysTick function without interfering with it. This library will bring new functionalities, such as performance counter, APIs for delay, clock() defined in time.h etc.</description>
   <url>https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/</url>
   <supportContact>https://github.com/GorgonMeducer/perf_counter/issues</supportContact>
-  <license>lib/LICENSE</license>
+  <license>LICENSE</license>
   <!-- optional license file -->
   <!-- 
   <license>
@@ -174,7 +174,18 @@
             <description>Require Perf_Counter Core</description>
             <require Cclass="Utilities" Cgroup="perf_counter" Csub="Core"/>
         </condition>
-        
+
+        <condition id="PMU Devices">
+            <description>Require Perf_Counter Core</description>
+            <require condition="perf_counter" />
+            <accept  Dcore="ARMV8MML"/>
+            <accept  Dcore="ARMV81MML"/>
+            <accept  Dcore="Cortex-M33"/>
+            <accept  Dcore="Cortex-M35P"/>
+            <accept  Dcore="Cortex-M55"/>
+            <accept  Dcore="Cortex-M85"/>
+        </condition>
+
         <condition id="Cortex-M Arm GCC">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm GCC"/>
@@ -257,29 +268,12 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="Library" condition="CMSIS-CORE">
-              <description>A dedicated performance counter for Cortex-M systick.</description>
-              <files>
-                <file category="header"     name="perf_counter.h"/>
-                <file category="library"    name="lib/perf_counter.lib"         condition="Cortex-M Arm Compiler"/>
-                <file category="library"    name="lib/libperf_counter_gcc.a"    condition="Cortex-M Arm GCC"/>
-              </files>
-              <RTE_Components_h>
-
-#define __PERF_COUNTER__ 1
-              </RTE_Components_h>
-
-
-              <Pre_Include_Global_h>
-
-#define __PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__ 1
-              </Pre_Include_Global_h>
-            </component>
-            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"         name="perf_counter.h"/>
                 <file category="sourceC"        name="perf_counter.c" />
+                <file category="sourceC"        name="perfc_port_default.c" />
                 <file category="sourceAsm"      name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE"/>
                 <file category="sourceAsm"      name="systick_wrapper_gcc.S"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
                 <file category="sourceAsm"      name="systick_wrapper_gnu.s"        condition="Armv8-M Arm Compiler CMSIS-CORE"/>
@@ -295,25 +289,66 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.2.5" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"         name="perf_counter.h"/>
                 <file category="sourceC"        name="perf_counter.c" />
+                <file category="sourceC"        name="perfc_port_default.c" />
               </files>
               <RTE_Components_h>
 
 #define __PERF_COUNTER__ 1
               </RTE_Components_h>
             </component>
+            
+            <component Cclass="Utilities" Cversion="1.0.2" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" isDefaultVariant="false" condition="perf_counter">
+              <description>A user define system timer</description>
+              <files>
+                <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.2"/>
+                <file category="header"         name="template/perfc_port_user.h" attr="config"  version="1.0.2"/>
+              </files>
+              <RTE_Components_h>
+
+#define __RTE_PERFC_PORTING_USER_DEFINED__ 1
+              </RTE_Components_h>
+
+              <Pre_Include_Global_h>
+
+#define __PERFC_USE_USER_CUSTOM_PORTING__               1
+#define __PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__   1
+#define __PERFC_CFG_PORTING_INCLUDE__                   "perfc_port_user.h"
+
+              </Pre_Include_Global_h>
+            </component>
+
+            <component Cclass="Utilities" Cversion="1.1.0" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
+              <description>Using the Performande Monitor Unit</description>
+              <files>
+                <file category="sourceC"        name="perfc_port_pmu.c"/>
+                <file category="header"         name="perfc_port_pmu.h"/>
+              </files>
+              <RTE_Components_h>
+
+#define __RTE_PERFC_PORTING_PMU__ 1
+              </RTE_Components_h>
+
+              <Pre_Include_Global_h>
+
+#define __PERFC_USE_PMU_PORTING__                       1
+#define __PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__   1
+#define __PERFC_CFG_PORTING_INCLUDE__                   "perfc_port_pmu.h"
+
+              </Pre_Include_Global_h>
+            </component>
 
 
-            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.2" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Benchmark" Cvariant="Coremark" Cversion="1.1.3" condition="perf_counter">
               <description>Coremark</description>
               <files>
                 <file category="sourceC"    name="benchmark/coremark_port/core_main.c"/>
-                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.2" />
-                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.2" />
+                <file category="sourceC"    name="benchmark/coremark_port/core_portme.c" attr="config"  version="1.1.3" />
+                <file category="header"     name="benchmark/coremark_port/core_portme.h" attr="config"  version="1.1.3" />
                 
                 <file category="include"    name="benchmark/coremark/" />
                 <file category="sourceC"    name="benchmark/coremark/core_list_join.c"/>
@@ -331,7 +366,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="os/perf_os_patch_rtx5.c"/>
@@ -343,7 +378,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_freertos.c"/>
@@ -366,7 +401,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_rt_thread.c"/>
@@ -384,7 +419,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.2.3" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_threadx.c"/>
