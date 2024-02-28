@@ -1,4 +1,4 @@
-# perf_counter (v2.2.4)
+# perf_counter (v2.3.0)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -10,10 +10,15 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - Measures **RAW / True** cycles used for specified code segment inside a thread, **i.e. scheduling cost are removed**. 
   - Measure **RAW/True** cycles used for a data-process-path across multiple threads.
 - **Easy to use**
-  - Helper macros: `__cycleof__()` , `__super_loop_monitor__()` etc.
+  - Helper macros: `__cycleof__()` , `__super_loop_monitor__()` , `__cpu_usage__()`, `__cpu_perf__()` etc.
   - Helper functions: `start_cycle_counter()`, `stop_cycle_counter()` etc.
-- **Support ALL Cortex-M processors**
-  - Including **Cortex-M85** and Star-MC1
+- Enable a broader processor architecture support
+  - **Support ALL Cortex-M processors**
+    - SysTick
+    - **[new]**Performance Monitor Unit (PMU)
+
+  - **[new]**Easy to port to a different architecture with a porting template
+
 - **Provide Free Services**
   - Do **NOT** interfer with existing SysTick based applications
 - **Support ALL arm compilers**
@@ -26,13 +31,12 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - **CMSIS-Pack is available**
   - **RT-Thread package is avaialble**
 - **Time based services**
-  - `delay_us()` and `delay_ms()`
+  - **[new]**`delay_us()` and `delay_ms()` with **64bit return value**.
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
   - Support SysTick Reconfiguration
   - Support changing System Frequency
-  - **[new]** Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
-  
+  - Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macro to create atomicity for specified code block, i.e. `__IRQ_SAFE{...}`
@@ -60,7 +64,7 @@ __cycleof__(<Description String for the target>, [User Code, see ref 1]) {
 }
 ```
 
-Here, [**ref 1**] is a small user code to read the measurement result via a local variable `__cycle_count__` for perl lovers, you can also use "`_`" to read the result. This User Code is optional. If you don't put anything here, the measured result will be shown with a `printf()`. 
+Here, [**ref 1**] is a small user code to read the measurement result via a local variable `__cycle_count__` . This User Code is optional. If you don't put anything here, the measured result will be shown with a `__perf_counter_printf__`. 
 
 #### **Example 1:** Simple measurement with printf
 
@@ -99,9 +103,123 @@ The result is read out from `__cycle_count__`and used in other place:
 
 ![image-20220509004714845](./documents/pictures/__cycleof___output_non_printf) 
 
+### 1.2 Performance Analysis
+
+#### 1.2.1 CPU Usage
+
+For both bare-metal and OS environment, you can measure the CPU Usage with macro `__cpu_usage__()` for a given code segment as long as it is executed repeatedly. 
+
+**Syntax**
+
+```c
+__cycleof__(<Iteration Count before getting an average result>, [User Code, see ref 1]) {
+    //! target code segment of measurement
+    ...
+}
+```
+
+Here, [**ref 1**] is a small user code to read the measurement result via a local variable `__usage__`. This User Code is optional. If you don't put anything here, the measured result will be shown with a `__perf_counter_printf__`. 
+
+##### **Example 1: the following code will show 30% of CPU Usage:**
+
+```c
+void main(void)
+{
+    ...
+    while (1) {
+        __cpu_usage__(10) {
+            delay_us(30000);
+        }
+        delay_us(70000);
+    }
+    ...
+}
+```
+
+##### Example 2: Read measurement result via `__usage__`
+
+```c
+void main(void)
+{
+    ...
+    while (1) {
+        
+        float fUsage = 0.0f;
+        __cpu_usage__(10, {
+            fUsage = __usage__; /*< "__usage__" stores the result */
+        }) {
+            delay_us(30000);
+        }
+        printf("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+
+        delay_us(70000);
+    }
+    ...
+}
+```
+
+NOTE: The `__usage__` stores the percentage information.
 
 
-### 1.2 Timestamp
+
+#### 1.2.2 Cycle per Instruction and L1 DCache Miss Rate
+
+For **Armv8.1-m** processors that implement the **PMU**, it is easy to measure the **CPI** (Cycle per Instruction) and **L1 DCache miss rate** with the macro `__cpu_perf__()`.
+
+**Syntax**:
+
+```c
+__cpu_perf__(<Description String for the target>, [User Code, see ref 1]) {
+    //! target code segment of measurement
+    ...
+}
+```
+
+Here, [**ref 1**] is a small user code to read the measurement result via a local **struct** variable `__PERF_INFO__` . This User Code is optional. If you don't put anything here, the measured result will be shown with a `__perf_counter_printf__`. The prototype of the `__PERF_INFO__` is shown below:
+
+```c
+struct {                                                                
+    uint64_t dwNoInstr;                 /* number of instruction executed */        
+    uint64_t dwNoMemAccess;             /* number of memory access */
+    uint64_t dwNoL1DCacheRefill;        /* number of L1 DCache Refill */
+    int64_t lCycles;                    /* number of CPU cycles */
+    uint32_t wInstrCalib;                                               
+    uint32_t wMemAccessCalib;                                           
+    float fCPI;                         /* Cycle per Instruction */
+    float fDCacheMissRate;              /* L1 DCache miss rate in percentage */
+} __PERF_INFO__;
+```
+
+For example, when insert user code, you can read CPI from `__PERF_INFO__.fCPI`.
+
+**Example 1: measure the Coremark**
+
+```c
+void main(void)
+{
+    init_cycle_counter(false);
+
+    printf("Run coremark\r\n");
+
+#ifdef __PERF_COUNTER_COREMARK__
+    __cpu_perf__("Coremark") {
+        coremark_main();
+    }
+#endif
+
+    while(1) {
+        __NOP();
+    }
+}
+```
+
+The result might look like the following:
+
+![](./documents/pictures/__cpu_perf__output.png) 
+
+
+
+### 1.3 Timestamp
 
 You can get the system timestamp (since the initialization of perf_counter service) via function `get_system_ticks()` and `get_system_ms()`. 
 
@@ -172,7 +290,7 @@ This example shows how to use the delta value of `get_system_ticks()` to measure
 
 
 
-### 1.3 Timer Services
+### 1.4 Timer Services
 
 perf_counter provides the basic timer services for delaying a given period of time and polling-for-timeout. For example:
 
@@ -193,7 +311,7 @@ while(1) {
 
 
 
-### 1.4 Work with EventRecorder in MDK
+### 1.5 Work with EventRecorder in MDK
 
 If you are using EventRecorder in MDK, once you deployed the `perf_counter`, it will provide the timer service for EventRecorder by implenting the following functions: `EventRecorderTimerSetup()`, `EventRecorderTimerGetFreq()` and `EventRecorderTimerGetCount()`. 
 
@@ -213,9 +331,9 @@ Please set the macro `EVENT_TIMESTAMP_SOURCE` to `3` to suppress it.
 
 
 
-### 1.5 On System Environment Changing
+### 1.6 On System Environment Changing
 
-#### 1.5.1 System Frequency Changing
+#### 1.6.1 System Frequency Changing
 
 If you want to change the System Frequency, **after** the change, make sure:
 
@@ -225,7 +343,7 @@ If you want to change the System Frequency, **after** the change, make sure:
 
 
 
-#### 1.5.2 Reconfigure the SysTick
+#### 1.6.2 Reconfigure the SysTick
 
 Some systems (e.g. FreeRTOS) might reconfigure the systick timer to fulfil the requirement of their feature. To support this:
 
@@ -250,7 +368,10 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 ```
 
 2. Add including path for `perf_counter` folder
-3. Add `perf_counter.c` to your compilation 
+3. Add `perf_counter.c` to your compilation. 
+
+> **NOTE**: Please do **NOT** add any assembly source files of this `perf_counter` library to your compilation, i.e. `systick_wrapper_gcc.S`, `systick_wrapper_gnu.s` or `systick_wrapper_ual.s`.
+
 4. Include `perf_counter.h` in corresponding c source file:
 
 ```c
@@ -259,13 +380,13 @@ git clone https://github.com/GorgonMeducer/perf_counter.git
 
 
 5. Make sure your system contains the CMSIS (with a version 5.7.0 or above) as `perf_counter.h` includes `cmsis_compiler.h`. 
-6. Call the function `user_code_insert_to_systick_handler()` in your `SysTick_Handler()`
+6. Call the function `perfc_port_insert_to_system_timer_insert_ovf_handler()` in your `SysTick_Handler()`
 
 ```c
 void SysTick_Handler(void)
 {
     ...
-    user_code_insert_to_systick_handler();
+    perfc_port_insert_to_system_timer_insert_ovf_handler();
     ...
 }
 ```

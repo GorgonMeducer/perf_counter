@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2024 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -22,7 +22,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
-#include "cmsis_compiler.h"
+
+#ifndef __PERFC_CFG_PORTING_INCLUDE__
+#   include "perfc_port_default.h"
+#else
+#   include __PERFC_CFG_PORTING_INCLUDE__
+#endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,8 +39,8 @@ extern "C" {
  * @{
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
-#define __PERF_COUNTER_VER_MINOR__          2
-#define __PERF_COUNTER_VER_REVISE__         4
+#define __PERF_COUNTER_VER_MINOR__          3
+#define __PERF_COUNTER_VER_REVISE__         0
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -133,6 +138,33 @@ extern "C" {
 #ifndef UNUSED_PARAM
 #   define UNUSED_PARAM(__VAR)     (void)(__VAR)
 #endif
+
+#ifndef MIN
+#   define MIN(__a, __b)  ((__a) <= (__b) ? (__a) : (__b))
+#endif
+
+#ifndef MAX
+#   define MAX(__a, __b)  ((__a) >= (__b) ? (__a) : (__b))
+#endif
+
+/*!
+ * \brief an attribute for static variables that no initialisation is required 
+ *        in the C startup process.
+ */
+#ifndef PERF_NOINIT
+#   if     defined(__IS_COMPILER_ARM_COMPILER_5__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit"),zero_init))
+#   elif   defined(__IS_COMPILER_ARM_COMPILER_6__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   elif   defined(__IS_COMPILER_IAR__)
+#       define PERF_NOINIT   __no_init
+#   elif   (defined(__IS_COMPILER_GCC__) || defined(__IS_COMPILER_LLVM__)) && !defined(__APPLE__)
+#       define PERF_NOINIT   __attribute__(( section( ".bss.noinit")))
+#   else
+#       define PERF_NOINIT
+#   endif
+#endif
+
 
 #undef __CONNECT2
 #undef __CONNECT3
@@ -265,25 +297,25 @@ extern "C" {
 
 #ifndef safe_atom_code
 #   define safe_atom_code()                                                     \
-            using(  uint32_t SAFE_NAME(temp) =                                  \
-                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
-                            __disable_irq();                                    \
-                            SAFE_NAME(temp2);}),                                \
-                        __set_PRIMASK(SAFE_NAME(temp)))
+            using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =           \
+                        perfc_port_disable_global_interrupt(),                  \
+                    perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
 #endif
 
 #ifndef __IRQ_SAFE
 #   define __IRQ_SAFE                                                           \
-            using(  uint32_t SAFE_NAME(temp) =                                  \
-                        ({  uint32_t SAFE_NAME(temp2)=__get_PRIMASK();          \
-                            __disable_irq();                                    \
-                            SAFE_NAME(temp2);}),                                \
-                        __set_PRIMASK(SAFE_NAME(temp)))
+            using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =           \
+                        perfc_port_disable_global_interrupt(),                  \
+                    perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
 #endif
 
 #ifndef __perf_counter_printf__
 #   define __perf_counter_printf__      printf
 #endif
+
+/* deprecated macro for backward compatibility */
+#define user_code_insert_to_systick_handler                                     \
+            perfc_port_insert_to_system_timer_insert_ovf_handler
 
 #if __PLOOC_VA_NUM_ARGS() != 0
 #warning Please enable GNU extensions, it is required by __cycleof__() and \
@@ -331,7 +363,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
                     __perf_counter_printf__(                                    \
                         "--------------------------------------------\r\n");    \
                     __perf_counter_printf__(                                    \
-                        __STR " total cycle count: %ld [%016lx]\r\n",           \
+                        __STR " total cycle count: %ld [%08lx]\r\n",            \
                             (long)_, (long)_);                                  \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
@@ -348,18 +380,18 @@ __asm(".global __ensure_systick_wrapper\n\t");
     E.g.
     \code
         while (1) {
-            __cpu_time__(100) {
+            __cpu_usage__(100) {
                 delay_us(5000);
             }
             delay_us(5000);
         }
     \endcode
  */
-#define __cpu_time__(__CNT, ...)                                                \
+#define __cpu_usage__(__CNT, ...)                                               \
     static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
-    static uint32_t s_wLoopCounter = (__CNT);                                   \
+    static uint32_t SAFE_NAME(s_wLoopCounter) = (__CNT);                        \
     using(float __usage__ = 0, ({                                               \
-    if (0 == s_wLoopCounter) {                                                  \
+    if (0 == SAFE_NAME(s_wLoopCounter)) {                                       \
         __usage__ = (float)((double)SAFE_NAME(s_lTotal)                         \
                         / (double)(     get_system_ticks()                      \
                                   -     SAFE_NAME(s_lTimestamp)));              \
@@ -367,18 +399,20 @@ __asm(".global __ensure_systick_wrapper\n\t");
         SAFE_NAME(s_lTimestamp) = 0;                                            \
         SAFE_NAME(s_lTotal) = 0;                                                \
         if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                            \
-            __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);                 \
+            __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);\
         } else {                                                                \
             __VA_ARGS__                                                         \
         }                                                                       \
     }                                                                           \
     if (0 == SAFE_NAME(s_lTimestamp)) {                                         \
         SAFE_NAME(s_lTimestamp) = get_system_ticks();                           \
-        s_wLoopCounter = (__CNT);                                               \
+        SAFE_NAME(s_wLoopCounter) = (__CNT);                                    \
     }                                                                           \
     start_task_cycle_counter();}),                                              \
     ({SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                         \
-    s_wLoopCounter--;}))
+    SAFE_NAME(s_wLoopCounter)--;}))
+
+#define __cpu_time__    __cpu_usage__
 
 /*!
  * \addtogroup gBasicTimerService 1.2 Timer Service
@@ -555,7 +589,6 @@ extern volatile int32_t g_nOffset;
 /*============================ PROTOTYPES ====================================*/
 
 
-
 /*!
  * \addtogroup gBasicTicks 1.1 Ticks APIs
  * \ingroup gBasic
@@ -601,7 +634,7 @@ extern int64_t clock(void);
 /*!
  * \brief try to set a start pointer for the performance counter
  */
-__STATIC_INLINE
+static inline
 void start_cycle_counter(void)
 {
     g_lLastTimeStamp = get_system_ticks();
@@ -612,7 +645,7 @@ void start_cycle_counter(void)
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
-__STATIC_INLINE
+static inline
 int64_t stop_cycle_counter(void)
 {
     int64_t lTemp = (get_system_ticks() - g_lLastTimeStamp);
@@ -634,29 +667,27 @@ int64_t stop_cycle_counter(void)
 
 /*!
  * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int32_t the elapsed milliseconds
+ * \return int64_t the elapsed milliseconds
  */
-extern int32_t get_system_ms(void);
+extern int64_t get_system_ms(void);
 
 /*!
  * \brief get the elapsed microsecond since perf_counter is initialised
- * \return int32_t the elapsed microsecond
+ * \return int64_t the elapsed microsecond
  */
-extern int32_t get_system_us(void);
-
-
+extern int64_t get_system_us(void);
 
 /*!
  * \brief delay specified time in microsecond
- * \param[in] nUs time in microsecond
+ * \param[in] wUs time in microsecond
  */
-extern void delay_us(int32_t nUs);
+extern void delay_us(uint32_t wUs);
 
 /*!
  * \brief delay specified time in millisecond
- * \param[in] nMs time in millisecond
+ * \param[in] wMs time in millisecond
  */
-extern void delay_ms(int32_t nMs);
+extern void delay_ms(uint32_t nMs);
 
 /*!
  * \brief convert ticks of a reference timer to millisecond
@@ -875,12 +906,16 @@ extern int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo);
  *
  *  \param[in] bIsSysTickOccupied  A boolean value which indicates whether SysTick
  *           is already used by user application.
+ *
+ *  \return false Failed to initialize the timer counter, as the timer is not
+ *                available or IO error.
+ *  \return true initialization is successful.
  */
-extern void init_cycle_counter(bool bIsSysTickOccupied);
+extern bool init_cycle_counter(bool bIsSysTickOccupied);
 
 
 /*!
- * \brief a system timer handler inserted to the SysTick_Handler
+ * \brief a system timer overflow handler
  *
  * \note  - if you are using a compiler other than armcc or armclang, e.g. iar,
  *        arm gcc etc, the systick_wrapper_ual.o doesn't work with the linker
@@ -893,7 +928,7 @@ extern void init_cycle_counter(bool bIsSysTickOccupied);
  *        you do NOT have to insert this function into your SysTick_Handler,
  *        the systick_wrapper_ual.s will do the work for you.
  */
-extern void user_code_insert_to_systick_handler(void);
+extern void perfc_port_insert_to_system_timer_insert_ovf_handler(void);
 
 /*!
  * \brief update perf_counter as SystemCoreClock has been updated.
@@ -943,5 +978,4 @@ void coremark_main(void);
 #ifdef __cplusplus
 }
 #endif
-
 #endif
