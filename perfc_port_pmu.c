@@ -1310,7 +1310,7 @@ void perfc_port_pmu_insert_to_debug_monitor_handler(void)
 
         if (chCounter > 6) {
 
-            for (int_fast8_t n = 6; n < chCounter; n++) {
+            for (uint_fast8_t n = 6; n < chCounter; n++) {
                 uint32_t wMask = (1<<n);
                 if (PMU->OVSSET & wMask) {
                     /* counter overflow is detected */
@@ -1333,8 +1333,9 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
     }
 
     __IRQ_SAFE {
+
         PMU->CTRL &= ~PMU_CTRL_ENABLE_Msk;
-        
+
         perfc_port_stop_system_timer_counting();
         
         /* disable PMU Cycle Counter interrupt */
@@ -1404,7 +1405,7 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
             }
 
             if (chCounter > 6) {
-                for (int_fast8_t n = 6; n < chCounter; n++) {
+                for (uint_fast8_t n = 6; n < chCounter; n++) {
                     uint32_t wMask = (1<<n);
 
                     PMU->OVSCLR = wMask;        /* clear overflow flag */
@@ -1419,12 +1420,15 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
                       DCB_DEMCR_SDME_Msk            |
                       DCB_DEMCR_TRCENA_Msk          |
                       DCB_DEMCR_MON_EN_Msk          ;
-        
+
         /* enable PMU Cycle Counter interrupt */
         PMU->INTENSET = PMU_INTENSET_CCYCNT_ENABLE_Msk;
 
         PMU->CNTENSET = PMU_CNTENSET_CCNTR_ENABLE_Msk;
         PMU->CTRL |= PMU_CTRL_ENABLE_Msk;
+        
+        /* force to disable DWT */
+        DWT->CTRL = 0;
     }
     
     return true;
@@ -1450,6 +1454,9 @@ uint64_t perfc_pmu_get_instruction_count(void)
         dwResult += (uint64_t)1<<32;
     }
 
+    /* force to disable DWT */
+    DWT->CTRL = 0;
+
     return dwResult;
 }
 
@@ -1473,6 +1480,9 @@ uint64_t perfc_pmu_get_memory_access_count(void)
     if (bIsOverflow) {
         dwResult += (uint64_t)1<<32;
     }
+
+    /* force to disable DWT */
+    DWT->CTRL = 0;
 
     return dwResult;
 }
@@ -1498,6 +1508,9 @@ uint64_t perfc_pmu_get_L1_dcache_refill_count(void)
     if (bIsOverflow) {
         dwResult += (uint64_t)1<<32;
     }
+
+    /* force to disable DWT */
+    DWT->CTRL = 0;
 
     return dwResult;
 }
