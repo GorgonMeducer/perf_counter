@@ -20,7 +20,14 @@
     <release version="9.9.9" tag="9.9.9">
       Active development ...
     </release>
-    <release date="2023-10-19" version="2.2.4" tag="2.2.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/GorgonMeducer.perf_counter.2.2.4.pack">
+    <release date="2024-02-28" version="2.3.0" tag="v2.3.0" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.3.0/GorgonMeducer.perf_counter.2.3.0.pack">
+      Release v2.3.0
+      - Support porting to a different architecture
+      - Support Armv8.1-m PMU
+          * Add __cpu_perf__() for CPI and L1 DCache miss rate
+      - Some other minor changes.
+    </release>
+    <release date="2023-10-19" version="2.2.4" tag="2.2.4" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.2.4/GorgonMeducer.perf_counter.2.2.4.pack">
       - Add support for RT-Thread-nano
       - Add an API for checking stack overflow
       - Improve the support for the Arm Compiler 6.21
