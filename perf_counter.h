@@ -380,14 +380,14 @@ __asm(".global __ensure_systick_wrapper\n\t");
     E.g.
     \code
         while (1) {
-            __cpu_time__(100) {
+            __cpu_usage__(100) {
                 delay_us(5000);
             }
             delay_us(5000);
         }
     \endcode
  */
-#define __cpu_time__(__CNT, ...)                                                \
+#define __cpu_usage__(__CNT, ...)                                                \
     static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
     static uint32_t s_wLoopCounter = (__CNT);                                   \
     using(float __usage__ = 0, ({                                               \
@@ -411,6 +411,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
     start_task_cycle_counter();}),                                              \
     ({SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                         \
     s_wLoopCounter--;}))
+
+#define __cpu_time__    __cpu_usage__
 
 /*!
  * \addtogroup gBasicTimerService 1.2 Timer Service

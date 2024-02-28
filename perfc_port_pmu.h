@@ -23,6 +23,43 @@
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
+#define __cpu_perf__(__str, ...)                                                \
+    using(                                                                      \
+        struct {                                                                \
+            uint64_t dwNoInstr;                                                 \
+            int64_t lCycles;                                                    \
+            uint32_t wCalib;                                                    \
+            float fCPI;                                                         \
+        } __PERF_INFO__ = {0},                                                  \
+        ({                                                                      \
+            __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
+            __PERF_INFO__.wCalib = perfc_pmu_get_instruction_count()            \
+                                - __PERF_INFO__.dwNoInstr;                      \
+            __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
+        }),                                                                     \
+        ({                                                                      \
+            __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count()         \
+                              - __PERF_INFO__.dwNoInstr                         \
+                              - __PERF_INFO__.wCalib;                           \
+            __PERF_INFO__.fCPI = (float)(    (double)__PERF_INFO__.lCycles      \
+                                       /    (double)__PERF_INFO__.dwNoInstr);   \
+            if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
+                printf( "\r\n"                                                  \
+                        "[Report for " __str "]\r\n"                            \
+                        "-----------------------------------------\r\n"         \
+                        "Instruction executed: %lld\r\n"                        \
+                        "Cycle Used: %lld\r\n"                                  \
+                        "Cycles per Instructions: %3.3f \r\n",                  \
+                        __PERF_INFO__.dwNoInstr,                                \
+                        __PERF_INFO__.lCycles,                                  \
+                        __PERF_INFO__.fCPI);                                    \
+             } else {                                                           \
+                __VA_ARGS__                                                     \
+             }                                                                  \
+        }))                                                                     \
+        __cycleof__("", { __PERF_INFO__.lCycles = __cycle_count__; })
+
+
 /*============================ TYPES =========================================*/
 typedef uint32_t perfc_global_interrupt_status_t;
 
