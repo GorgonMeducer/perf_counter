@@ -28,7 +28,6 @@
         struct {                                                                \
             uint64_t dwNoInstr;                                                 \
             uint64_t dwNoMemAccess;                                             \
-            uint64_t dwNoCacheMiss;                                             \
             uint64_t dwNoL1DCacheRefill;                                        \
             int64_t lCycles;                                                    \
             uint32_t wInstrCalib;                                               \
