@@ -235,7 +235,7 @@
             <require condition="Arm Compiler"/>
             <require condition="Previous Generation Cortex-M Processors"/>
             <require condition="CMSIS-CORE"/>
-            <require conditoin="Default Porting"/>
+            <require condition="Default Porting"/>
         </condition>
         
         <condition id="Armv8-M Arm Compiler CMSIS-CORE Default Porting">
@@ -243,7 +243,7 @@
             <require condition="Arm Compiler"/>
             <require condition="Armv8-M Processors"/>
             <require condition="CMSIS-CORE"/>
-            <require conditoin="Default Porting"/>
+            <require condition="Default Porting"/>
         </condition>
         
         <condition id="Cortex-M Arm GCC CMSIS-CORE Default Porting">
@@ -251,7 +251,7 @@
             <require condition="Arm GCC"/>
             <require condition="Cortex-M Processors"/>
             <require condition="CMSIS-CORE"/>
-            <require conditoin="Default Porting"/>
+            <require condition="Default Porting"/>
         </condition>
         
     </conditions>
