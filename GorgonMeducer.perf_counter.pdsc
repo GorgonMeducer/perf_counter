@@ -320,7 +320,7 @@
               </RTE_Components_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="1.0.2" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" isDefaultVariant="false" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="1.0.3" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" isDefaultVariant="false" condition="perf_counter">
               <description>A user define system timer</description>
               <files>
                 <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.0.2"/>
@@ -332,7 +332,7 @@
               </RTE_Components_h>
 
               <Pre_Include_Global_h>
-
+#define __PERFC_USE_PORTING__                           1
 #define __PERFC_USE_USER_CUSTOM_PORTING__               1
 #define __PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__   1
 #define __PERFC_CFG_PORTING_INCLUDE__                   "perfc_port_user.h"
@@ -340,7 +340,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="1.1.0" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
+            <component Cclass="Utilities" Cversion="1.1.1" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
               <description>Using the Performande Monitor Unit</description>
               <files>
                 <file category="sourceC"        name="perfc_port_pmu.c"/>
@@ -352,7 +352,7 @@
               </RTE_Components_h>
 
               <Pre_Include_Global_h>
-
+#define __PERFC_USE_PORTING__                           1
 #define __PERFC_USE_PMU_PORTING__                       1
 #define __PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__   1
 #define __PERFC_CFG_PORTING_INCLUDE__                   "perfc_port_pmu.h"

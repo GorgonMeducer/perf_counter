@@ -322,13 +322,17 @@ extern "C" {
 __super_loop_monitor__()
 #endif
 
-#if defined(__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__)
+#if defined(__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__)                           \
+ && (   !defined(__PERFC_USE_PORTING__)                                         \
+    ||  (defined(__PERFC_USE_PORTING__) && (0 == __PERFC_USE_PORTING__)) )
+
 #   if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__
 #       pragma import(__ensure_systick_wrapper)
 #   elif    (defined(__GNUC__) || defined(__clang__))                           \
         &&  (!defined(__IS_COMPILER_IAR__) || !__IS_COMPILER_IAR__)
 __asm(".global __ensure_systick_wrapper\n\t");
 #   endif
+
 #endif
 /*! @} */
 

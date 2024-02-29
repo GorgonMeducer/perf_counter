@@ -1,5 +1,5 @@
 ;/****************************************************************************
-;*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+;*  Copyright 2024 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 ;*                                                                           *
 ;*  Licensed under the Apache License, Version 2.0 (the "License");          *
 ;*  you may not use this file except in compliance with the License.         *
@@ -14,13 +14,7 @@
 ;*  limitations under the License.                                           *
 ;*                                                                           *
 ;****************************************************************************/
-#if defined(_RTE_)
-#   include "RTE_Components.h"
-#endif
 
-#if !defined(__RTE_PERFC_PORTING_USER_DEFINED__) && !defined(__RTE_PERFC_PORTING_PMU__)
-
-#if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax unified
     .arch   armv6-m
 
@@ -48,6 +42,3 @@ $Sub$$SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
-#endif
-
-#endif
