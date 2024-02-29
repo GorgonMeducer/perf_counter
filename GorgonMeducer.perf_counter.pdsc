@@ -216,12 +216,7 @@
             <require condition="Armv8-M Processors"/>
         </condition>
         
-        <condition id="Cortex-M Arm GCC CMSIS-CORE">
-            <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
-            <require condition="Arm GCC"/>
-            <require condition="Cortex-M Processors"/>
-            <require condition="CMSIS-CORE"/>
-        </condition>
+
         <condition id="Cortex-M Arm Compiler CMSIS-CORE">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm Compiler"/>
@@ -229,19 +224,35 @@
             <require condition="CMSIS-CORE"/>
         </condition>
         
-        <condition id="Previous Generation Cortex-M Arm Compiler CMSIS-CORE">
+        <condition id="Default Porting">
+            <description>Reject PMU and other portings</description>
+            <deny Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" />
+            <deny Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" />
+        </condition>
+        
+        <condition id="Previous Generation Cortex-M Arm Compiler CMSIS-CORE Default Porting">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm Compiler"/>
             <require condition="Previous Generation Cortex-M Processors"/>
             <require condition="CMSIS-CORE"/>
+            <require conditoin="Default Porting">
         </condition>
-        <condition id="Armv8-M Arm Compiler CMSIS-CORE">
+        
+        <condition id="Armv8-M Arm Compiler CMSIS-CORE Default Porting">
             <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
             <require condition="Arm Compiler"/>
             <require condition="Armv8-M Processors"/>
             <require condition="CMSIS-CORE"/>
+            <require conditoin="Default Porting">
         </condition>
         
+        <condition id="Cortex-M Arm GCC CMSIS-CORE Default Porting">
+            <description>Compile Cortex-M Processors with GNU Tools for Arm Embedded Processors.</description>
+            <require condition="Arm GCC"/>
+            <require condition="Cortex-M Processors"/>
+            <require condition="CMSIS-CORE"/>
+            <require conditoin="Default Porting">
+        </condition>
         
     </conditions>
   <!-- apis section (optional - for Application Programming Interface descriptions) -->
@@ -275,15 +286,15 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.3.1" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"         name="perf_counter.h"/>
                 <file category="sourceC"        name="perf_counter.c" />
                 <file category="sourceC"        name="perfc_port_default.c" />
-                <file category="sourceAsm"      name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE"/>
-                <file category="sourceAsm"      name="systick_wrapper_gcc.S"        condition="Cortex-M Arm GCC CMSIS-CORE"/>
-                <file category="sourceAsm"      name="systick_wrapper_gnu.s"        condition="Armv8-M Arm Compiler CMSIS-CORE"/>
+                <file category="sourceAsm"      name="systick_wrapper_ual.s"        condition="Previous Generation Cortex-M Arm Compiler CMSIS-CORE Default Porting"/>
+                <file category="sourceAsm"      name="systick_wrapper_gcc.S"        condition="Cortex-M Arm GCC CMSIS-CORE Default Porting"/>
+                <file category="sourceAsm"      name="systick_wrapper_gnu.s"        condition="Armv8-M Arm Compiler CMSIS-CORE Default Porting"/>
               </files>
               <RTE_Components_h>
 
@@ -296,7 +307,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.3.0" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.3.1" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="header"         name="perf_counter.h"/>
