@@ -16,9 +16,10 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
-    <!--automatically generated content, please do not modify -->
-    <release version="9.9.9" tag="9.9.9">
-      Active development ...
+    <release date="2024-03-12" version="2.3.1" tag="v2.3.1" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.3.1/GorgonMeducer.perf_counter.2.3.1.pack">
+      Release v2.3.1
+      - Fixed PMU-SysTick-overflow-miscounting issue
+      - Other minor changes.
     </release>
     <release date="2024-02-28" version="2.3.0" tag="v2.3.0" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.3.0/GorgonMeducer.perf_counter.2.3.0.pack">
       Release v2.3.0
