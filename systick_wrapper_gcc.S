@@ -1,5 +1,5 @@
 ;/****************************************************************************
-;*  Copyright 2022 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+;*  Copyright 2024 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 ;*                                                                           *
 ;*  Licensed under the Apache License, Version 2.0 (the "License");          *
 ;*  you may not use this file except in compliance with the License.         *
@@ -15,7 +15,6 @@
 ;*                                                                           *
 ;****************************************************************************/
 
-#if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
     .syntax	unified
     .arch	armv6-m
 
@@ -43,4 +42,3 @@ __wrap_SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
-#endif
