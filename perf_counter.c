@@ -209,7 +209,7 @@ void before_cycle_counter_reconfiguration(void)
         if (perfc_port_is_system_timer_ovf_pending()) {                         
             perfc_port_clear_system_timer_ovf_pending();                        /* clear pending bit */
 
-            user_code_insert_to_systick_handler();                              /* manually handle exception */
+            perfc_port_insert_to_system_timer_insert_ovf_handler();             /* manually handle exception */
 
         }
         s_lSystemClockCounts = get_system_ticks();                              /* get the final cycle counter value */
