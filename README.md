@@ -1,4 +1,4 @@
-# perf_counter (v2.3.1)
+# perf_counter (v2.3.2)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -15,13 +15,13 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
 - Enable a broader processor architecture support
   - **Support ALL Cortex-M processors**
     - SysTick
-    - **[new]**Performance Monitor Unit (PMU)
+    - Performance Monitor Unit (PMU)
 
-  - **[new]**Easy to port to a different architecture with a porting template
+  - Easy to port to a different architecture with a porting template
 
 - **Provide Free Services**
   - Do **NOT** interfer with existing SysTick based applications
-- **Support ALL arm compilers**
+- **Support most of the arm compilers**
   - Arm Compiler 5 (armcc), Arm Compiler 6 (armclang)
   - arm gcc
   - LLVM
@@ -31,7 +31,7 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
   - **CMSIS-Pack is available**
   - **RT-Thread package is avaialble**
 - **Time based services**
-  - **[new]**`delay_us()` and `delay_ms()` with **64bit return value**.
+  - `delay_us()` and `delay_ms()` with **64bit return value**.
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
   - Support SysTick Reconfiguration
@@ -46,6 +46,7 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
     - C# like `using()`
     - simple overload feature of OOPC made out of ANSI-C99, `__PLOOC_VA_NUM_ARGS()`
     - ...
+  - **[new]** A dedicated macro `__perfc_sync_barrier__()` for code barrier. 
 
 
 

@@ -127,6 +127,11 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 
 }
 
+uint32_t perfc_get_systimer_frequency(void)
+{
+    return perfc_port_get_system_timer_freq();
+}
+
 __WEAK
 void __perf_os_patch_init(void)
 {
@@ -141,6 +146,7 @@ void update_perf_counter(void)
     
     __IRQ_SAFE {
         g_lLastTimeStamp = get_system_ticks();
+        __perfc_sync_barrier__();
         g_nOffset = get_system_ticks() - g_lLastTimeStamp;
     }
 }
@@ -157,7 +163,8 @@ bool init_cycle_counter(bool bIsSysTickOccupied)
     s_lSystemClockCounts = 0;                       // reset system cycle counter
     s_lSystemMS = 0;                                // reset system millisecond counter
     s_lSystemUS = 0;                                // reset system microsecond counter
-
+    s_lOldTimestamp = 0;
+    
     __perf_os_patch_init();
     
     return bResult;
@@ -209,7 +216,7 @@ void before_cycle_counter_reconfiguration(void)
         if (perfc_port_is_system_timer_ovf_pending()) {                         
             perfc_port_clear_system_timer_ovf_pending();                        /* clear pending bit */
 
-            user_code_insert_to_systick_handler();                              /* manually handle exception */
+            perfc_port_insert_to_system_timer_insert_ovf_handler();             /* manually handle exception */
 
         }
         s_lSystemClockCounts = get_system_ticks();                              /* get the final cycle counter value */

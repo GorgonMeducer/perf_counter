@@ -27,6 +27,11 @@
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+#ifndef __perfc_sync_barrier__
+#   define __perfc_sync_barrier__(...)         do {__DSB();__ISB();} while(0)
+#endif
+
 /*============================ TYPES =========================================*/
 typedef uint32_t perfc_global_interrupt_status_t;
 

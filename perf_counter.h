@@ -40,7 +40,7 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          3
-#define __PERF_COUNTER_VER_REVISE__         1
+#define __PERF_COUNTER_VER_REVISE__         2
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -333,6 +333,17 @@ __super_loop_monitor__()
 __asm(".global __ensure_systick_wrapper\n\t");
 #   endif
 
+#ifndef __perfc_sync_barrier__
+
+/* default implementation */
+#if defined(__clang__) || __IS_COMPILER_GCC__
+#   define __perfc_sync_barrier__(...)      __sync_synchronize()
+#else
+#   define __perfc_sync_barrier__(...)
+#endif
+
+#endif
+
 #endif
 /*! @} */
 
@@ -358,7 +369,9 @@ __asm(".global __ensure_systick_wrapper\n\t");
  */
 #define __cycleof__(__STR, ...)                                                 \
             using(int64_t _ = get_system_ticks(), __cycle_count__ = _,          \
-                _=_, {                                                          \
+                {__perfc_sync_barrier__();},                                    \
+                {                                                               \
+                __perfc_sync_barrier__();                                       \
                 _ = get_system_ticks() - _ - g_nOffset;                         \
                 __cycle_count__ = _;                                            \
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
@@ -668,6 +681,12 @@ int64_t stop_cycle_counter(void)
  * \ingroup gBasic
  * @{
  */
+
+/*!
+ * \brief get the system timer frequency
+ * \return uint32_t the system timer frequency in Hz
+ */
+extern uint32_t perfc_get_systimer_frequency(void);
 
 /*!
  * \brief get the elapsed milliseconds since perf_counter is initialised

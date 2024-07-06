@@ -23,6 +23,11 @@
 
 /*============================ MACROS ========================================*/
 /*============================ MACROFIED FUNCTIONS ===========================*/
+#ifndef __perfc_sync_barrier__
+#   define __perfc_sync_barrier__(...)         do {__DSB();__ISB();} while(0)
+#endif
+
+
 #define __cpu_perf__(__str, ...)                                                \
     using(                                                                      \
         struct {                                                                \
