@@ -19,4 +19,5 @@ documents/Doxygen
 RTE_Components.h
 *uvgui.*
 *uvguix.*
-example/ArInp.bat
+ArInp.bat
+Pre_Include_Global.h

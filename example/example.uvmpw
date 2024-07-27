@@ -15,7 +15,6 @@
 
   <project>
     <PathAndName>.\gcc_example.uvprojx</PathAndName>
-    <NodeIsExpanded>1</NodeIsExpanded>
   </project>
 
 </ProjectWorkspace>
