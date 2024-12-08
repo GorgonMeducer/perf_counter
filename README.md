@@ -1,4 +1,4 @@
-# perf_counter (v2.3.3)
+# perf_counter (v2.4.0)
 A dedicated performance counter for Cortex-M Systick. It shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` delay_us` and `clock()` service defined in `time.h`.
 
 ### Features:
@@ -45,8 +45,9 @@ A dedicated performance counter for Cortex-M Systick. It shares the SysTick with
     - `foreach()`, dimof(), `CONNECT()`
     - C# like `using()`
     - simple overload feature of OOPC made out of ANSI-C99, `__PLOOC_VA_NUM_ARGS()`
+    - **[new]** add macros for PT
     - ...
-  - **[new]** A dedicated macro `__perfc_sync_barrier__()` for code barrier. 
+  - A dedicated macro `__perfc_sync_barrier__()` for code barrier. 
 
 
 
@@ -145,13 +146,13 @@ void main(void)
     ...
     while (1) {
         
-        float fUsage = 0.0f;
         __cpu_usage__(10, {
-            fUsage = __usage__; /*< "__usage__" stores the result */
+            float fUsage = __usage__; /*< "__usage__" stores the result */
+            printf("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
         }) {
             delay_us(30000);
         }
-        printf("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+        
 
         delay_us(70000);
     }

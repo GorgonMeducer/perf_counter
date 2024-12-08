@@ -15,15 +15,15 @@
 ;*                                                                           *
 ;****************************************************************************/
 
-    .syntax	unified
-    .arch	armv6-m
+    .syntax unified
+    .arch   armv6-m
 
     .text
     .thumb
     .thumb_func
-    .align	2
-    .globl	__wrap_SysTick_Handler
-    .type	__wrap_SysTick_Handler, %function
+    .align  2
+    .globl  __wrap_SysTick_Handler
+    .type   __wrap_SysTick_Handler, %function
 
 __wrap_SysTick_Handler:
     push    {r4, r5}

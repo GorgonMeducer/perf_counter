@@ -39,8 +39,8 @@ extern "C" {
  * @{
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
-#define __PERF_COUNTER_VER_MINOR__          3
-#define __PERF_COUNTER_VER_REVISE__         3
+#define __PERF_COUNTER_VER_MINOR__          4
+#define __PERF_COUNTER_VER_REVISE__         0
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -275,7 +275,8 @@ extern "C" {
 #endif
 
 
-#define SAFE_NAME(__NAME)   CONNECT3(__,__NAME,__LINE__)
+#define SAFE_NAME(__NAME)           CONNECT3(__,__NAME,__LINE__)
+#define PERFC_SAFE_NAME(__name)     CONNECT3(__,__name,__LINE__)
 
 #undef foreach2
 #undef foreach3
@@ -283,23 +284,23 @@ extern "C" {
 
 #define foreach1(__array)                                                       \
             using(__typeof__(__array[0]) *_ = __array)                          \
-            for (   uint_fast32_t SAFE_NAME(count) = dimof(__array);            \
-                    SAFE_NAME(count) > 0;                                       \
-                    _++, SAFE_NAME(count)--                                     \
+            for (   uint_fast32_t PERFC_SAFE_NAME(count) = dimof(__array);      \
+                    PERFC_SAFE_NAME(count) > 0;                                 \
+                    _++, PERFC_SAFE_NAME(count)--                               \
                 )
 
 #define foreach2(__type, __array)                                               \
             using(__type *_ = __array)                                          \
-            for (   uint_fast32_t SAFE_NAME(count) = dimof(__array);            \
-                    SAFE_NAME(count) > 0;                                       \
-                    _++, SAFE_NAME(count)--                                     \
+            for (   uint_fast32_t PERFC_SAFE_NAME(count) = dimof(__array);      \
+                    PERFC_SAFE_NAME(count) > 0;                                 \
+                    _++, PERFC_SAFE_NAME(count)--                               \
                 )
 
 #define foreach3(__type, __array, __item)                                       \
             using(__type *_ = __array, *__item = _, _ = _, _ = _ )              \
-            for (   uint_fast32_t SAFE_NAME(count) = dimof(__array);            \
-                    SAFE_NAME(count) > 0;                                       \
-                    _++, __item = _, SAFE_NAME(count)--                         \
+            for (   uint_fast32_t PERFC_SAFE_NAME(count) = dimof(__array);      \
+                    PERFC_SAFE_NAME(count) > 0;                                 \
+                    _++, __item = _, PERFC_SAFE_NAME(count)--                   \
                 )
 
 #define foreach(...)                                                            \
@@ -415,29 +416,30 @@ __asm(".global __ensure_systick_wrapper\n\t");
     \endcode
  */
 #define __cpu_usage__(__CNT, ...)                                               \
-    static int64_t SAFE_NAME(s_lTimestamp) = 0, SAFE_NAME(s_lTotal) = 0;        \
-    static uint32_t SAFE_NAME(s_wLoopCounter) = (__CNT);                        \
+    static int64_t  PERFC_SAFE_NAME(s_lTimestamp) = 0,                          \
+                    PERFC_SAFE_NAME(s_lTotal) = 0;                              \
+    static uint32_t PERFC_SAFE_NAME(s_wLoopCounter) = (__CNT);                  \
     using(float __usage__ = 0, ({                                               \
-    if (0 == SAFE_NAME(s_wLoopCounter)) {                                       \
-        __usage__ = (float)((double)SAFE_NAME(s_lTotal)                         \
+    if (0 == PERFC_SAFE_NAME(s_wLoopCounter)) {                                 \
+        __usage__ = (float)((double)PERFC_SAFE_NAME(s_lTotal)                   \
                         / (double)(     get_system_ticks()                      \
-                                  -     SAFE_NAME(s_lTimestamp)));              \
+                                  -     PERFC_SAFE_NAME(s_lTimestamp)));        \
         __usage__ *= 100.0f;                                                    \
-        SAFE_NAME(s_lTimestamp) = 0;                                            \
-        SAFE_NAME(s_lTotal) = 0;                                                \
+        PERFC_SAFE_NAME(s_lTimestamp) = 0;                                      \
+        PERFC_SAFE_NAME(s_lTotal) = 0;                                          \
         if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                            \
             __perf_counter_printf__("CPU Usage %3.2f%%\r\n", (double)__usage__);\
         } else {                                                                \
             __VA_ARGS__                                                         \
         }                                                                       \
     }                                                                           \
-    if (0 == SAFE_NAME(s_lTimestamp)) {                                         \
-        SAFE_NAME(s_lTimestamp) = get_system_ticks();                           \
-        SAFE_NAME(s_wLoopCounter) = (__CNT);                                    \
+    if (0 == PERFC_SAFE_NAME(s_lTimestamp)) {                                   \
+        PERFC_SAFE_NAME(s_lTimestamp) = get_system_ticks();                     \
+        PERFC_SAFE_NAME(s_wLoopCounter) = (__CNT);                              \
     }                                                                           \
     start_task_cycle_counter();}),                                              \
-    ({SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                         \
-    SAFE_NAME(s_wLoopCounter)--;}))
+    ({PERFC_SAFE_NAME(s_lTotal) += stop_task_cycle_counter();                   \
+    PERFC_SAFE_NAME(s_wLoopCounter)--;}))
 
 #define __cpu_time__    __cpu_usage__
 
@@ -462,7 +464,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_ms3(__ms, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp);  (void)SAFE_NAME(s_lTimestamp); \
+    ({  static int64_t PERFC_SAFE_NAME(s_lTimestamp);                           \
+        (void)PERFC_SAFE_NAME(s_lTimestamp);                                    \
         __perfc_is_time_out(perfc_convert_ms_to_ticks(__ms),                    \
         (__timestamp_ptr), (__auto_reload));})
 
@@ -487,7 +490,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_ms1(__ms)                                             \
-            perfc_is_time_out_ms3((__ms), &SAFE_NAME(s_lTimestamp), true)
+            perfc_is_time_out_ms3((__ms), &PERFC_SAFE_NAME(s_lTimestamp), true)
 
 /*!
  * \brief set an alarm with given period in ms and check the status
@@ -512,7 +515,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \return bool whether it is timeout
  */
 #define perfc_is_time_out_us3(__us, __timestamp_ptr, __auto_reload)             \
-    ({  static int64_t SAFE_NAME(s_lTimestamp); (void)SAFE_NAME(s_lTimestamp);  \
+    ({  static int64_t PERFC_SAFE_NAME(s_lTimestamp);                           \
+        (void)PERFC_SAFE_NAME(s_lTimestamp);                                    \
         __perfc_is_time_out(perfc_convert_us_to_ticks(__us),                    \
         (__timestamp_ptr), (__auto_reload));})
 
@@ -568,9 +572,9 @@ __asm(".global __ensure_systick_wrapper\n\t");
             int64_t lTaskUsedCycles;                                            \
             int64_t lTimeElapsed;                                               \
         } __cpu_usage__ = {.lStart = get_system_ticks()})                       \
-    using(int SAFE_NAME(cnt) = (__N))                                           \
+    using(int PERFC_SAFE_NAME(cnt) = (__N))                                     \
     for(start_task_cycle_counter();; ({                                         \
-        if (!(--SAFE_NAME(cnt))) {                                              \
+        if (!(--PERFC_SAFE_NAME(cnt))) {                                        \
             __cpu_usage__.lTimeElapsed                                          \
                 = get_system_ticks() - __cpu_usage__.lStart - g_nOffset;        \
             __cpu_usage__.lTaskUsedCycles = stop_task_cycle_counter();          \
@@ -583,13 +587,142 @@ __asm(".global __ensure_systick_wrapper\n\t");
             } else {                                                            \
                 __VA_ARGS__;                                                    \
             }                                                                   \
-            SAFE_NAME(cnt) = (__N);                                             \
+            PERFC_SAFE_NAME(cnt) = (__N);                                       \
             __cpu_usage__.lStart = get_system_ticks();                          \
             start_task_cycle_counter();                                         \
         };                                                                      \
     }))
 
+/*----------------------------------------------------------------------------*
+ * PT Operations                                                              *
+ *----------------------------------------------------------------------------*/
+/*
+Protothreads open source BSD-style license
+The protothreads library is released under an open source license that allows 
+both commercial and non-commercial use without restrictions. The only 
+requirement is that credits is given in the source code and in the documentation 
+for your product.
+
+The full license text follows.
+
+Copyright (c) 2004-2005, Swedish Institute of Computer Science.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.
+3. Neither the name of the Institute nor the names of its contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS `AS IS' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+Author: Adam Dunkels
+*/
+
+#define PERFC_PT_BEGIN(__state)                                                 \
+            enum {                                                              \
+                count_offset = __COUNTER__ + 1,                                 \
+            };                                                                  \
+            uint8_t *ptPTState = &(__state);                                    \
+            switch (__state) {                                                  \
+                case __COUNTER__ - count_offset: 
+
+#define PERFC_PT_ENTRY(...)                                                     \
+            (*ptPTState) = (__COUNTER__ - count_offset + 1) >> 1;               \
+            __VA_ARGS__                                                         \
+            case (__COUNTER__ - count_offset) >> 1: (void)(*ptPTState);
+            
+#define PERFC_PT_YIELD(...)                                                     \
+            PERFC_PT_ENTRY(return __VA_ARGS__;)
+            
+#define PERFC_PT_END()                                                          \
+            (*ptPTState) = 0;                                                   \
+            break;}
+
+#define PERFC_PT_GOTO_PREV_ENTRY(...)    return __VA_ARGS__;
+
+#define PERFC_PT_WAIT_UNTIL(__CONDITION, ...)                                   \
+            PERFC_PT_ENTRY()                                                    \
+                __VA_ARGS__;                                                    \
+                if (!(__CONDITION)) {                                           \
+                    PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_on_going);                  \
+                }
+
+#define PERFC_PT_WAIT_OBJ_UNTIL(__CONDITION, ...)                               \
+            perfc_pt__ENTRY()                                                   \
+                __VA_ARGS__;                                                    \
+                if (!(__CONDITION)) {                                           \
+                    PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_wait_for_obj);              \
+                }
+
+#define PERFC_PT_WAIT_RESOURCE_UNTIL(__CONDITION, ...)                          \
+            PERFC_PT_ENTRY()                                                    \
+                __VA_ARGS__;                                                    \
+                if (!(__CONDITION)) {                                           \
+                    PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_wait_for_res);              \
+                }
+
+#define PERFC_PT_DELAY_MS(__ms, ...)                                            \
+            PERFC_PT_ENTRY(                                                     \
+                static int64_t PERFC_SAFE_NAME(s_lTimestamp);                   \
+                UNUSED_PARAM(PERFC_SAFE_NAME(s_lTimestamp));                    \
+                int64_t *PERFC_SAFE_NAME(plTimestamp)                           \
+                    = (&PERFC_SAFE_NAME(s_lTimestamp), ##__VA_ARGS__);          \
+                *PERFC_SAFE_NAME(plTimestamp) = get_system_ms();                \
+            )                                                                   \
+            do {                                                                \
+                PERFC_SAFE_NAME(plTimestamp)                                    \
+                    = (&PERFC_SAFE_NAME(s_lTimestamp), ##__VA_ARGS__);          \
+                int64_t PERFC_SAFE_NAME(lElapsedMs) =                           \
+                    get_system_ms() - *PERFC_SAFE_NAME(plTimestamp);            \
+                if (PERFC_SAFE_NAME(lElapsedMs) < (__ms)) {                     \
+                    PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_on_going);                  \
+                }                                                               \
+            } while(0)
+
+
+#define PERFC_PT_REPORT_STATUS(...)                                             \
+            PERFC_PT_ENTRY(                                                     \
+                return __VA_ARGS__;                                             \
+            )
+            
+#define PERFC_PT_RETURN(...)                                                    \
+            (*ptPTState) = 0;                                                   \
+            return __VA_ARGS__;
+
 /*============================ TYPES =========================================*/
+
+#ifndef __FSM_RT_TYPE__
+#   define __FSM_RT_TYPE__
+//! \name finit state machine state
+//! @{
+typedef enum {
+    fsm_rt_err          = -1,    //!< fsm error, error code can be get from other interface
+    fsm_rt_cpl          = 0,     //!< fsm complete
+    fsm_rt_on_going     = 1,     //!< fsm on-going
+    fsm_rt_wait_for_obj = 2,     //!< fsm wait for object
+    fsm_rt_asyn         = 3,     //!< fsm asynchronose complete, you can check it later.
+    fsm_rt_wait_for_res = 4,     //!< fsm wait for resource
+} fsm_rt_t;
+//! @}
+#endif
+
 typedef struct {
     int64_t             lStart;
     int64_t             lUsedTotal;

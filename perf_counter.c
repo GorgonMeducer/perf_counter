@@ -64,9 +64,10 @@ struct __task_cycle_info_t {
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
-volatile int64_t g_lLastTimeStamp = 0;
+
 volatile static int64_t s_lOldTimestamp;
-volatile int32_t g_nOffset = 0;
+volatile static int64_t s_lOldTimestampUS;
+volatile static int64_t s_lOldTimestampMS;
 volatile static uint32_t s_wUSUnit = 1;
 volatile static uint32_t s_wMSUnit = 1;
 volatile static uint32_t s_wMSResidule = 0;
@@ -75,6 +76,9 @@ volatile static int64_t s_lSystemMS = 0;
 volatile static int64_t s_lSystemUS = 0;
 
 volatile static int64_t s_lSystemClockCounts = 0;
+
+volatile int32_t g_nOffset = 0;
+volatile int64_t g_lLastTimeStamp = 0;
 
 /*============================ PROTOTYPES ====================================*/
 
@@ -102,29 +106,35 @@ void perfc_port_clear_system_timer_counter(void);
 void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 {
     int64_t lLoad = perfc_port_get_system_timer_top() + 1;
-    s_lSystemClockCounts += lLoad;
 
-    // update system ms counter
-    do {
-        int64_t lTemp = s_wMSResidule + lLoad;
-        
-        int64_t lMS = lTemp / s_wMSUnit;
-        s_lSystemMS += lMS;
-        s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
+    /* prevent high priority exceptions from preempting the system timer OVF 
+     * exception handling
+     */
+    __IRQ_SAFE {
+        s_lSystemClockCounts += lLoad;
 
-    } while(0);
+        // update system ms counter
+        do {
+            int64_t lTemp = s_wMSResidule + lLoad;
 
-    // update system us counter
-    do {
-        int64_t lTemp = s_wUSResidule + lLoad;
-        
-        int64_t lUS = lTemp / s_wUSUnit;
-        s_lSystemUS += lUS;
+            int64_t lMS = lTemp / s_wMSUnit;
+            s_lSystemMS += lMS;
+            s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
 
-        s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
+        } while(0);
+    }
 
-    } while(0);
+    __IRQ_SAFE {
+        // update system us counter
+        do {
+            int64_t lTemp = s_wUSResidule + lLoad;
 
+            int64_t lUS = lTemp / s_wUSUnit;
+            s_lSystemUS += lUS;
+
+            s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
+        } while(0);
+    }
 }
 
 uint32_t perfc_get_systimer_frequency(void)
@@ -164,6 +174,8 @@ bool init_cycle_counter(bool bIsSysTickOccupied)
     s_lSystemMS = 0;                                // reset system millisecond counter
     s_lSystemUS = 0;                                // reset system microsecond counter
     s_lOldTimestamp = 0;
+    s_lOldTimestampUS = 0;
+    s_lOldTimestampMS = 0;
     
     __perf_os_patch_init();
     
@@ -176,33 +188,22 @@ bool init_cycle_counter(bool bIsSysTickOccupied)
  */
 __STATIC_INLINE int64_t check_systick(void)
 {
-    int64_t lLoad = perfc_port_get_system_timer_top() + 1;
     int64_t lTemp = perfc_port_get_system_timer_elapsed();
 
     /*        Since we cannot stop counting temporarily, there are several
      *        conditions which we should take into consideration:
      *        - Condition 1: when assigning nTemp with the register value (LOAD-VAL),
      *            the underflow didn't happen but when we check the PENDSTSET bit,
-     *            the underflow happens, for this condition, we should not
-     *            do any compensation. When this happens, the (LOAD-nTemp) is
-     *            smaller than PERF_CNT_COMPENSATION_THRESHOLD (a small value) as
-     *            long as LOAD is bigger than (or equals to) the
-     *            PERF_CNT_COMPENSATION_THRESHOLD;
-     *        - Condition 2: when assigning nTemp with the register value (LOAD-VAL),
-     *            the VAL is zero and underflow happened and the PENDSTSET bit
-     *            is set, for this condition, we should not do any compensation.
-     *            When this happens, the (LOAD-nTemp) is equals to zero.
-     *        - Condition 3: when assigning nTemp with the register value (LOAD-VAL),
-     *            the underflow has already happened, hence the PENDSTSET
-     *            is set, for this condition, we should compensate the return
-     *            value. When this happens, the (LOAD-nTemp) is bigger than (or
-     *            equals to) PERF_CNT_COMPENSATION_THRESHOLD.
+     *            the underflow happens, for this condition, we should recall the
+     *            perfc_port_get_system_timer_elapsed().
      *        The following code implements an equivalent logic.
      */
     if (perfc_port_is_system_timer_ovf_pending()){
-        if ((lLoad - lTemp) >= PERF_CNT_COMPENSATION_THRESHOLD) {
-            lTemp += lLoad;
-        }
+        /* refresh the elapsed just in case the counter has just overflowed/underflowed
+         * after we called the perfc_port_get_system_timer_elapsed()
+         */
+        lTemp = perfc_port_get_system_timer_elapsed();
+        lTemp += perfc_port_get_system_timer_top() + 1;
     }
 
     return lTemp;
@@ -328,7 +329,15 @@ int64_t get_system_ms(void)
     int64_t lTemp = 0;
 
     __IRQ_SAFE {
-        lTemp = s_lSystemMS + ((check_systick() + (int64_t)s_wMSResidule) / s_wMSUnit);
+        lTemp = s_lSystemMS 
+              + (   (check_systick() 
+                +   (int64_t)s_wMSResidule) / s_wMSUnit);
+
+        if (lTemp < s_lOldTimestampMS) {
+            lTemp = s_lOldTimestampMS;
+        } else {
+            s_lOldTimestampMS = lTemp;
+        }
     }
 
     return lTemp;
@@ -339,7 +348,16 @@ int64_t get_system_us(void)
     int64_t lTemp = 0;
 
     __IRQ_SAFE {
-        lTemp = s_lSystemUS + ((check_systick() + (int64_t)s_wUSResidule) / s_wUSUnit);
+        lTemp = s_lSystemUS 
+              + (   (check_systick() 
+                +   (int64_t)s_wUSResidule) / s_wUSUnit);
+
+        if (lTemp < s_lOldTimestampUS) {
+            lTemp = s_lOldTimestampUS;
+        } else {
+            s_lOldTimestampUS = lTemp;
+        }
+
     }
 
     return lTemp;
@@ -375,7 +393,6 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
     }
     
     int64_t lTimestamp = get_system_ticks();
-
 
     if (0 == *plTimestamp) {
         *plTimestamp = lPeriod;
@@ -416,8 +433,6 @@ uint32_t EventRecorderTimerGetCount (void)
 {
     return get_system_ticks();
 }
-
-
 
 __WEAK
 task_cycle_info_t * get_rtos_task_cycle_info(void)

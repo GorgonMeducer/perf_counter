@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <cmsis_compiler.h>
 #include "perf_counter.h"
+#include <stdlib.h>
 
 
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
@@ -126,6 +127,47 @@ uint32_t calculate_stack_usage_bottomup(void)
 /*----------------------------------------------------------------------------
   Main function
  *----------------------------------------------------------------------------*/
+
+typedef struct {
+    uint8_t chPT;
+    void *ptResource;
+} pt_led_flash_cb_t;
+
+#undef this
+#define this    (*ptThis)
+
+fsm_rt_t pt_example_led_flash(pt_led_flash_cb_t *ptThis)
+{
+
+PERFC_PT_BEGIN(this.chPT)
+
+    do {
+
+    PERFC_PT_WAIT_RESOURCE_UNTIL( 
+        (this.ptResource != NULL),               /* quit condition */
+        this.ptResource = malloc(100);          /* try to allocate memory */
+    )
+
+        printf("LED ON  [%lld]\r\n", get_system_ms());
+
+    PERFC_PT_DELAY_MS(500);
+        
+        printf("LED OFF [%lld]\r\n", get_system_ms());
+
+    PERFC_PT_DELAY_MS(500);
+        
+        free(this.ptResource);
+
+    } while(1);
+
+PERFC_PT_END()
+
+    return fsm_rt_cpl;
+
+}
+
+static pt_led_flash_cb_t s_tExamplePT = {0};
+
 int main (void)
 {
     int32_t iCycleResult = 0;
@@ -205,10 +247,9 @@ int main (void)
         }) {
             delay_us(50000);
         }
-        
-        
-        
-        delay_us(20000);
 
+        delay_us(20000);
+        
+        pt_example_led_flash(&s_tExamplePT);
     }
 }
