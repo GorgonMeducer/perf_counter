@@ -1,5 +1,5 @@
 /****************************************************************************
-*  Copyright 2021 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
+*  Copyright 2025 Gorgon Meducer (Email:embedded_zhuoran@hotmail.com)       *
 *                                                                           *
 *  Licensed under the Apache License, Version 2.0 (the "License");          *
 *  you may not use this file except in compliance with the License.         *
@@ -21,6 +21,8 @@
 #include "perf_counter.h"
 #include <stdlib.h>
 
+#include "pt_example.h"
+#include "cpt_example.h"
 
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
@@ -128,45 +130,19 @@ uint32_t calculate_stack_usage_bottomup(void)
   Main function
  *----------------------------------------------------------------------------*/
 
-typedef struct {
-    uint8_t chPT;
-    void *ptResource;
-} pt_led_flash_cb_t;
+static 
+PERFC_NOINIT
+pt_led_flash_cb_t s_tExamplePT;
 
-#undef this
-#define this    (*ptThis)
+static 
+PERFC_NOINIT
+cpt_led_flash_cb_t s_tExampleCPT[2];
 
-fsm_rt_t pt_example_led_flash(pt_led_flash_cb_t *ptThis)
-{
+__attribute__((section(".bss.stacks.coroutine")))
+uint64_t s_dwStack0[128];
 
-PERFC_PT_BEGIN(this.chPT)
-
-    do {
-
-    PERFC_PT_WAIT_RESOURCE_UNTIL( 
-        (this.ptResource != NULL),               /* quit condition */
-        this.ptResource = malloc(100);          /* try to allocate memory */
-    )
-
-        printf("LED ON  [%lld]\r\n", get_system_ms());
-
-    PERFC_PT_DELAY_MS(500);
-        
-        printf("LED OFF [%lld]\r\n", get_system_ms());
-
-    PERFC_PT_DELAY_MS(500);
-        
-        free(this.ptResource);
-
-    } while(1);
-
-PERFC_PT_END()
-
-    return fsm_rt_cpl;
-
-}
-
-static pt_led_flash_cb_t s_tExamplePT = {0};
+__attribute__((section(".bss.stacks.coroutine")))
+uint64_t s_dwStack1[128];
 
 int main (void)
 {
@@ -175,17 +151,17 @@ int main (void)
     /*! demo of using() block */
     using(int a = 0,printf("========= On Enter =======\r\n"),
                     printf("========= On Leave =======\r\n")) {
-        printf("\t In Body a=%d \r\n", ++a);
+        __perf_counter_printf__("\t In Body a=%d \r\n", ++a);
     }
 
     __cycleof__("Calibration") {}
 
-    printf("\r\n\r\n\r\n\r\n");
+    __perf_counter_printf__("\r\n\r\n\r\n\r\n");
 
     /*! demo of __cycleof__() operation */
     __cycleof__() {
         foreach(s_tItem) {
-            printf("Processing item with ID = %d\r\n", _->chID);
+            __perf_counter_printf__("Processing item with ID = %d\r\n", _->chID);
         }
     }
 
@@ -195,10 +171,12 @@ int main (void)
         {
             iCycleResult = __cycle_count__;   /*< "__cycle_count__" stores the result */
         }) {
-        delay_us(1000ul);
+        perfc_delay_us(1000ul);
     }
+    
+    perfc_delay_ms(500);
 
-    printf("\r\n delay_us(1000ul) takes %d cycles\r\n", (int)iCycleResult);
+    __perf_counter_printf__("\r\n delay_us(1000ul) takes %d cycles\r\n", (int)iCycleResult);
 
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
@@ -219,7 +197,7 @@ int main (void)
         __IRQ_SAFE {
             printf("no interrupt \r\n");
         }
-        printf("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
+        __perf_counter_printf__("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
     } while(0);
 
 #if __IS_COMPILER_ARM_COMPILER__
@@ -231,25 +209,46 @@ int main (void)
     coremark_main();
 #endif
 
+    pt_example_led_flash_init(&s_tExamplePT);
+    cpt_example_led_flash_init(&s_tExampleCPT[0], s_dwStack0, sizeof(s_dwStack0));
+    cpt_example_led_flash_init(&s_tExampleCPT[1], s_dwStack1, sizeof(s_dwStack1));
+
     while (1) {
         if (perfc_is_time_out_ms(10000)) {
-            printf("\r[%010lld]", get_system_ms());
+            __perf_counter_printf__("\r[%010lld]", get_system_ms());
         }
 
         __cpu_usage__(10) {
-            delay_us(30000);
+            perfc_delay_us(30000);
         }
-        
+
+    extern uint32_t Image$$ARM_LIB_STACK$$Base[];
+
+    //__stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
+    __stack_usage_max__("LED", Image$$ARM_LIB_STACK$$Base) {
         float fUsage = 0;
         __cpu_usage__(10, {
             fUsage = __usage__;
-            printf("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+            __perf_counter_printf__("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
         }) {
-            delay_us(50000);
+            perfc_delay_us(50000);
         }
 
-        delay_us(20000);
-        
-        pt_example_led_flash(&s_tExamplePT);
+        perfc_delay_us(20000);
+    }
+
+
+    fsm_rt_t tResult = perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[0]).nResult;
+    if (fsm_rt_cpl == tResult) {
+        size_t tStackRemain 
+            = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
+        __perf_counter_printf__("\r\nCoroutine Stack Remain: %d\r\n", tStackRemain);
+    }
+
+
+
+        perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
+
+        //pt_example_led_flash(&s_tExamplePT);
     }
 }

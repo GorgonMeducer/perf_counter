@@ -1764,6 +1764,20 @@ void perfc_port_clear_system_timer_counter(void)
     PMU->CTRL |= PMU_CTRL_CYCCNT_RESET_Msk;
 }
 
+__WEAK
+__attribute__((noinline))
+uintptr_t __perfc_port_get_sp(void)
+{
+    return __get_MSP();
+}
+
+__WEAK
+__attribute__((noinline))
+void __perfc_port_set_sp(uintptr_t nSP)
+{
+    __set_MSP(nSP);
+}
+
 #endif
 
 

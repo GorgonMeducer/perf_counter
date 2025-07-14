@@ -35,6 +35,7 @@
 #   pragma clang diagnostic ignored "-Wconditional-uninitialized"
 #   pragma clang diagnostic ignored "-Wcast-align"
 #   pragma clang diagnostic ignored "-Wmissing-prototypes"
+#   pragma clang diagnostic ignored "-Wimplicit-function-declaration"
 #endif
 
 
@@ -127,6 +128,22 @@ void perfc_port_clear_system_timer_counter(void)
     /* clear the system timer counter */
 }
 
+
+__attribute__((noinline))
+uintptr_t __perfc_port_get_sp(void)
+{
+    uintptr_t result;
+
+    __ASM volatile ("mov %0, sp" : "=r" (result) );
+    return (result);
+}
+
+
+__attribute__((noinline))
+void __perfc_port_set_sp(uintptr_t nSP)
+{
+    __ASM volatile ("mov sp, %0" : "=r" (nSP) );
+}
 #endif
 
 

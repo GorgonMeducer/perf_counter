@@ -5,7 +5,7 @@
 
   <Header>### uVision Project, (C) Keil Software</Header>
 
-  <WorkspaceName>Y:\Work\git\perf_counter\example\example.uvmpw</WorkspaceName>
+  <WorkspaceName>example</WorkspaceName>
 
   <project>
     <PathAndName>.\example.uvprojx</PathAndName>

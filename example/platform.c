@@ -19,7 +19,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "perf_counter.h"
-#include "ARMCM0.h"                     // Keil::Board Support:V2M-MPS2:Common
+#include "ARMCM4.h"                     // Keil::Board Support:V2M-MPS2:Common
 #include <assert.h>
 #include <RTE_Components.h>
 #if defined(RTE_Compiler_EventRecorder)
@@ -60,6 +60,7 @@ void platform_init(void)
 
     /* Generate interrupt each 1 ms  */
     SysTick_Config(SystemCoreClock / 1000);
+    //perfc_init(false);
     
 #if defined(RTE_Compiler_EventRecorder) && defined(RTE_Compiler_IO_STDOUT_EVR)
     EventRecorderInitialize(0,1);

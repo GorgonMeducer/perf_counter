@@ -159,7 +159,8 @@ extern uint32_t SystemCoreClock;
 /*============================ INCLUDES ======================================*/
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
-__WEAK 
+__WEAK
+__attribute__((noinline))
 bool perfc_port_init_system_timer(bool bTimerOccupied)
 {
     do {
@@ -183,46 +184,70 @@ bool perfc_port_init_system_timer(bool bTimerOccupied)
     return true;
 }
 
-__WEAK 
+__WEAK
+__attribute__((noinline))
 uint32_t perfc_port_get_system_timer_freq(void)
 {
     return SystemCoreClock;
 }
 
-__WEAK 
+__WEAK
+__attribute__((noinline))
 bool perfc_port_is_system_timer_ovf_pending(void)
 {
     return SCB->ICSR & SCB_ICSR_PENDSTSET_Msk;
 }
 
 __WEAK
+__attribute__((noinline))
 int64_t perfc_port_get_system_timer_top(void)
 {
     return SysTick->LOAD;
 }
 
 __WEAK
+__attribute__((noinline))
 int64_t perfc_port_get_system_timer_elapsed(void)
 {
     return (int64_t)SysTick->LOAD - (uint32_t)SysTick->VAL;
 }
 
 __WEAK
+__attribute__((noinline))
 void perfc_port_clear_system_timer_ovf_pending(void)
 {
     SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
 }
 
 __WEAK
+__attribute__((noinline))
 void perfc_port_stop_system_timer_counting(void)
 {
     SysTick->CTRL &= ~SysTick_CTRL_ENABLE_Msk;
 }
 
 __WEAK
+__attribute__((noinline))
 void perfc_port_clear_system_timer_counter(void)
 {
     SysTick->VAL = 0UL;
+}
+
+__WEAK
+__attribute__((noinline))
+uintptr_t __perfc_port_get_sp(void)
+{
+    uintptr_t result;
+
+    __ASM volatile ("mov %0, sp" : "=r" (result) );
+    return (result);
+}
+
+__WEAK
+__attribute__((noinline))
+void __perfc_port_set_sp(uintptr_t nSP)
+{
+    __ASM volatile ("mov sp, %0" : "=r" (nSP) );
 }
 
 #endif

@@ -1,11 +1,11 @@
 /******************************************************************************
- * @file     startup_ARMCM0.c
- * @brief    CMSIS-Core(M) Device Startup File for a Cortex-M0 Device
- * @version  V2.0.3
- * @date     31. March 2020
+ * @file     startup_ARMCM4.c
+ * @brief    CMSIS-Core(M) Device Startup File for a Cortex-M4 Device
+ * @version  V3.0.0
+ * @date     06. April 2023
  ******************************************************************************/
 /*
- * Copyright (c) 2009-2020 Arm Limited. All rights reserved.
+ * Copyright (c) 2009-2023 Arm Limited. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#if defined (ARMCM0)
-  #include "ARMCM0.h"
+#if defined (ARMCM4)
+  #include "ARMCM4.h"
 #else
   #error device not specified!
 #endif
@@ -47,7 +47,11 @@ __NO_RETURN void Reset_Handler  (void);
 /* Exceptions */
 void NMI_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
 void HardFault_Handler      (void) __attribute__ ((weak));
+void MemManage_Handler      (void) __attribute__ ((weak, alias("Default_Handler")));
+void BusFault_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
+void UsageFault_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
 void SVC_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
+void DebugMon_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
 void PendSV_Handler         (void) __attribute__ ((weak, alias("Default_Handler")));
 void SysTick_Handler        (void) __attribute__ ((weak, alias("Default_Handler")));
 
@@ -67,26 +71,26 @@ void Interrupt9_Handler     (void) __attribute__ ((weak, alias("Default_Handler"
   Exception / Interrupt Vector table
  *----------------------------------------------------------------------------*/
 
-#if __IS_COMPILER_GCC__
+#if defined ( __GNUC__ )
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
 
-extern const VECTOR_TABLE_Type __VECTOR_TABLE[48];
-       const VECTOR_TABLE_Type __VECTOR_TABLE[48] __VECTOR_TABLE_ATTRIBUTE = {
+extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
+       const VECTOR_TABLE_Type __VECTOR_TABLE[240] __VECTOR_TABLE_ATTRIBUTE = {
   (VECTOR_TABLE_Type)(&__INITIAL_SP),       /*     Initial Stack Pointer */
   Reset_Handler,                            /*     Reset Handler */
   NMI_Handler,                              /* -14 NMI Handler */
   HardFault_Handler,                        /* -13 Hard Fault Handler */
+  MemManage_Handler,                        /* -12 MPU Fault Handler */
+  BusFault_Handler,                         /* -11 Bus Fault Handler */
+  UsageFault_Handler,                       /* -10 Usage Fault Handler */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
-  0,                                        /*     Reserved */
-  SVC_Handler,                              /*  -5 SVCall Handler */
-  0,                                        /*     Reserved */
+  SVC_Handler,                              /*  -5 SVC Handler */
+  DebugMon_Handler,                         /*  -4 Debug Monitor Handler */
   0,                                        /*     Reserved */
   PendSV_Handler,                           /*  -2 PendSV Handler */
   SysTick_Handler,                          /*  -1 SysTick Handler */
@@ -102,10 +106,10 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[48];
   Interrupt7_Handler,                       /*   7 Interrupt 7 */
   Interrupt8_Handler,                       /*   8 Interrupt 8 */
   Interrupt9_Handler                        /*   9 Interrupt 9 */
-                                            /* Interrupts 10..31 are left out */
+                                            /* Interrupts 10 .. 223 are left out */
 };
 
-#if __IS_COMPILER_GCC__
+#if defined ( __GNUC__ )
 #pragma GCC diagnostic pop
 #endif
 
