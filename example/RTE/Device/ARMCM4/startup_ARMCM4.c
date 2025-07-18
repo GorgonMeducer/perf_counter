@@ -71,7 +71,7 @@ void Interrupt9_Handler     (void) __attribute__ ((weak, alias("Default_Handler"
   Exception / Interrupt Vector table
  *----------------------------------------------------------------------------*/
 
-#if defined ( __GNUC__ )
+#if __IS_COMPILER_GCC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
@@ -109,7 +109,7 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
                                             /* Interrupts 10 .. 223 are left out */
 };
 
-#if defined ( __GNUC__ )
+#if __IS_COMPILER_GCC__
 #pragma GCC diagnostic pop
 #endif
 

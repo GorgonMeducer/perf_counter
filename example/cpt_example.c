@@ -27,6 +27,8 @@
 #   pragma clang diagnostic ignored "-Wreserved-identifier"
 #   pragma clang diagnostic ignored "-Wdeclaration-after-statement"
 #   pragma clang diagnostic ignored "-Wcast-function-type-mismatch"
+#elif __IS_COMPILER_ARM_COMPILER_5__
+#   pragma diag_suppress 111
 #endif
 
 #ifdef __cplusplus

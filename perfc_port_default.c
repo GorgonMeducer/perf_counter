@@ -234,6 +234,13 @@ void perfc_port_clear_system_timer_counter(void)
 
 __WEAK
 __attribute__((noinline))
+#if __IS_COMPILER_ARM_COMPILER_5__
+__asm uintptr_t __perfc_port_get_sp(void)
+{
+    mov r0, sp
+    bx lr
+}
+#else
 uintptr_t __perfc_port_get_sp(void)
 {
     uintptr_t result;
@@ -241,9 +248,17 @@ uintptr_t __perfc_port_get_sp(void)
     __ASM volatile ("mov %0, sp" : "=r" (result) );
     return (result);
 }
+#endif
 
 __WEAK
 __attribute__((noinline))
+#if __IS_COMPILER_ARM_COMPILER_5__
+__asm void __perfc_port_set_sp(uintptr_t nSP)
+{
+    mov sp, r0
+    bx lr
+}
+#else
 void __perfc_port_set_sp(uintptr_t nSP)
 {
     /* Please do NOT remove the nAlign8Padding, it is used to enforce 8 bytes
@@ -252,6 +267,7 @@ void __perfc_port_set_sp(uintptr_t nSP)
     uint32_t nAlign8Padding = nSP;
     __ASM volatile ("mov sp, %0" : "=r" (nAlign8Padding) );
 }
+#endif
 
 #endif
 

@@ -21,6 +21,10 @@
 #include <stdio.h>
 #include <string.h>
 
+#if defined(__IS_COMPILER_ARM_COMPILER_5__)
+#   pragma diag_suppress 550, 546, 111
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
