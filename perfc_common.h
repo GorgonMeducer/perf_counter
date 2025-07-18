@@ -383,6 +383,16 @@ extern "C" {
 #   define __perf_counter_printf__      printf
 #endif
 
+#ifndef __PERFC_STACK_WATERMARK_U32__
+#   define __PERFC_STACK_WATERMARK_U32__            0xDEADBEEF
+#endif
+
+#undef __PERFC_STACK_WATERMARK_U64__
+#define __PERFC_STACK_WATERMARK_U64__                                           \
+            ((uint64_t) (   __PERFC_STACK_WATERMARK_U32__                       \
+                        |   ((uint64_t)__PERFC_STACK_WATERMARK_U32__ << 32)     \
+                        ))
+
 /*!
  * \brief measure the stack usage of the given code segement
  * \param[in] __STR a name for this measurement

@@ -43,5 +43,14 @@ __ensure_systick_wrapper   PROC
                 NOP
                 BX      LR
                 ENDP
-                
+
+                ALIGN
+                AREA    |.text|, CODE, READONLY
+
+__perfc_port_set_sp   PROC
+                EXPORT  __perfc_port_set_sp
+                MOV     SP, R0
+                BX      LR
+                ENDP
+
                 END

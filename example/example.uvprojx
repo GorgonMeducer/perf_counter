@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
+              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__,__PERFC_STACK_CHECK_IN_ISR__</Define>
               <Undefine></Undefine>
               <IncludePath>..</IncludePath>
             </VariousControls>

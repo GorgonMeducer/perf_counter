@@ -151,8 +151,6 @@ size_t perfc_coroutine_stack_remain(perfc_coroutine_t *ptTask)
 
 }
 
-
-
 perfc_coroutine_rt_t perfc_coroutine_call(perfc_coroutine_t *ptTask)
 {
     if (NULL == ptTask) {
@@ -177,7 +175,8 @@ perfc_coroutine_rt_t perfc_coroutine_call(perfc_coroutine_t *ptTask)
         uint64_t *pdwCanary = (uint64_t *)
             (   ((uintptr_t)(ptTask->pStackBase) + 7)
             &   (~((uintptr_t)0x07)));
-        if (*pdwCanary != 0xDEADBEEFDEADBEEFul) {
+
+        if (*pdwCanary != __PERFC_STACK_WATERMARK_U64__) {
             /* report stackover flow */
             perf_coroutine_report_error(ptTask, PERFC_CR_ERR_STACK_OVERFLOW);
         }

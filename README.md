@@ -1,4 +1,4 @@
-# perf_counter (v2.5.0)
+# perf_counter (v2.5.1)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.
@@ -35,7 +35,7 @@ A dedicated template is provided to port the perf_counter to different architect
   - **RT-Thread package is avaialble**
 - **Time-based services**
   - `perfc_delay_us()` and `perfc_delay_ms()` with **64bit return value**.
-    - **[new]** Adds weak entries `perfc_delay_us_user_code_in_loop()` and `perfc_delay_ms_user_code_in_loop()` for users to override, e.g. feeding the watchdog. 
+    - Adds weak entries `perfc_delay_us_user_code_in_loop()` and `perfc_delay_ms_user_code_in_loop()` for users to override, e.g. feeding the watchdog. 
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
 - **Support both RTOS and bare-metal environments**
   - Support SysTick Reconfiguration
@@ -43,7 +43,7 @@ A dedicated template is provided to port the perf_counter to different architect
   - Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
-  - **[new**] Macros to detect compiler features: 
+  - Macros to detect compiler features: 
     - `__COMPILER_HAS_GNU_EXTENSIONS__`
     - `__IS_COMPILER_SUPPORT_C99__`
     - `__IS_COMPILER_SUPPORT_C11__`
@@ -55,8 +55,12 @@ A dedicated template is provided to port the perf_counter to different architect
     - simple overload feature of OOPC made out of ANSI-C99, `__PLOOC_VA_NUM_ARGS()`.
     - ...
   - A dedicated macro `__perfc_sync_barrier__()` for code barrier. 
-  - **[new]** Adds a macro `__stack_usage__()` and `__stack_usage_max__()` to measure the stack usage for a given code segment.
-- **[new]** Adds C Language Extensions
+  - Macros to measure stack usage
+    - Adds a macro `__stack_usage__()` and `__stack_usage_max__()` to measure the stack usage for a given code segment.
+    - **[new]** Adds a macro `ISR()` to measure the stack usage of a given Cortex-M Exception handling. 
+      - You can define macro `__PERFC_STACK_CHECK_IN_ISR__` in project configuration to enable this feature.
+    - You can define macro `__PERFC_STACK_WATERMARK_U32__`  in your project configuration to override the default watermark, i.e. `0xDEADBEEF`.
+- Adds C Language Extensions
   - Adds Coroutine support
     - Adds watermark to stack and users can call `perfc_coroutine_stack_remain()` to get the stack usage info.
     - Defining macro `__PERFC_COROUTINE_NO_STACK_CHECK__` in **compilation command line** disables the stack-checking feature. 
@@ -610,9 +614,9 @@ Since version v2.1.0, I removed the unnecessary bundle feature from the cmsis-pa
 
 
 
-Sorry about this inconvinience. 
+Sorry about this inconvenience. 
 
-### 3.3 [new] How to feed the watchdog in perfc_delay_ms()?
+### 3.3 [new] How to feed the watchdog in `perfc_delay_ms()`?
 
 Since version v2.5.0, it is possible to feed the watchdog while waiting for `perfc_delay_ms()` to return. You can implement a function called `perfc_delay_ms_user_code_in_loop()` in ANY of your C source file and use it to feed the watchdog:
 
@@ -637,4 +641,4 @@ bool perfc_delay_ms_user_code_in_loop(int64_t lRemainInMs)
 
 ## 4.  License
 
-**Performance Counter for Cortex-M**, a.k.a. ***perf_counter*** is under Apache 2.0 license. 
+The **Performance Counter** for Microcontrollers, a.k.a. ***perf_counter*** is under Apache 2.0 license. 

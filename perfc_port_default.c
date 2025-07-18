@@ -156,7 +156,6 @@ extern uint32_t SystemCoreClock;
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
-/*============================ INCLUDES ======================================*/
 
 #if !__PERFC_CFG_DISABLE_DEFAULT_SYSTICK_PORTING__
 __WEAK
@@ -247,7 +246,11 @@ __WEAK
 __attribute__((noinline))
 void __perfc_port_set_sp(uintptr_t nSP)
 {
-    __ASM volatile ("mov sp, %0" : "=r" (nSP) );
+    /* Please do NOT remove the nAlign8Padding, it is used to enforce 8 bytes
+     * alignment for LLVM -O0 optimization level.
+     */
+    uint32_t nAlign8Padding = nSP;
+    __ASM volatile ("mov sp, %0" : "=r" (nAlign8Padding) );
 }
 
 #endif

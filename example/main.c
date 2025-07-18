@@ -139,10 +139,10 @@ PERFC_NOINIT
 cpt_led_flash_cb_t s_tExampleCPT[2];
 
 __attribute__((section(".bss.stacks.coroutine")))
-uint64_t s_dwStack0[128];
+uint64_t s_dwStack0[256];
 
 __attribute__((section(".bss.stacks.coroutine")))
-uint64_t s_dwStack1[128];
+uint64_t s_dwStack1[256];
 
 int main (void)
 {
@@ -222,30 +222,27 @@ int main (void)
             perfc_delay_us(30000);
         }
 
-    extern uint32_t Image$$ARM_LIB_STACK$$Base[];
+        extern uint32_t Image$$ARM_LIB_STACK$$Base[];
 
-    //__stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
-    __stack_usage_max__("LED", Image$$ARM_LIB_STACK$$Base) {
-        float fUsage = 0;
-        __cpu_usage__(10, {
-            fUsage = __usage__;
-            __perf_counter_printf__("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
-        }) {
-            perfc_delay_us(50000);
+        //__stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
+        __stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
+            float fUsage = 0;
+            __cpu_usage__(10, {
+                fUsage = __usage__;
+                __perf_counter_printf__("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+            }) {
+                perfc_delay_us(50000);
+            }
+
+            perfc_delay_us(20000);
         }
 
-        perfc_delay_us(20000);
-    }
-
-
-    fsm_rt_t tResult = perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[0]).nResult;
-    if (fsm_rt_cpl == tResult) {
-        size_t tStackRemain 
-            = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
-        __perf_counter_printf__("\r\nCoroutine Stack Remain: %d\r\n", tStackRemain);
-    }
-
-
+        fsm_rt_t tResult = perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[0]).nResult;
+        if (fsm_rt_cpl == tResult) {
+            size_t tStackRemain 
+                = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
+            __perf_counter_printf__("\r\nCoroutine Stack Remain: %d\r\n", tStackRemain);
+        }
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 

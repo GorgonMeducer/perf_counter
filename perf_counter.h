@@ -47,7 +47,7 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          5
-#define __PERF_COUNTER_VER_REVISE__         0
+#define __PERF_COUNTER_VER_REVISE__         1
 
 #define __PERF_COUNTER_VER_STR__            ""
 

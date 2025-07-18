@@ -1454,7 +1454,6 @@ void perfc_port_stop_system_timer_counting(void);
 extern
 void perfc_port_clear_system_timer_counter(void);
 
-/*============================ INCLUDES ======================================*/
 /*============================ IMPLEMENTATION ================================*/
 
 
@@ -1768,15 +1767,23 @@ __WEAK
 __attribute__((noinline))
 uintptr_t __perfc_port_get_sp(void)
 {
-    return __get_MSP();
+    uintptr_t result;
+
+    __ASM volatile ("mov %0, sp" : "=r" (result) );
+    return (result);
 }
 
 __WEAK
 __attribute__((noinline))
 void __perfc_port_set_sp(uintptr_t nSP)
 {
-    __set_MSP(nSP);
+    /* Please do NOT remove the nAlign8Padding, it is used to enforce 8 bytes
+     * alignment for LLVM -O0 optimization level.
+     */
+    uint32_t nAlign8Padding = nSP;
+    __ASM volatile ("mov sp, %0" : "=r" (nAlign8Padding) );
 }
+
 
 #endif
 

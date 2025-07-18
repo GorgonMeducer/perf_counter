@@ -108,7 +108,6 @@ extern
 void perfc_port_clear_system_timer_counter(void);
 
 /*============================ IMPLEMENTATION ================================*/
-/*============================ INCLUDES ======================================*/
 
 void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 {
@@ -466,6 +465,11 @@ bool perfc_stack_fill(uintptr_t nSP, uintptr_t nStackLimit)
     /* force 8bytes alignment */
     nSP &= (~((uintptr_t)0x07));
     nStackLimit = (nStackLimit + 7) & (~((uintptr_t)0x07));
+    
+    /* We don't know whether the location pointed by SP is used or not, it's 
+     * safe to ignore it
+     */
+    nSP -= 8;
 
     if (nSP <= nStackLimit) {
         /* stack overflow */
@@ -473,8 +477,8 @@ bool perfc_stack_fill(uintptr_t nSP, uintptr_t nStackLimit)
     }
 
     uint32_t * pwStackPointer = (uint32_t *) nStackLimit;
-    while((uintptr_t)pwStackPointer <= nSP) {
-        *pwStackPointer++ = 0xDEADBEEF;
+    while((uintptr_t)pwStackPointer < nSP) {
+        *pwStackPointer++ = __PERFC_STACK_WATERMARK_U32__;
     }
     
     return true;
@@ -489,7 +493,7 @@ size_t perfc_stack_remain(uintptr_t nStackLimit)
             (   ((uintptr_t)(nStackLimit) + 7)
             &   (~((uintptr_t)0x07)));
     
-    while(*pdwCanary++ == 0xDEADBEEFDEADBEEFul) {
+    while(*pdwCanary++ == __PERFC_STACK_WATERMARK_U64__) {
         nDWordCount++;
     }
 

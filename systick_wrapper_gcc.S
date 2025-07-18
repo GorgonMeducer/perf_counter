@@ -18,6 +18,7 @@
     .syntax unified
     .arch   armv6-m
 
+    
     .text
     .thumb
     .thumb_func
@@ -34,11 +35,17 @@ __wrap_SysTick_Handler:
     mov     lr, r5
     pop     {r4, r5}
     ldr     R0, =__real_SysTick_Handler
-    bx      R0
-                
+    bx      R0   
 
     .globl	__ensure_systick_wrapper
     .type	__ensure_systick_wrapper, %function
 
 __ensure_systick_wrapper:
     bx      lr
+
+    .globl  __perfc_port_set_sp
+    .type   __perfc_port_set_sp, %function
+
+__perfc_port_set_sp:
+    mov sp, r0
+    bx lr

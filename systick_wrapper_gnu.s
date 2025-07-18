@@ -42,3 +42,10 @@ $Sub$$SysTick_Handler:
 
 __ensure_systick_wrapper:
     bx      lr
+
+    .globl  __perfc_port_set_sp
+    .type   __perfc_port_set_sp, %function
+
+__perfc_port_set_sp:
+    mov sp, r0
+    bx lr
