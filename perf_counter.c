@@ -459,6 +459,56 @@ bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload
     return false;
 }
 
+#ifdef __PERFC_STACK_GROWS_UPWARD__
+
+__attribute__((noinline))
+bool perfc_stack_fill(uintptr_t nSP, uintptr_t nStackLimit)
+{
+    /* force 8bytes alignment */
+    nSP = (nSP + 7) & (~((uintptr_t)0x07));
+    nStackLimit &= (~((uintptr_t)0x07));
+    
+    /* we know the stack limit address is the last available byte address of the 
+     * growing-upward stack, but just in case someone mistakenly use the
+     * (base address + stack size) as the input, it is safe to ignore the 8 
+     * bytes close to the (aligned) input limit address */
+    nStackLimit -= 8;
+
+    /* We don't know whether the location pointed by SP is used or not, it's 
+     * safe to ignore it
+     */
+    nSP += 8;
+
+    if (nSP > nStackLimit) {
+        /* stack overflow */
+        return false;
+    }
+
+    uint32_t * pwStackPointer = (uint32_t *) nStackLimit;
+    while((uintptr_t)pwStackPointer >= nSP) {
+        *pwStackPointer-- = __PERFC_STACK_WATERMARK_U32__;
+    }
+    
+    return true;
+}
+
+__attribute__((noinline))
+size_t perfc_stack_remain(uintptr_t nStackLimit)
+{
+    size_t nDWordCount = 0;
+    nStackLimit &= (~((uintptr_t)0x07));
+    nStackLimit -= 8;
+    
+    uint64_t *pdwCanary = (uint64_t *)nStackLimit;
+    
+    while(*pdwCanary-- == __PERFC_STACK_WATERMARK_U64__) {
+        nDWordCount++;
+    }
+
+    return nDWordCount * sizeof(uint64_t);
+}
+
+#else
 __attribute__((noinline))
 bool perfc_stack_fill(uintptr_t nSP, uintptr_t nStackLimit)
 {
@@ -471,7 +521,7 @@ bool perfc_stack_fill(uintptr_t nSP, uintptr_t nStackLimit)
      */
     nSP -= 8;
 
-    if (nSP <= nStackLimit) {
+    if (nSP < nStackLimit) {
         /* stack overflow */
         return false;
     }
@@ -499,6 +549,10 @@ size_t perfc_stack_remain(uintptr_t nStackLimit)
 
     return nDWordCount * sizeof(uint64_t);
 }
+
+#endif
+
+
 
 
 /// Setup timer hardware.

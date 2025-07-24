@@ -16,10 +16,7 @@
 ****************************************************************************/
 
 #include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include "perf_counter.h"
-#include "ARMCM4.h"                     // Keil::Board Support:V2M-MPS2:Common
 #include <assert.h>
 #include <RTE_Components.h>
 #if defined(RTE_Compiler_EventRecorder)
@@ -58,6 +55,7 @@ ISR(SysTick_Handler, 512)
 __attribute__((constructor(101)))
 void platform_init(void)
 {
+    extern void SystemCoreClockUpdate(void);
     SystemCoreClockUpdate();
 
     /* Generate interrupt each 1 ms  */

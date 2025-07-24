@@ -76,14 +76,23 @@ int perfc_coroutine_init(   perfc_coroutine_t *ptTask,
         memset(ptTask, 0, sizeof(*ptTask));
         
         ptTask->pStackBase = pStackBase;
-        
+
+    #if __PERFC_STACK_GROWS_UPWARD__
+        uintptr_t pStackLimit = (uintptr_t)pStackBase + tSizeInByte;
+    #   if !defined(__PERFC_COROUTINE_NO_STACK_CHECK__)
+        perfc_stack_fill((uintptr_t)pStackBase, pStackLimit);
+    #   endif
+        uintptr_t pStackTop = (uintptr_t)pStackBase;
+        pStackTop = (pStackTop + 7) & (~((uintptr_t)0x07));
+    #else
         uintptr_t pStackTop = (uintptr_t)pStackBase + tSizeInByte;
         /* force 8bytes alignment */
         pStackTop &= (~((uintptr_t)0x07));
         pStackTop -= 8;
-
-    #if !defined(__PERFC_COROUTINE_NO_STACK_CHECK__)
+        
+    #   if !defined(__PERFC_COROUTINE_NO_STACK_CHECK__)
         perfc_stack_fill(pStackTop, (uintptr_t)pStackBase);
+    #   endif
     #endif
 
         typedef volatile struct {
@@ -170,12 +179,11 @@ perfc_coroutine_rt_t perfc_coroutine_call(perfc_coroutine_t *ptTask)
     }
 
     /* perform stack overflow detection */
-#if !defined(__PERFC_COROUTINE_NO_STACK_CHECK__)
+#if !defined(__PERFC_COROUTINE_NO_STACK_CHECK__) && !defined(__PERFC_STACK_GROWS_UPWARD__)
     do {
         uint64_t *pdwCanary = (uint64_t *)
             (   ((uintptr_t)(ptTask->pStackBase) + 7)
             &   (~((uintptr_t)0x07)));
-
         if (*pdwCanary != __PERFC_STACK_WATERMARK_U64__) {
             /* report stackover flow */
             perf_coroutine_report_error(ptTask, PERFC_CR_ERR_STACK_OVERFLOW);

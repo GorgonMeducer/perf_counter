@@ -161,7 +161,7 @@ int main (void)
     /*! demo of __cycleof__() operation */
     __cycleof__() {
         foreach(s_tItem) {
-            __perf_counter_printf__("Processing item with ID = %d\r\n", _->chID);
+            __perf_counter_printf__("Processing item with ID = %"PRIi32"\r\n", _->chID);
         }
     }
 
@@ -176,7 +176,7 @@ int main (void)
     
     perfc_delay_ms(500);
 
-    __perf_counter_printf__("\r\n delay_us(1000ul) takes %d cycles\r\n", (int)iCycleResult);
+    __perf_counter_printf__("\r\n delay_us(1000ul) takes %"PRIi32" cycles\r\n", (int32_t)iCycleResult);
 
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
@@ -197,7 +197,7 @@ int main (void)
         __IRQ_SAFE {
             printf("no interrupt \r\n");
         }
-        __perf_counter_printf__("used clock cycle: %d", (int32_t)(get_system_ticks() - tStart));
+        __perf_counter_printf__("used clock cycle: %"PRIi32, (int32_t)(get_system_ticks() - tStart));
     } while(0);
 
 #if __IS_COMPILER_ARM_COMPILER__
@@ -215,17 +215,23 @@ int main (void)
 
     while (1) {
         if (perfc_is_time_out_ms(10000)) {
-            __perf_counter_printf__("\r[%010lld]", get_system_ms());
+            __perf_counter_printf__("\r[%010"PRIi64"]", get_system_ms());
         }
 
         __cpu_usage__(10) {
             perfc_delay_us(30000);
         }
 
-        extern uint32_t Image$$ARM_LIB_STACK$$Base[];
+    #if __IS_COMPILER_ARM_COMPILER__
+        extern uintptr_t Image$$ARM_LIB_STACK$$Base[];
+        uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$Base;
+    #else
+        extern uintptr_t __StackLimit[];
+        uintptr_t nStackLimit = (uintptr_t)__StackLimit;
+    #endif
 
-        //__stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
-        __stack_usage__("LED", Image$$ARM_LIB_STACK$$Base) {
+        __stack_usage__("LED", nStackLimit) {
+        //__stack_usage_max__("LED", Image$$ARM_LIB_STACK$$Base) {
             float fUsage = 0;
             __cpu_usage__(10, {
                 fUsage = __usage__;
@@ -241,7 +247,7 @@ int main (void)
         if (fsm_rt_cpl == tResult) {
             size_t tStackRemain 
                 = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
-            __perf_counter_printf__("\r\nCoroutine Stack Remain: %d\r\n", tStackRemain);
+            __perf_counter_printf__("\r\nCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
         }
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);

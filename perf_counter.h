@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <inttypes.h>
 
 #include "perfc_common.h"
 
@@ -49,7 +50,7 @@ extern "C" {
 #define __PERF_COUNTER_VER_MINOR__          5
 #define __PERF_COUNTER_VER_REVISE__         2
 
-#define __PERF_COUNTER_VER_STR__            "dev"
+#define __PERF_COUNTER_VER_STR__            ""
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -177,6 +178,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
  * \addtogroup Deprecated
  * @{
  */
+#if !defined(__PERFC_NO_DEPRECATED__)
 #define init_cycle_counter(__is_systimer_occupied)                              \
             perfc_init(__is_systimer_occupied)
 
@@ -185,19 +187,26 @@ __asm(".global __ensure_systick_wrapper\n\t");
 #define delay_ms(__ms)          perfc_delay_ms(__ms)
 
 #ifndef CONNECT
-#   define CONNECT    PERFC_CONNECT
+#   define CONNECT      PERFC_CONNECT
 #endif
 
-#ifndef using
-#   define using perfc_using
+#ifndef CONNECT2
+#   define CONNECT2     PERFC_CONNECT2
 #endif
 
-#ifndef with
-#   define with perfc_with
-#endif
+#ifndef __cplusplus
+    #ifndef using
+    #   define using perfc_using
+    #endif
 
-#ifndef foreach
-#   define foreach perfc_foreach
+    #ifndef with
+    #   define with perfc_with
+    #endif
+
+    #ifndef foreach
+    #   define foreach perfc_foreach
+    #endif
+#endif
 #endif
 /*! @} */
 
@@ -232,8 +241,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
                     __perf_counter_printf__(                                    \
                         "------------------------------------\r\n");            \
                     __perf_counter_printf__(                                    \
-                        __STR " total cycle count: %ld [%08lx]\r\n",            \
-                            (long)_, (long)_);                                  \
+                        __STR " total cycle count: %"PRIi64" [%08"PRIX64"]\r\n",\
+                            (int64_t)_, (int64_t)_);                            \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
                 };                                                              \

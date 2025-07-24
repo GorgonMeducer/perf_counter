@@ -21,11 +21,17 @@
 
 /*============================ INCLUDES ======================================*/
 #include "perf_counter.h"
+#if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
+#   include "__perfc_task_common.h"
+#endif
 
 #if defined(__clang__)
 #   pragma clang diagnostic push
 #   pragma clang diagnostic ignored "-Wunknown-warning-option"
 #   pragma clang diagnostic ignored "-Wunused-label"
+#elif __IS_COMPILER_GCC__
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wunused-label"
 #endif
 
 #ifdef __cplusplus

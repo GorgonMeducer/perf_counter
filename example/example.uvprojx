@@ -58,7 +58,7 @@
           <ListingPath>.\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
-          <CreateBatchFile>0</CreateBatchFile>
+          <CreateBatchFile>1</CreateBatchFile>
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
@@ -1874,7 +1874,7 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.1" condition="CMSIS-CORE">
+      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2-dev" condition="CMSIS-CORE">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1944,6 +1944,7 @@
         <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM4 CMSIS" isDefaultVariant="1"/>
         <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
         <targetInfos>
+          <targetInfo name="example_arm compiler_5"/>
           <targetInfo name="example_arm_compiler_6"/>
         </targetInfos>
       </file>
@@ -2055,15 +2056,15 @@
         <package name="perf_counter" schemaVersion="1.4" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.0.0"/>
         <targetInfos/>
       </file>
-      <file attr="config" category="sourceC" name="template\perfc_port_user.c" version="1.0.3">
+      <file attr="config" category="sourceC" name="template\perfc_port_user.c" version="1.2.1">
         <instance index="0" removed="1">RTE\Utilities\perfc_port_user.c</instance>
-        <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" Cvendor="GorgonMeducer" Cversion="1.0.3" condition="perf_counter" isDefaultVariant="0"/>
+        <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" Cvendor="GorgonMeducer" Cversion="1.2.1" condition="perf_counter" isDefaultVariant="0"/>
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos/>
       </file>
-      <file attr="config" category="header" name="template\perfc_port_user.h" version="1.0.3">
+      <file attr="config" category="header" name="template\perfc_port_user.h" version="1.2.1">
         <instance index="0" removed="1">RTE\Utilities\perfc_port_user.h</instance>
-        <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" Cvendor="GorgonMeducer" Cversion="1.0.3" condition="perf_counter" isDefaultVariant="0"/>
+        <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" Cvendor="GorgonMeducer" Cversion="1.2.1" condition="perf_counter" isDefaultVariant="0"/>
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos/>
       </file>

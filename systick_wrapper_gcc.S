@@ -49,3 +49,4 @@ __ensure_systick_wrapper:
 __perfc_port_set_sp:
     mov sp, r0
     bx lr
+

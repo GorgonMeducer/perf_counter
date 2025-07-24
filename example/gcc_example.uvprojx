@@ -22,7 +22,7 @@
           <StartupFile></StartupFile>
           <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000)</FlashDriverDll>
           <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:ARMCM0$Device\ARM\ARMCM0\Include\ARMCM0.h</RegisterFile>
+          <RegisterFile>$$Device:ARMCM0$Device\ARMCM0\Include\ARMCM0.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -51,7 +51,7 @@
           <OutputName>gcc_example</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\GCC_Out\</ListingPath>
@@ -166,7 +166,7 @@
             <hadIRAM>1</hadIRAM>
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
-            <RvdsVP>0</RvdsVP>
+            <RvdsVP>2</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
             <nBranchProt>0</nBranchProt>
@@ -238,13 +238,13 @@
             <bigend>0</bigend>
             <Strict>0</Strict>
             <Optim>5</Optim>
-            <wLevel>3</wLevel>
+            <wLevel>2</wLevel>
             <uThumb>1</uThumb>
             <VariousControls>
-              <MiscControls></MiscControls>
+              <MiscControls>--std=gnu11 -fms-extensions</MiscControls>
               <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\perf_counter</IncludePath>
+              <IncludePath></IncludePath>
             </VariousControls>
           </Carm>
           <Aarm>
@@ -311,10 +311,77 @@
               <FileType>1</FileType>
               <FilePath>.\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>pt_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pt_example.c</FilePath>
+            </File>
+            <File>
+              <FileName>pt_example.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pt_example.h</FilePath>
+            </File>
+            <File>
+              <FileName>cpt_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\cpt_example.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpt_example.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\cpt_example.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
           <GroupName>perf_counter</GroupName>
+          <GroupOption>
+            <CommonProperty>
+              <UseCPPCompiler>0</UseCPPCompiler>
+              <RVCTCodeConst>0</RVCTCodeConst>
+              <RVCTZI>0</RVCTZI>
+              <RVCTOtherData>0</RVCTOtherData>
+              <ModuleSelection>0</ModuleSelection>
+              <IncludeInBuild>0</IncludeInBuild>
+              <AlwaysBuild>2</AlwaysBuild>
+              <GenerateAssemblyFile>2</GenerateAssemblyFile>
+              <AssembleAssemblyFile>2</AssembleAssemblyFile>
+              <PublicsOnly>2</PublicsOnly>
+              <StopOnExitCode>11</StopOnExitCode>
+              <CustomArgument></CustomArgument>
+              <IncludeLibraryModules></IncludeLibraryModules>
+              <ComprImg>1</ComprImg>
+            </CommonProperty>
+            <GroupArm>
+              <Carm>
+                <arpcs>2</arpcs>
+                <stkchk>2</stkchk>
+                <reentr>2</reentr>
+                <interw>2</interw>
+                <bigend>2</bigend>
+                <Strict>0</Strict>
+                <Optim>0</Optim>
+                <wLevel>0</wLevel>
+                <uThumb>2</uThumb>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Carm>
+              <Aarm>
+                <bBE>2</bBE>
+                <interw>2</interw>
+                <VariousControls>
+                  <MiscControls></MiscControls>
+                  <Define></Define>
+                  <Undefine></Undefine>
+                  <IncludePath></IncludePath>
+                </VariousControls>
+              </Aarm>
+            </GroupArm>
+          </GroupOption>
           <Files>
             <File>
               <FileName>perf_counter.c</FileName>
@@ -345,6 +412,12 @@
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
+        </Group>
+        <Group>
+          <GroupName>::Language Extension</GroupName>
+        </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
         </Group>
       </Groups>
     </Target>
@@ -746,6 +819,26 @@
               <FileType>1</FileType>
               <FilePath>.\stdout_USART.c</FilePath>
             </File>
+            <File>
+              <FileName>pt_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\pt_example.c</FilePath>
+            </File>
+            <File>
+              <FileName>pt_example.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\pt_example.h</FilePath>
+            </File>
+            <File>
+              <FileName>cpt_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\cpt_example.c</FilePath>
+            </File>
+            <File>
+              <FileName>cpt_example.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\cpt_example.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -781,6 +874,12 @@
         <Group>
           <GroupName>::CMSIS</GroupName>
         </Group>
+        <Group>
+          <GroupName>::Language Extension</GroupName>
+        </Group>
+        <Group>
+          <GroupName>::Utilities</GroupName>
+        </Group>
       </Groups>
     </Target>
   </Targets>
@@ -788,8 +887,29 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
+        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
+        <targetInfos>
+          <targetInfo name="example"/>
+          <targetInfo name="gcc_lib"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Language Extension" Cgroup="Coroutine" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter">
+        <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
+        <targetInfos>
+          <targetInfo name="example"/>
+          <targetInfo name="gcc_lib"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Language Extension" Cgroup="protoThread" Cvendor="GorgonMeducer" Cversion="1.1.0" condition="perf_counter">
+        <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
+        <targetInfos>
+          <targetInfo name="example"/>
+          <targetInfo name="gcc_lib"/>
+        </targetInfos>
+      </component>
+      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2" condition="CMSIS-CORE">
+        <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>

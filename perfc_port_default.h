@@ -32,6 +32,11 @@
 #   define __perfc_sync_barrier__(...)         do {__DSB();__ISB();} while(0)
 #endif
 
+#if defined(__PERFC_STACK_GROWS_UPWARD__)
+#error The macro "__PERFC_STACK_GROWS_UPWARD__" is defined but the stacks of \
+the Cortex-M architecture grow downward!! Please remove the macro from project!!
+#endif
+
 #if defined(__PERFC_STACK_CHECK_IN_ISR__)
 
 #   define __ISR(__ISR_NAME, __STACK_SIZE_HINT)                                 \

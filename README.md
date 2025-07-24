@@ -1,4 +1,4 @@
-# perf_counter (v2.5.2-dev)
+# perf_counter (v2.5.2)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.
@@ -59,7 +59,8 @@ A dedicated template is provided to port the perf_counter to different architect
     - Adds a macro `__stack_usage__()` and `__stack_usage_max__()` to measure the stack usage for a given code segment.
     - **[new]** Adds a macro `ISR()` to measure the stack usage of a given Cortex-M Exception handling. 
       - You can define macro `__PERFC_STACK_CHECK_IN_ISR__` in project configuration to enable this feature.
-    - You can define macro `__PERFC_STACK_WATERMARK_U32__`  in your project configuration to override the default watermark, i.e. `0xDEADBEEF`.
+    - **[new]** You can define macro `__PERFC_STACK_WATERMARK_U32__`  in your project configuration to override the default watermark, i.e. `0xDEADBEEF`.
+    - **[new]** Supports for architectures that use growing-upward stacks. You can define macro `__PERFC_STACK_GROWS_UPWARD__` to switch.
 - Adds C Language Extensions
   - Adds Coroutine support
     - Adds watermark to stack and users can call `perfc_coroutine_stack_remain()` to get the stack usage info.
@@ -77,6 +78,8 @@ A dedicated template is provided to port the perf_counter to different architect
   - `using()` -> `perfc_using()`
   - `with()` -> `perfc_with()`
   - `foreach()` -> `perfc_foreach()`
+
+- **[new]** You can define the macro `__PERFC_NO_DEPRECATED__` to disable the alias of the deprecated APIs.
 
   
 
