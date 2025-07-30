@@ -102,10 +102,14 @@ __cycleof__(<Description String for the target>, [User Code, see ref 1]) {
 
 Here, [**ref 1**] is a small user code to read the measurement result via a local variable `__cycle_count__`. This User Code is optional. If you don't put anything here, the measured result will be shown with a `__perf_counter_printf__`. 
 
-#### **Example 1:** Simple measurement with printf
+> [!NOTE]
+>
+> The first parameter cannot be ignored. If you don't want to give a description string, please pass an empty string i.e. "". 
+
+#### **Example 1:** Simple measurement with `printf()`
 
 ```c
-    __cycleof__() {
+    __cycleof__("") {
         foreach(example_lv0_t, s_tItem, ptItem) {
             __perf_counter_printf__("Processing item with ID = %d\r\n", _->chID);
         }
