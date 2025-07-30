@@ -159,7 +159,7 @@ int main (void)
     __perf_counter_printf__("\r\n\r\n\r\n\r\n");
 
     /*! demo of __cycleof__() operation */
-    __cycleof__() {
+    __cycleof__("") {
         foreach(s_tItem) {
             __perf_counter_printf__("Processing item with ID = %"PRIi32"\r\n", _->chID);
         }
