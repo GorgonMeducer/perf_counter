@@ -73,11 +73,11 @@ static example_lv0_t s_tItem[8] = {
 #endif
 uint32_t calculate_stack_usage_topdown(void)
 {
-    extern uint32_t Image$$ARM_LIB_STACK$$Limit[];
-    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Limit[];
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Length;
 
-    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Limit;
-    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length / 4;
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$ZI$$Limit;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length / 4;
     uint32_t wStackUsed = 0;
 
 
@@ -91,20 +91,20 @@ uint32_t calculate_stack_usage_topdown(void)
     
     printf("\r\nStack Usage: [%d/%d] %2.2f%%\r\n", 
             wStackUsed * 4, 
-            (uintptr_t)&Image$$ARM_LIB_STACK$$Length,
+            (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length,
             (   (float)wStackUsed * 400.0f 
-            /   (float)(uintptr_t)&Image$$ARM_LIB_STACK$$Length));
+            /   (float)(uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length));
 
     return wStackUsed * 4;
 }
 
 uint32_t calculate_stack_usage_bottomup(void)
 {
-    extern uint32_t Image$$ARM_LIB_STACK$$Base[];
-    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Length;
 
-    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Base;
-    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length;
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$ZI$$Base;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length;
     uint32_t wStackUsed = wStackSize / 4;
 
     do {
@@ -223,15 +223,15 @@ int main (void)
         }
 
     #if __IS_COMPILER_ARM_COMPILER__
-        extern uintptr_t Image$$ARM_LIB_STACK$$Base[];
-        uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$Base;
+        extern uintptr_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+        uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base;
     #else
         extern uintptr_t __StackLimit[];
         uintptr_t nStackLimit = (uintptr_t)__StackLimit;
     #endif
 
         __stack_usage__("LED", nStackLimit) {
-        //__stack_usage_max__("LED", Image$$ARM_LIB_STACK$$Base) {
+        //__stack_usage_max__("LED", Image$$ARM_LIB_STACK$$ZI$$Base) {
             float fUsage = 0;
             __cpu_usage__(10, {
                 fUsage = __usage__;
@@ -252,6 +252,9 @@ int main (void)
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 
+        
+        __perf_counter_printf__("System Stack Remain: %"PRIu32 "\r\n", 
+                                perfc_stack_remain((uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Base));
         //pt_example_led_flash(&s_tExamplePT);
     }
 }

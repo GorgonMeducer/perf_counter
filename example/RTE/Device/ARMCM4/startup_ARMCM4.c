@@ -113,13 +113,19 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
 #pragma GCC diagnostic pop
 #endif
 
+#include "perf_counter.h"
+
 /*----------------------------------------------------------------------------
   Reset Handler called on controller reset
  *----------------------------------------------------------------------------*/
 __NO_RETURN void Reset_Handler(void)
 {
-  SystemInit();                             /* CMSIS System Initialization */
-  __PROGRAM_START();                        /* Enter PreMain (C library entry point) */
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+
+    perfc_stack_fill(__perfc_port_get_sp(), 
+                    (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base);
+    SystemInit();                             /* CMSIS System Initialization */
+    __PROGRAM_START();                        /* Enter PreMain (C library entry point) */
 }
 
 

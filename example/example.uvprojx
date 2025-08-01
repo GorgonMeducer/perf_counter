@@ -1874,8 +1874,8 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2-dev" condition="CMSIS-CORE">
-        <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
+      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2" condition="CMSIS-CORE">
+        <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="2.5.2"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
           <targetInfo name="example_arm_compiler_6"/>
