@@ -178,6 +178,14 @@ int main (void)
 
     __perf_counter_printf__("\r\n delay_us(1000ul) takes %"PRIi32" cycles\r\n", (int32_t)iCycleResult);
 
+    
+    __perf_counter_printf__("Long Delay Test Start...Please wait for 10s...\r\n");
+    __IRQ_SAFE {
+        perfc_delay_ms(10000);
+    }
+    __perf_counter_printf__("Long Delay Test End...\r\n");
+
+
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
         _->wA = 1;

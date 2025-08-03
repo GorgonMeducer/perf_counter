@@ -207,11 +207,15 @@ __STATIC_INLINE int64_t check_systick(void)
      *        The following code implements an equivalent logic.
      */
     if (perfc_port_is_system_timer_ovf_pending()){
+
+        perfc_port_clear_system_timer_ovf_pending();
+        perfc_port_insert_to_system_timer_insert_ovf_handler();
+
         /* refresh the elapsed just in case the counter has just overflowed/underflowed
          * after we called the perfc_port_get_system_timer_elapsed()
          */
         lTemp = perfc_port_get_system_timer_elapsed();
-        lTemp += perfc_port_get_system_timer_top() + 1;
+        //lTemp += perfc_port_get_system_timer_top() + 1;
     }
 
     return lTemp;
