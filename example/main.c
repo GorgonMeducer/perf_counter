@@ -30,6 +30,8 @@
 typedef int64_t clock_t ;
 #endif
 
+extern uintptr_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+
 extern void systimer_1ms_handler(void);
 
 void systimer_1ms_handler(void)
@@ -222,6 +224,11 @@ int main (void)
     cpt_example_led_flash_init(&s_tExampleCPT[1], s_dwStack1, sizeof(s_dwStack1));
 
     while (1) {
+
+        __perf_counter_printf__("System Stack Remain: %"PRIu32 "\r\n", 
+                        perfc_stack_remain((uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Base));
+
+
         if (perfc_is_time_out_ms(10000)) {
             __perf_counter_printf__("\r[%010"PRIi64"]", get_system_ms());
         }
@@ -231,7 +238,7 @@ int main (void)
         }
 
     #if __IS_COMPILER_ARM_COMPILER__
-        extern uintptr_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+        
         uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base;
     #else
         extern uintptr_t __StackLimit[];
@@ -258,11 +265,9 @@ int main (void)
             __perf_counter_printf__("\r\nCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
         }
 
+
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 
-        
-        __perf_counter_printf__("System Stack Remain: %"PRIu32 "\r\n", 
-                                perfc_stack_remain((uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Base));
-        //pt_example_led_flash(&s_tExamplePT);
+        pt_example_led_flash(&s_tExamplePT);
     }
 }

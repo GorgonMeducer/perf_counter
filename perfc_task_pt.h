@@ -245,15 +245,9 @@ label_switch_start:                                                             
 
 #define PERFC_CPT_DELAY_MS(__ms, ...)                                           \
             {                                                                   \
-                int64_t lDelayTimestampInMs = get_system_ms();                  \
-                do {                                                            \
-                    if ((get_system_ms() - lDelayTimestampInMs) >= (__ms)) {    \
-                        break;                                                  \
-                    }                                                           \
-                    PERFC_CPT_YIELD(fsm_rt_on_going);                           \
-                } while(1);                                                     \
+                ptTask->tCoroutine.tReturn.nResult = fsm_rt_on_going;           \
+                perfc_delay_ms((__ms), &ptTask->tCoroutine);                    \
             }
-
 
 #define PERFC_CPT_REPORT_STATUS(...)   PERFC_CPT_YIELD(__VA_ARGS__)
             
