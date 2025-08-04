@@ -119,28 +119,26 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
      */
     __IRQ_SAFE {
         s_lSystemClockCounts += lLoad;
-
-        // update system ms counter
-        do {
-            int64_t lTemp = s_wMSResidule + lLoad;
-
-            int64_t lMS = lTemp / s_wMSUnit;
-            s_lSystemMS += lMS;
-            s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
-
-        } while(0);
     }
 
+    // update system ms counter
     __IRQ_SAFE {
-        // update system us counter
-        do {
-            int64_t lTemp = s_wUSResidule + lLoad;
+        int64_t lTemp = s_wMSResidule + lLoad;
 
-            int64_t lUS = lTemp / s_wUSUnit;
-            s_lSystemUS += lUS;
+        int64_t lMS = lTemp / s_wMSUnit;
+        s_lSystemMS += lMS;
 
-            s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
-        } while(0);
+        s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
+    }
+
+    // update system us counter
+    __IRQ_SAFE {
+        int64_t lTemp = s_wUSResidule + lLoad;
+
+        int64_t lUS = lTemp / s_wUSUnit;
+        s_lSystemUS += lUS;
+
+        s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
     }
 }
 
