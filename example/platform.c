@@ -60,7 +60,6 @@ void platform_init(void)
 
     /* Generate interrupt each 1 ms  */
     //SysTick_Config(SystemCoreClock / 1000);
-    perfc_init(false);
     
 #if defined(RTE_Compiler_EventRecorder) && defined(RTE_Compiler_IO_STDOUT_EVR)
     EventRecorderInitialize(0,1);

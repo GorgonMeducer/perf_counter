@@ -24,6 +24,8 @@
 #include "pt_example.h"
 #include "cpt_example.h"
 
+#include "ARMCM4.h"
+
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
 #else
@@ -148,6 +150,9 @@ uint64_t s_dwStack1[256];
 
 int main (void)
 {
+    SysTick_Config(SystemCoreClock / 1000);
+    perfc_init(true);
+
     int32_t iCycleResult = 0;
 
     /*! demo of using() block */

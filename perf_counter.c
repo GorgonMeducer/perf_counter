@@ -79,6 +79,7 @@ volatile static int64_t s_lSystemClockCounts = 0;
 
 volatile int32_t g_nOffset = 0;
 volatile int64_t g_lLastTimeStamp = 0;
+volatile static bool s_bIsSysTimerOccupied = true;
 
 /*============================ PROTOTYPES ====================================*/
 
@@ -168,11 +169,11 @@ void update_perf_counter(void)
     }
 }
 
-//bool init_cycle_counter(bool bIsSysTickOccupied)
 bool perfc_init(bool bIsSysTimerOccupied)
 {
     bool bResult = false;
     __IRQ_SAFE {
+        s_bIsSysTimerOccupied = bIsSysTimerOccupied;
         bResult = perfc_port_init_system_timer(bIsSysTimerOccupied);            // use the longest period
         perfc_port_clear_system_timer_ovf_pending();
     }
@@ -207,15 +208,31 @@ __STATIC_INLINE int64_t check_systick(void)
      *        The following code implements an equivalent logic.
      */
     if (perfc_port_is_system_timer_ovf_pending()){
+    
+        if (s_bIsSysTimerOccupied) {
+        
+        #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
+            perfc_port_clear_system_timer_ovf_pending();
+            perfc_port_insert_to_system_timer_insert_ovf_handler();
 
-        perfc_port_clear_system_timer_ovf_pending();
-        perfc_port_insert_to_system_timer_insert_ovf_handler();
+            /* refresh the elapsed just in case the counter has just overflowed/underflowed
+             * after we called the perfc_port_get_system_timer_elapsed()
+             */
+            lTemp = perfc_port_get_system_timer_elapsed();
+        #else
+            lTemp = perfc_port_get_system_timer_elapsed();
+            lTemp += perfc_port_get_system_timer_top() + 1;
+        #endif
+        } else {
+            perfc_port_clear_system_timer_ovf_pending();
+            perfc_port_insert_to_system_timer_insert_ovf_handler();
 
-        /* refresh the elapsed just in case the counter has just overflowed/underflowed
-         * after we called the perfc_port_get_system_timer_elapsed()
-         */
-        lTemp = perfc_port_get_system_timer_elapsed();
-        //lTemp += perfc_port_get_system_timer_top() + 1;
+            /* refresh the elapsed just in case the counter has just overflowed/underflowed
+             * after we called the perfc_port_get_system_timer_elapsed()
+             */
+            lTemp = perfc_port_get_system_timer_elapsed();
+        }
+        
     }
 
     return lTemp;
