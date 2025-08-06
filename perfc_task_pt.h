@@ -87,24 +87,24 @@ SUCH DAMAGE.
 
 Author: Adam Dunkels
 */
-#define PERFC_PT_BEGIN(__state)                                                 \
+#define PERFC_PT_BEGIN(__pt)                                                    \
             enum {                                                              \
                 count_offset = __COUNTER__ + 1,                                 \
             };                                                                  \
-            uint8_t *ptPTState = &(__state);                                    \
-            switch (__state) {                                                  \
+            perfc_pt_t *ptPTCB = (((perfc_pt_t *)&(__pt)));                     \
+            switch (ptPTCB->chState) {                                          \
                 case __COUNTER__ - count_offset: 
 
 #define PERFC_PT_ENTRY(...)                                                     \
-                    (*ptPTState) = (__COUNTER__ - count_offset + 1) >> 1;       \
+                    (ptPTCB->chState) = (__COUNTER__ - count_offset + 1) >> 1;  \
                     __VA_ARGS__                                                 \
-                case (__COUNTER__ - count_offset) >> 1: (void)(*ptPTState);
+                case (__COUNTER__ - count_offset) >> 1: (void)(ptPTCB->chState);
             
 #define PERFC_PT_YIELD(...)                                                     \
             PERFC_PT_ENTRY(return __VA_ARGS__;)
             
 #define PERFC_PT_END()                                                          \
-                    (*ptPTState) = 0;                                           \
+                    (ptPTCB->chState) = 0;                                      \
                     break;                                                      \
             }
 
@@ -121,7 +121,7 @@ Author: Adam Dunkels
 
 #define PERFC_PT_WAIT_FOR_OBJ_UNTIL(__CONDITION, ...)                           \
             {                                                                   \
-            PERFC_PT__ENTRY()                                                   \
+            PERFC_PT_ENTRY()                                                    \
                 __VA_ARGS__;                                                    \
                 if (!(__CONDITION)) {                                           \
                     PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_wait_for_obj);              \
@@ -139,17 +139,11 @@ Author: Adam Dunkels
 
 #define PERFC_PT_DELAY_MS(__ms, ...)                                            \
             {                                                                   \
-                PERFC_PT_ENTRY(                                                 \
-                    static int64_t PERFC_SAFE_NAME(s_lTimestamp);               \
-                    UNUSED_PARAM(PERFC_SAFE_NAME(s_lTimestamp));                \
-                    int64_t *PERFC_SAFE_NAME(plTimestamp)                       \
-                        = (&PERFC_SAFE_NAME(s_lTimestamp), ##__VA_ARGS__);      \
-                    *PERFC_SAFE_NAME(plTimestamp) = get_system_ms();            \
-                )                                                               \
-                PERFC_SAFE_NAME(plTimestamp)                                    \
-                    = (&PERFC_SAFE_NAME(s_lTimestamp), ##__VA_ARGS__);          \
+            PERFC_PT_ENTRY(                                                     \
+                ptPTCB->lTimestamp = get_system_ms();                           \
+            )                                                                   \
                 int64_t PERFC_SAFE_NAME(lElapsedMs) =                           \
-                    get_system_ms() - *PERFC_SAFE_NAME(plTimestamp);            \
+                    get_system_ms() - ptPTCB->lTimestamp;                       \
                 if (PERFC_SAFE_NAME(lElapsedMs) < (__ms)) {                     \
                     PERFC_PT_GOTO_PREV_ENTRY(fsm_rt_on_going);                  \
                 }                                                               \
@@ -285,6 +279,11 @@ label_switch_start:                                                             
 #endif
 
 /*============================ TYPES =========================================*/
+
+typedef struct perfc_pt_t {
+    uint8_t chState;
+    int64_t lTimestamp;
+} perfc_pt_t;
 
 #if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
 
