@@ -456,10 +456,12 @@ __asm(".global __ensure_systick_wrapper\n\t");
 typedef enum {
     fsm_rt_err          = -1,    //!< fsm error, error code can be get from other interface
     fsm_rt_cpl          = 0,     //!< fsm complete
+    fsm_rt_ok           = 0,     //!< no error
     fsm_rt_on_going     = 1,     //!< fsm on-going
     fsm_rt_wait_for_obj = 2,     //!< fsm wait for object
     fsm_rt_asyn         = 3,     //!< fsm asynchronose complete, you can check it later.
     fsm_rt_wait_for_res = 4,     //!< fsm wait for resource
+    fsm_rt_timeout      = 5,     //!< fsm timeout
 } fsm_rt_t;
 //! @}
 #endif

@@ -201,47 +201,72 @@ label_switch_start:                                                             
                     goto label_switch_start;                                    \
                 }
 
-#define PERFC_CPT_WAIT_UNTIL(__CONDITION, ...)                                  \
+/*!
+ * \note this keyword can only be used inside PERFC_CPT_WAIT_...
+ */
+#define PERFC_CPT_TIMEOUT(__MS)                                                 \
             {                                                                   \
+                int16_t lCurrentMs = get_system_ms();                           \
+                if (0 == lTimestamp) {                                          \
+                    lTimestamp = lCurrentMs;                                    \
+                } else if ((lCurrentMs - lTimestamp) >= (__MS)) {               \
+                    tCPTResult = fsm_rt_timeout;                                \
+                }                                                               \
+            }
+
+#define PERFC_CPT_WAIT_UNTIL(__CONDITION, ...)                                  \
+            ({                                                                  \
+                fsm_rt_t tCPTResult = fsm_rt_ok;                                \
+                int64_t lTimestamp = 0;                                         \
+                UNUSED_PARAM(lTimestamp);                                       \
         label_wait_until_entry_##__LINE__:                                      \
                 (void)(ptTask);                                                 \
                 __VA_ARGS__;                                                    \
-                if ((__CONDITION)) {                                            \
+                if ((__CONDITION) || tCPTResult == fsm_rt_timeout) {            \
                     goto label_wait_until_exit_##__LINE__;                      \
                 }                                                               \
                 PERFC_CPT_YIELD(fsm_rt_on_going);                               \
                 goto label_wait_until_entry_##__LINE__;                         \
         label_wait_until_exit_##__LINE__:                                       \
                 (void)(ptTask);                                                 \
-            }
+                tCPTResult;                                                     \
+            })
 
 #define PERFC_CPT_WAIT_FOR_OBJ_UNTIL(__CONDITION, ...)                          \
-            {                                                                   \
+            ({                                                                  \
+                fsm_rt_t tCPTResult = fsm_rt_ok;                                \
+                int64_t lTimestamp = 0;                                         \
+                UNUSED_PARAM(lTimestamp);                                       \
         label_wait_for_obj_until_entry_##__LINE__:                              \
                 (void)(ptTask);                                                 \
                 __VA_ARGS__;                                                    \
-                if ((__CONDITION)) {                                            \
+                if ((__CONDITION) || tCPTResult == fsm_rt_timeout) {            \
                     goto label_wait_for_obj_until_exit_##__LINE__;              \
                 }                                                               \
                 PERFC_CPT_YIELD(fsm_rt_wait_for_obj);                           \
                 goto label_wait_for_obj_until_entry_##__LINE__;                 \
         label_wait_for_obj_until_exit_##__LINE__:                               \
                 (void)(ptTask);                                                 \
-            }
+                tCPTResult;                                                     \
+            })
 
 #define PERFC_CPT_WAIT_FOR_RES_UNTIL(__CONDITION, ...)                          \
-            {                                                                   \
+            ({                                                                  \
+                fsm_rt_t tCPTResult = fsm_rt_ok;                                \
+                int64_t lTimestamp = 0;                                         \
+                UNUSED_PARAM(lTimestamp);                                       \
         label_wait_for_res_until_entry_##__LINE__:                              \
                 (void)(ptTask);                                                 \
                 __VA_ARGS__;                                                    \
-                if ((__CONDITION)) {                                            \
+                if ((__CONDITION) || tCPTResult == fsm_rt_timeout) {            \
                     goto label_wait_for_res_until_exit_##__LINE__;              \
                 }                                                               \
                 PERFC_CPT_YIELD(fsm_rt_wait_for_res);                           \
                 goto label_wait_for_res_until_entry_##__LINE__;                 \
         label_wait_for_res_until_exit_##__LINE__:                               \
                 (void)(ptTask);                                                 \
-            }
+                tCPTResult;                                                     \
+            })
 
 #define PERFC_CPT_DELAY_MS(__ms, ...)                                           \
             {                                                                   \
