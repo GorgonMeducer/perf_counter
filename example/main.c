@@ -229,7 +229,7 @@ int main (void)
     cpt_example_led_flash_init(&s_tExampleCPT[1], s_dwStack1, sizeof(s_dwStack1));
 
     while (1) {
-#if 0
+
         __perf_counter_printf__("System Stack Remain: %"PRIu32 "\r\n", 
                         perfc_stack_remain((uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Base));
 
@@ -272,7 +272,7 @@ int main (void)
 
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
-#endif
+
         pt_example_led_flash(&s_tExamplePT);
     }
 }
