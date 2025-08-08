@@ -88,7 +88,6 @@ extern "C" {
 
 #endif
 
-
 #undef __IS_COMPILER_ARM_COMPILER__
 #if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__   \
 ||  defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__
@@ -104,6 +103,7 @@ extern "C" {
 #define __PLOOC_VA_NUM_ARGS(...)                                                \
             __PLOOC_VA_NUM_ARGS_IMPL( 0,##__VA_ARGS__,16,15,14,13,12,11,10,9,   \
                                       8,7,6,5,4,3,2,1,0)
+#endif
 
 #undef __COMPILER_HAS_GNU_EXTENSIONS__
 #if __PLOOC_VA_NUM_ARGS() == 0
@@ -120,8 +120,6 @@ extern "C" {
 #   define __IS_COMPILER_SUPPORT_C11__          1
 #endif
 
-
-#endif
 
 #if defined(__clang__)
 #   pragma clang diagnostic push
