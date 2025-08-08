@@ -72,15 +72,16 @@
                                        /    (double)__PERF_INFO__.dwNoInstr);   \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
                 __perf_counter_printf__( "\r\n"                                 \
-                        "[Report for " __str "]\r\n"                            \
+                        "[Report for %s]\r\n"                                   \
                         "-----------------------------------------\r\n"         \
-                        "Instruction executed: %lld\r\n"                        \
-                        "Cycle Used: %lld\r\n"                                  \
+                        "Instruction executed: %"PRIi64"\r\n"                   \
+                        "Cycle Used: %"PRIi64"\r\n"                             \
                         "Cycles per Instructions: %3.3f \r\n\r\n"               \
-                        "Memory Access Count: %lld\r\n"                         \
-                        "L1 DCache Refill Count: %lld\r\n"                      \
+                        "Memory Access Count: %"PRIi64"\r\n"                    \
+                        "L1 DCache Refill Count: %"PRIi64"\r\n"                 \
                         "L1 DCache Miss Rate: %3.4f %% \r\n"                    \
                         ,                                                       \
+                        (__str),                                                \
                         __PERF_INFO__.dwNoInstr,                                \
                         __PERF_INFO__.lCycles,                                  \
                         (double)__PERF_INFO__.fCPI,                             \
