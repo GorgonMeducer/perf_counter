@@ -241,7 +241,7 @@ __asm(".global __ensure_systick_wrapper\n\t");
                     __perf_counter_printf__(                                    \
                         "------------------------------------\r\n");            \
                     __perf_counter_printf__(                                    \
-                        "%s total cycle count: %"PRIi64" [%08"PRIX64"]\r\n",    \
+                        "%s total cycle count: %" PRIi64 " [%08" PRIX64 "]\r\n",\
                          (const char *)(__STR), (int64_t)_, (int64_t)_);        \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
