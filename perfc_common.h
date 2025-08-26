@@ -287,6 +287,9 @@ extern "C" {
             ALT_PERFC_CONNECT2( PERFC_CONNECT,                                  \
                                 __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
+#undef SAFE_NAME
+#undef PERFC_SAFE_NAME
+
 #define SAFE_NAME(__NAME)           PERFC_CONNECT3(__,__NAME,__LINE__)
 #define PERFC_SAFE_NAME(__name)     PERFC_CONNECT3(__,__name,__LINE__)
 
@@ -418,8 +421,8 @@ extern "C" {
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
                             "%s Stack Overflow!!!"                              \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Limit: [0x%08"PRIxPTR"]\r\n",               \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Limit: [0x%08" PRIxPTR "]\r\n",             \
                             (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
@@ -434,7 +437,7 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            "%s Stack Used: %"PRIuPTR " bytes\r\n",             \
+                            "%s Stack Used: %" PRIuPTR " bytes\r\n",            \
                             (const char *)(__STR),                              \
                             __stack_used__);                                    \
                     } else {                                                    \
@@ -471,8 +474,8 @@ extern "C" {
                     __perf_counter_printf__(                                    \
                             "\r\n-------------------------------------\r\n"     \
                             "%s Stack Overflow!!!"                              \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Limit: [0x%08"PRIxPTR"]\r\n",               \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Limit: [0x%08" PRIxPTR "]\r\n",             \
                             (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
@@ -490,7 +493,7 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            "%s Stack Used: %"PRIuPTR" bytes\r\n",              \
+                            "%s Stack Used: %" PRIuPTR " bytes\r\n",            \
                             (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(__stack_used__));                   \
                     }                                                           \
@@ -530,8 +533,8 @@ extern "C" {
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
                             __STR " Stack Overflow!!!"                          \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Base: [0x%08"PRIxPTR"]\r\n",                \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Base: [0x%08" PRIxPTR "]\r\n",              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
                     } else {                                                    \
@@ -545,7 +548,7 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR " Stack Used: %"PRIuPTR" bytes\r\n",          \
+                            __STR " Stack Used: %" PRIuPTR " bytes\r\n",        \
                             __stack_used__);                                    \
                     } else {                                                    \
                         __VA_ARGS__;                                            \
@@ -581,8 +584,8 @@ extern "C" {
                     __perf_counter_printf__(                                    \
                         "\r\n-------------------------------------\r\n"         \
                         __STR " Stack Overflow!!!"                              \
-                        " SP: [0x%08"PRIxPTR"]"                                 \
-                        " Stack Base: [0x%08"PRIxPTR"]\r\n",                    \
+                        " SP: [0x%08" PRIxPTR "]"                               \
+                        " Stack Base: [0x%08" PRIxPTR "]\r\n",                  \
                         PERFC_SAFE_NAME(nSP),                                   \
                         PERFC_SAFE_NAME(nStackLimit));                          \
                 }                                                               \
@@ -600,8 +603,8 @@ extern "C" {
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
                             __STR                                               \
-                            " Stack Used Max: %"PRIuPTR" bytes\r\n",             \
-                            PERFC_SAFE_NAME(__stack_used__));         \
+                            " Stack Used Max: %" PRIuPTR " bytes\r\n",          \
+                            PERFC_SAFE_NAME(__stack_used__));                   \
                     }                                                           \
                 }                                                               \
             }                                                                   \
