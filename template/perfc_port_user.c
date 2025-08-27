@@ -75,7 +75,7 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
             break;
         }
 
-        __IRQ_SAFE {
+        __PERFC_SAFE {
             /* Configure the system timer count with the longest possible period
              * clear counter 
              * Clear overflow pending flag

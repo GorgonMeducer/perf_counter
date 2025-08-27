@@ -140,6 +140,14 @@ extern "C" {
                     perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
 #endif
 
+
+#ifndef __PERFC_SAFE
+#   define __PERFC_SAFE                                                         \
+            perfc_using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =     \
+                        perfc_port_mask_systimer_interrupt(),                   \
+                    perfc_port_resume_systimer_interrupt(SAFE_NAME(temp)))
+#endif
+
 /* deprecated macro for backward compatibility */
 #define user_code_insert_to_systick_handler                                     \
             perfc_port_insert_to_system_timer_insert_ovf_handler

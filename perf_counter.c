@@ -117,12 +117,12 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
     /* prevent high priority exceptions from preempting the system timer OVF 
      * exception handling
      */
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         s_lSystemClockCounts += lLoad;
     }
 
     // update system ms counter
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         int64_t lTemp = s_wMSResidule + lLoad;
 
         int64_t lMS = lTemp / s_wMSUnit;
@@ -132,7 +132,7 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
     }
 
     // update system us counter
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         int64_t lTemp = s_wUSResidule + lLoad;
 
         int64_t lUS = lTemp / s_wUSUnit;
@@ -160,7 +160,7 @@ void update_perf_counter(void)
     s_wUSUnit = wSystemFrequency / 1000000ul;
     s_wMSUnit = wSystemFrequency / 1000ul;
     
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         g_lLastTimeStamp = get_system_ticks();
         __perfc_sync_barrier__();
         g_nOffset = get_system_ticks() - g_lLastTimeStamp;
@@ -170,7 +170,7 @@ void update_perf_counter(void)
 bool perfc_init(bool bIsSysTimerOccupied)
 {
     bool bResult = false;
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         s_bIsSysTimerOccupied = bIsSysTimerOccupied;
         bResult = perfc_port_init_system_timer(bIsSysTimerOccupied);            // use the longest period
         perfc_port_clear_system_timer_ovf_pending();
@@ -238,7 +238,7 @@ __STATIC_INLINE int64_t check_systick(void)
 
 void before_cycle_counter_reconfiguration(void)
 {
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         perfc_port_stop_system_timer_counting();
 
         if (perfc_port_is_system_timer_ovf_pending()) {                         
@@ -339,7 +339,7 @@ int64_t get_system_ticks(void)
 {
     int64_t lTemp = 0;
 
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         lTemp = check_systick() + s_lSystemClockCounts;
         
         /* When calling get_system_ticks() in an exception handler that has a  
@@ -395,7 +395,7 @@ int64_t get_system_ms(void)
 {
     int64_t lTemp = 0;
 
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         lTemp = s_lSystemMS 
               + (   (check_systick() 
                 +   (int64_t)s_wMSResidule) / s_wMSUnit);
@@ -414,7 +414,7 @@ int64_t get_system_us(void)
 {
     int64_t lTemp = 0;
 
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         lTemp = s_lSystemUS 
               + (   (check_systick() 
                 +   (int64_t)s_wUSResidule) / s_wUSUnit);
@@ -656,7 +656,7 @@ bool enable_task_cycle_info(task_cycle_info_t *ptInfo)
         return false;
     }
     bool bOrig;
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         bOrig = ptInfo->bEnabled;
         ptInfo->bEnabled = true;
     }
@@ -669,7 +669,7 @@ bool disable_task_cycle_info(task_cycle_info_t *ptInfo)
         return false;
     }
     bool bOrig;
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         bOrig = ptInfo->bEnabled;
         ptInfo->bEnabled = false;
     }
@@ -689,7 +689,7 @@ void resume_task_cycle_info(task_cycle_info_t *ptInfo, bool bEnabledStatus)
 task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
                                              task_cycle_info_agent_t *ptAgent)
 {
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         do {
             if (NULL == ptAgent || NULL == ptInfo) {
                 break;
@@ -727,7 +727,7 @@ task_cycle_info_agent_t *register_task_cycle_agent(task_cycle_info_t *ptInfo,
 task_cycle_info_agent_t *
 unregister_task_cycle_agent(task_cycle_info_agent_t *ptAgent)
 {
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         do {
             if (NULL == ptAgent) {
                 break;
@@ -814,7 +814,7 @@ void __start_task_cycle_counter(task_cycle_info_t *ptInfo)
         return ;
     }
 
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         ptRootAgent->lLastTimeStamp = get_system_ticks();
         ptRootAgent->tInfo.lUsedTotal = 0;
 
@@ -836,7 +836,7 @@ int64_t __stop_task_cycle_counter(task_cycle_info_t *ptInfo)
 
     int64_t lCycles = 0;
 
-    __IRQ_SAFE {
+    __PERFC_SAFE {
         int64_t lCycleUsed = get_system_ticks() - ptRootAgent->lLastTimeStamp - g_nOffset;
         ptRootAgent->tInfo.lUsedTotal += lCycleUsed;
 

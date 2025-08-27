@@ -106,6 +106,10 @@ typedef uint32_t perfc_global_interrupt_status_t;
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
 
+#ifndef __PERFC_SYSTIMER_PRIORITY__
+#   define __PERFC_SYSTIMER_PRIORITY__      0
+#endif
+
 __STATIC_INLINE 
 perfc_global_interrupt_status_t perfc_port_disable_global_interrupt(void)
 {
@@ -119,6 +123,40 @@ __STATIC_INLINE
 void perfc_port_resume_global_interrupt(perfc_global_interrupt_status_t tStatus)
 {
     __set_PRIMASK(tStatus);
+}
+
+__STATIC_INLINE 
+perfc_global_interrupt_status_t perfc_port_mask_systimer_interrupt(void)
+{
+#if (defined(__ARM_ARCH) && __ARM_ARCH == 6 && __ARM_ARCH_PROFILE == 'M') || __PERFC_SYSTIMER_PRIORITY__ == 0
+    perfc_global_interrupt_status_t tStatus = __get_PRIMASK();
+    __disable_irq();
+    
+    return tStatus;
+#elif __ARM_ARCH_PROFILE == 'M'
+    perfc_global_interrupt_status_t tStatus = __get_BASEPRI();
+    __set_BASEPRI_MAX(__PERFC_SYSTIMER_PRIORITY__);
+    
+    return tStatus;
+
+#else
+    /* this should not happen */
+    return 0;
+#endif
+}
+
+__STATIC_INLINE 
+void perfc_port_resume_systimer_interrupt(perfc_global_interrupt_status_t tStatus)
+{
+#if (defined(__ARM_ARCH) && __ARM_ARCH == 6 && __ARM_ARCH_PROFILE == 'M') || __PERFC_SYSTIMER_PRIORITY__ == 0
+    __set_PRIMASK(tStatus);
+#elif __ARM_ARCH_PROFILE == 'M'
+    __set_BASEPRI(tStatus);
+#else
+    /* this should not happen */
+    return 0;
+#endif
+    
 }
 
 

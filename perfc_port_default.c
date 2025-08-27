@@ -167,7 +167,7 @@ bool perfc_port_init_system_timer(bool bTimerOccupied)
             break;
         }
 
-        __IRQ_SAFE {
+        __PERFC_SAFE {
             SysTick->CTRL  = 0;
 
             SysTick->LOAD  = SysTick_LOAD_RELOAD_Msk;                               /* set reload register */
