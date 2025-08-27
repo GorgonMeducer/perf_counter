@@ -247,6 +247,10 @@ extern "C" {
 #undef PERFC_CONNECT7
 #undef PERFC_CONNECT8
 #undef PERFC_CONNECT9
+#undef ALT_PERFC_CONNECT2
+
+#undef SAFE_NAME
+#undef PERFC_SAFE_NAME
 
 #undef PERFC_CONNECT
 
@@ -266,6 +270,7 @@ extern "C" {
                                     __A##__B##__C##__D##__E##__F##__G##__H
 #define __PERFC_CONNECT9(__A, __B, __C, __D, __E, __F, __G, __H, __I)           \
                                     __A##__B##__C##__D##__E##__F##__G##__H##__I
+
 
 #define ALT_PERFC_CONNECT2(__A, __B)        __PERFC_CONNECT2(__A, __B)
 #define PERFC_CONNECT2(__A, __B)            __PERFC_CONNECT2(__A, __B)
@@ -287,8 +292,7 @@ extern "C" {
             ALT_PERFC_CONNECT2( PERFC_CONNECT,                                  \
                                 __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
 
-#undef SAFE_NAME
-#undef PERFC_SAFE_NAME
+
 
 #define SAFE_NAME(__NAME)           PERFC_CONNECT3(__,__NAME,__LINE__)
 #define PERFC_SAFE_NAME(__name)     PERFC_CONNECT3(__,__name,__LINE__)
@@ -395,6 +399,8 @@ extern "C" {
                         |   ((uint64_t)__PERFC_STACK_WATERMARK_U32__ << 32)     \
                         ))
 
+#undef __stack_usage__
+#undef __stack_usage_max__
 #ifdef __PERFC_STACK_GROWS_UPWARD__
 /*!
  * \brief measure the stack usage of the given code segement

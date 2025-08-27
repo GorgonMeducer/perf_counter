@@ -131,7 +131,7 @@ typedef struct
   __IOM uint32_t AIRCR;                  /*!< Offset: 0x00C (R/W)  Application Interrupt and Reset Control Register */
   __IOM uint32_t SCR;                    /*!< Offset: 0x010 (R/W)  System Control Register */
   __IOM uint32_t CCR;                    /*!< Offset: 0x014 (R/W)  Configuration Control Register */
-  __IOM uint8_t  SHP[12U];               /*!< Offset: 0x018 (R/W)  System Handlers Priority Registers (4-7, 8-11, 12-15) */
+  __IOM uint8_t  SHPR[12U];              /*!< Offset: 0x018 (R/W)  System Handlers Priority Registers (4-7, 8-11, 12-15) */
   __IOM uint32_t SHCSR;                  /*!< Offset: 0x024 (R/W)  System Handler Control and State Register */
   __IOM uint32_t CFSR;                   /*!< Offset: 0x028 (R/W)  Configurable Fault Status Register */
   __IOM uint32_t HFSR;                   /*!< Offset: 0x02C (R/W)  HardFault Status Register */
@@ -171,12 +171,12 @@ bool perfc_port_init_system_timer(bool bTimerOccupied)
             SysTick->CTRL  = 0;
 
             SysTick->LOAD  = SysTick_LOAD_RELOAD_Msk;                               /* set reload register */
-            //NVIC_SetPriority (SysTick_IRQn, (1UL << __NVIC_PRIO_BITS) - 1UL);     /* set Priority for Systick Interrupt */
+            SCB->SHPR[(((uint32_t)-1) & 0xFUL)-4UL] = __PERFC_SYSTIMER_PRIORITY__;  /* set priority */
             SysTick->VAL   = 0UL;                                                   /* Load the SysTick Counter Value */
             SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
                                SysTick_CTRL_TICKINT_Msk   |
                                SysTick_CTRL_ENABLE_Msk;                             /* Enable SysTick IRQ and SysTick Timer */
-            //SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
+            SCB->ICSR      = SCB_ICSR_PENDSTCLR_Msk;
         }
     } while(0);
     
