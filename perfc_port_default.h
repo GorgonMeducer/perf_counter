@@ -98,6 +98,10 @@ void __ISR_NAME(void)
 
 #define ISR(__ISR_NAME, __STACK_SIZE_HINT)  __ISR(__ISR_NAME, __STACK_SIZE_HINT)
 
+#ifndef __PERFC_SYSTIMER_PRIORITY__
+#   define __PERFC_SYSTIMER_PRIORITY__      0
+#endif
+
 /*============================ TYPES =========================================*/
 typedef uint32_t perfc_global_interrupt_status_t;
 
@@ -105,10 +109,6 @@ typedef uint32_t perfc_global_interrupt_status_t;
 /*============================ LOCAL VARIABLES ===============================*/
 /*============================ PROTOTYPES ====================================*/
 /*============================ IMPLEMENTATION ================================*/
-
-#ifndef __PERFC_SYSTIMER_PRIORITY__
-#   define __PERFC_SYSTIMER_PRIORITY__      0
-#endif
 
 __STATIC_INLINE 
 perfc_global_interrupt_status_t perfc_port_disable_global_interrupt(void)
