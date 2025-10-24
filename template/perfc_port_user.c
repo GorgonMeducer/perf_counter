@@ -66,6 +66,14 @@ void perfc_port_clear_system_timer_counter(void);
 /*============================ IMPLEMENTATION ================================*/
 
 #if __PERFC_USE_USER_CUSTOM_PORTING__
+
+
+/*
+ * IMPORTANT: Please implement a timer interrupt service routine (ISR) here,
+ *            and call function inside the ISR:
+ *            perfc_port_insert_to_system_timer_insert_ovf_handler()
+ */
+
  
 bool perfc_port_init_system_timer(bool bIsTimeOccupied)
 {
@@ -80,6 +88,7 @@ bool perfc_port_init_system_timer(bool bIsTimeOccupied)
              * clear counter 
              * Clear overflow pending flag
              * Enable interrupt if required
+             * NOTE: Please set timer interrupt priority as __PERFC_SYSTIMER_PRIORITY__
              * start counting
              */
         }
