@@ -23,8 +23,9 @@
 
 #include "pt_example.h"
 #include "cpt_example.h"
+#include "RTE_Components.h"
 
-#include "ARMCM4.h"
+#include CMSIS_device_header
 
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>

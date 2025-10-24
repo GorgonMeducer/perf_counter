@@ -169,9 +169,8 @@ bool perfc_port_init_system_timer(bool bTimerOccupied)
 
         __PERFC_SAFE {
             SysTick->CTRL  = 0;
-
             SysTick->LOAD  = SysTick_LOAD_RELOAD_Msk;                               /* set reload register */
-            SCB->SHPR[(((uint32_t)-1) & 0xFUL)-4UL] = __PERFC_SYSTIMER_PRIORITY__;  /* set priority */
+            SCB->SHPR[11]  = __PERFC_SYSTIMER_PRIORITY__;                           /* set priority */
             SysTick->VAL   = 0UL;                                                   /* Load the SysTick Counter Value */
             SysTick->CTRL  =   SysTick_CTRL_CLKSOURCE_Msk |
                                SysTick_CTRL_TICKINT_Msk   |

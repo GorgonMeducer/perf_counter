@@ -128,7 +128,7 @@ void perfc_port_resume_global_interrupt(perfc_global_interrupt_status_t tStatus)
 __STATIC_INLINE 
 perfc_global_interrupt_status_t perfc_port_mask_systimer_interrupt(void)
 {
-#if (defined(__ARM_ARCH) && __ARM_ARCH == 6 && __ARM_ARCH_PROFILE == 'M') || __PERFC_SYSTIMER_PRIORITY__ == 0
+#if (defined(__ARM_ARCH) && __ARM_ARCH_PROFILE == 'M' && (__ARM_ARCH_ISA_THUMB < 2)) ||  __PERFC_SYSTIMER_PRIORITY__ == 0
     perfc_global_interrupt_status_t tStatus = __get_PRIMASK();
     __disable_irq();
     
@@ -148,7 +148,7 @@ perfc_global_interrupt_status_t perfc_port_mask_systimer_interrupt(void)
 __STATIC_INLINE 
 void perfc_port_resume_systimer_interrupt(perfc_global_interrupt_status_t tStatus)
 {
-#if (defined(__ARM_ARCH) && __ARM_ARCH == 6 && __ARM_ARCH_PROFILE == 'M') || __PERFC_SYSTIMER_PRIORITY__ == 0
+#if (defined(__ARM_ARCH) && __ARM_ARCH_PROFILE == 'M' && (__ARM_ARCH_ISA_THUMB < 2)) ||  __PERFC_SYSTIMER_PRIORITY__ == 0
     __set_PRIMASK(tStatus);
 #elif __ARM_ARCH_PROFILE == 'M'
     __set_BASEPRI(tStatus);
