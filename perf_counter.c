@@ -36,6 +36,7 @@
 #   pragma clang diagnostic ignored "-Wconditional-uninitialized"
 #   pragma clang diagnostic ignored "-Wcast-align"
 #   pragma clang diagnostic ignored "-Wmissing-prototypes"
+#   pragma clang diagnostic ignored "-Wunused-function"
 #endif
 
 
@@ -61,6 +62,17 @@ struct __task_cycle_info_t {
     uint32_t                wMagicWord;        //!< an magic word for validation
 } ;
 
+typedef int32_t q16_t;
+
+/**
+* @brief 64-bit fractional data type in 1.63 format.
+*/
+typedef int64_t q63_t;
+
+/**
+* @brief 32-bit fractional data type in 1.31 format.
+*/
+typedef int32_t q31_t;
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -118,6 +130,117 @@ extern
 void perfc_port_clear_system_timer_counter(void);
 
 /*============================ IMPLEMENTATION ================================*/
+
+
+__STATIC_INLINE 
+q16_t
+reinterpret_q16_s16(int16_t iIn0)
+{
+    return ((q16_t)(iIn0) << 16);
+}
+
+__STATIC_INLINE 
+int16_t
+reinterpret_s16_q16(q16_t q16In0)
+{
+    return (int16_t)((q16_t)(q16In0) >> 16);
+}
+
+__STATIC_INLINE 
+q16_t
+reinterpret_q16_f32(float fIn0)
+{
+    return ((q16_t)((fIn0) * 65536.0f + ((fIn0) >= 0 ? 0.5f : -0.5f)));
+}
+
+__STATIC_INLINE 
+float
+reinterpret_f32_q16(q16_t q16In0)
+{
+    return ((float)(q16In0) / 65536.0f);
+}
+
+__STATIC_INLINE 
+q16_t
+mul_q16(q16_t q16In0, q16_t q16In1)
+{
+    return (q16_t)((((int64_t)(q16In0)) * ((int64_t)(q16In1))) >> 16);
+}
+
+__STATIC_INLINE 
+q16_t
+mul_n_q16(q16_t q16In0, int32_t nIn1)
+{
+    return q16In0 * nIn1;
+}
+
+__STATIC_INLINE 
+q16_t
+mul_f_q16(q16_t q16In0, float fIn1)
+{
+    return mul_q16(q16In0, reinterpret_q16_f32(fIn1));
+}
+
+__STATIC_INLINE 
+q16_t
+div_q16(q16_t q16In0, q16_t q16In1)
+{
+    if (0 == q16In1) {
+        return 0;
+    }
+
+    int64_t lTemp = ((int64_t)q16In0 << 16);
+    return (q16_t)(lTemp / q16In1);
+}
+
+__STATIC_INLINE 
+q16_t
+div_n_q16(q16_t q16In0, int32_t nIn1)
+{
+    if (0 == nIn1) {
+        return 0;
+    }
+    return (q16_t)(q16In0 / nIn1);
+}
+
+__STATIC_INLINE 
+q16_t
+div_f_q16(q16_t q16In0, float fIn1)
+{
+    return div_q16(q16In0, reinterpret_q16_f32(fIn1));
+}
+
+__STATIC_INLINE 
+q16_t
+abs_q16(q16_t q16In0)
+{
+    return (q16In0 < 0) ? -q16In0 : q16In0;
+}
+
+/**
+   * @brief Clips Q63 to Q31 values.
+   */
+__STATIC_FORCEINLINE q31_t clip_q63_to_q31(
+q63_t x)
+{
+return ((q31_t) (x >> 32) != ((q31_t) x >> 31)) ?
+  ((0x7FFFFFFF ^ ((q31_t) (x >> 63)))) : (q31_t) x;
+}
+
+__STATIC_INLINE
+q16_t
+qadd_q16(q16_t q16In0, q16_t q16In1) 
+{
+    return ((q16_t)(clip_q63_to_q31((q63_t)q16In0 + (q63_t)q16In1)));
+}
+
+__STATIC_INLINE
+q16_t
+qsub_q16(q16_t q16In0, q16_t q16In1) 
+{
+    return ((q16_t)(clip_q63_to_q31((q63_t)q16In0 - (q63_t)q16In1)));
+}
+
 
 void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 {
