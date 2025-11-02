@@ -55,7 +55,8 @@
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
-#define INT_TO_Q16(__INT)       ((__INT) >> 16)
+#define INT_TO_Q16(__INT)       ((__INT) << 16)
+#define Q16_TO_INT(__Q16)       ((__Q16) >> 16)
 
 /*============================ TYPES =========================================*/
 
@@ -92,10 +93,14 @@ volatile static struct {
     /* microsecond */
     struct {
         uint32_t    wResidule;
+    #if defined(__PERFC_NO_Q16__)
         uint32_t    wUnit;
+    #else
+        q16_t       q16Unit;
+    #endif
 
         struct {
-            uint32_t    wCompenstation;
+            uint32_t    lCompensation;
             uint32_t    wResidule;
         } Overflow;
 
@@ -108,7 +113,7 @@ volatile static struct {
         uint32_t    wResidule;
         uint32_t    wUnit;
         struct {
-            uint32_t    wCompenstation;
+            uint32_t    lCompensation;
             uint32_t    wResidule;
         } Overflow;
         int64_t     lTimestampBase;
@@ -280,17 +285,39 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
         PERFC.Ticks.lTimestampBase += lLoad;
     }
 
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
     // update system ms counter
     __PERFC_SAFE {
-        PERFC.MS.lTimestampBase += PERFC.MS.Overflow.wCompenstation;
-        PERFC.MS.wResidule += PERFC.MS.Overflow.wResidule;
+        PERFC.MS.lTimestampBase += PERFC.MS.Overflow.lCompensation;
+        
+        uint32_t wResidule = PERFC.MS.wResidule + PERFC.MS.Overflow.wResidule;
+
+        if (__UINT32_MAX__ - wResidule <= PERFC.MS.Overflow.wResidule) {
+            int64_t lMSCompen = perfc_convert_ticks_to_ms(wResidule);
+            PERFC.MS.wResidule = (int64_t)wResidule - perfc_convert_ms_to_ticks(lMSCompen);
+            
+            PERFC.MS.lTimestampBase += lMSCompen;
+        } else {
+            PERFC.MS.wResidule = wResidule;
+        }
     }
 
     // update system us counter
     __PERFC_SAFE {
-        PERFC.US.lTimestampBase += PERFC.US.Overflow.wCompenstation;
-        PERFC.US.wResidule += PERFC.US.Overflow.wResidule;
+        PERFC.US.lTimestampBase += PERFC.US.Overflow.lCompensation;
+        
+        uint32_t wResidule = PERFC.US.wResidule + PERFC.US.Overflow.wResidule;
+
+        if (__UINT32_MAX__ - wResidule <= PERFC.US.Overflow.wResidule) {
+            int64_t lUSCompen = perfc_convert_ticks_to_us(wResidule);
+            PERFC.US.wResidule = (int64_t)wResidule - perfc_convert_us_to_ticks(lUSCompen);
+            
+            PERFC.US.lTimestampBase += lUSCompen;
+        } else {
+            PERFC.US.wResidule = wResidule;
+        }
     }
+#endif
 }
 
 uint32_t perfc_get_systimer_frequency(void)
@@ -310,13 +337,23 @@ void update_perf_counter(void)
     int64_t lLoad = perfc_port_get_system_timer_top() + 1;
     uint32_t wSystemFrequency = perfc_port_get_system_timer_freq();
 
+#if defined(__PERFC_NO_Q16__)
     PERFC.US.wUnit = wSystemFrequency / 1000000ul;
-    PERFC.US.Overflow.wCompenstation = lLoad / PERFC.US.wUnit;
-    PERFC.US.Overflow.wResidule = lLoad % PERFC.US.wUnit;
+#else
+    PERFC.US.q16Unit = reinterpret_q16_f32( (float)wSystemFrequency 
+                                          / 1000000.0f);
+#endif
+
+    PERFC.US.Overflow.lCompensation = perfc_convert_ticks_to_us(lLoad);
+    PERFC.US.Overflow.wResidule = lLoad 
+                                - perfc_convert_us_to_ticks(
+                                            PERFC.US.Overflow.lCompensation);
 
     PERFC.MS.wUnit = wSystemFrequency / 1000ul;
-    PERFC.MS.Overflow.wCompenstation = lLoad / PERFC.MS.wUnit;
-    PERFC.MS.Overflow.wResidule = lLoad % PERFC.MS.wUnit;
+    PERFC.MS.Overflow.lCompensation = perfc_convert_ticks_to_ms(lLoad);
+    PERFC.MS.Overflow.wResidule = lLoad 
+                                - perfc_convert_ms_to_ticks(
+                                            PERFC.MS.Overflow.lCompensation);
 
     __PERFC_SAFE {
         g_nOffset = 0;
@@ -435,24 +472,25 @@ bool perfc_delay_us_user_code_in_loop(int64_t lRemainInUs)
 
 void perfc_delay_us(uint32_t wUs)
 {
-    int64_t lUs = (int64_t)wUs * (int64_t)PERFC.US.wUnit;
+    int16_t lTicks = perfc_convert_us_to_ticks(wUs);
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
 
-    if (lUs <= iCompensate) {
+    if (lTicks <= iCompensate) {
         return ;
     }
 
-    lUs -= iCompensate;
+    lTicks -= iCompensate;
 
-    lUs += get_system_ticks();
+    lTicks += get_system_ticks();
     do {
         int64_t lTimestamp = get_system_ticks();
-        if (lTimestamp >= lUs) {
+        if (lTimestamp >= lTicks) {
             break;
         }
-        if (!perfc_delay_us_user_code_in_loop( perfc_convert_ticks_to_us(lUs - lTimestamp) )) {
+        if (!perfc_delay_us_user_code_in_loop( 
+                perfc_convert_ticks_to_us(lTicks - lTimestamp) )) {
             break;
         }
     } while(1);
@@ -473,24 +511,25 @@ void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine)
 void perfc_delay_ms(uint32_t wMs)
 #endif
 {
-    int64_t lMs = (int64_t)wMs * (int64_t)PERFC.MS.wUnit;
+    int64_t lTicks = perfc_convert_ms_to_ticks(wMs);
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
 
-    if (lMs <= iCompensate) {
+    if (lTicks <= iCompensate) {
         return ;
     }
 
-    lMs -= iCompensate;
+    lTicks -= iCompensate;
 
-    lMs += get_system_ticks();
+    lTicks += get_system_ticks();
     do {
         int64_t lTimestamp = get_system_ticks();
-        if (lTimestamp >= lMs) {
+        if (lTimestamp >= lTicks) {
             break;
         }
-        if (!perfc_delay_ms_user_code_in_loop( perfc_convert_ticks_to_ms(lMs - lTimestamp) )) {
+        if (!perfc_delay_ms_user_code_in_loop(
+                perfc_convert_ticks_to_ms(lTicks - lTimestamp) )) {
             break;
         }
 #if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
@@ -556,14 +595,50 @@ int64_t clock(void)
     return get_system_ticks();
 }
 
+int64_t perfc_convert_ticks_to_ms(int64_t lTick)
+{
+    return lTick / (int64_t)PERFC.MS.wUnit;
+}
+
+int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
+{
+    return (int64_t)PERFC.MS.wUnit * (int64_t)wMS;
+}
+
+#if defined(__PERFC_NO_Q16__)
+int64_t perfc_convert_ticks_to_us(int64_t lTick)
+{
+    return lTick / (int64_t)PERFC.US.wUnit;
+}
+
+int64_t perfc_convert_us_to_ticks(uint32_t wUS)
+{
+    return (int64_t)PERFC.US.wUnit * (int64_t)wUS;
+}
+#else
+
+int64_t perfc_convert_ticks_to_us(int64_t lTick)
+{
+    return INT_TO_Q16(lTick) / PERFC.US.q16Unit;
+}
+
+int64_t perfc_convert_us_to_ticks(uint32_t wUS)
+{
+    return Q16_TO_INT((int64_t)wUS * (int64_t)PERFC.US.q16Unit);
+}
+
+#endif
+
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
 int64_t get_system_ms(void)
 {
     int64_t lTemp = 0;
 
     __PERFC_SAFE {
+
         lTemp = PERFC.MS.lTimestampBase 
-              + (   (check_systick() 
-                +   (int64_t)PERFC.MS.wResidule) / PERFC.MS.wUnit);
+              + perfc_convert_ticks_to_ms(   check_systick() 
+                                         +   (int64_t)PERFC.MS.wResidule);
 
         if (lTemp < PERFC.MS.lOldTimestamp) {
             lTemp = PERFC.MS.lOldTimestamp;
@@ -580,42 +655,21 @@ int64_t get_system_us(void)
     int64_t lTemp = 0;
 
     __PERFC_SAFE {
+
         lTemp = PERFC.US.lTimestampBase 
-              + (   (check_systick() 
-                +   (int64_t)PERFC.US.wResidule) / PERFC.US.wUnit);
+              + perfc_convert_ticks_to_us(  check_systick() 
+                                         +  (int64_t)PERFC.US.wResidule);
 
         if (lTemp < PERFC.US.lOldTimestamp) {
             lTemp = PERFC.US.lOldTimestamp;
         } else {
             PERFC.US.lOldTimestamp = lTemp;
         }
-
     }
 
     return lTemp;
 }
-
-int64_t perfc_convert_ticks_to_ms(int64_t lTick)
-{
-    return lTick / (int64_t)PERFC.MS.wUnit;
-}
-
-int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
-{
-    int64_t lResult = (int64_t)PERFC.MS.wUnit * (int64_t)wMS;
-    return lResult ? lResult : 1;
-}
-
-int64_t perfc_convert_ticks_to_us(int64_t lTick)
-{
-    return lTick / (int64_t)PERFC.US.wUnit;
-}
-
-int64_t perfc_convert_us_to_ticks(uint32_t wMS)
-{
-    int64_t lResult = (int64_t)PERFC.US.wUnit * (int64_t)wMS;
-    return lResult ? lResult : 1;
-}
+#endif
 
 
 bool __perfc_is_time_out(int64_t lPeriod, int64_t *plTimestamp, bool bAutoReload)

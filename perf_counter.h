@@ -574,40 +574,6 @@ int64_t stop_cycle_counter(void)
  */
 
 /*!
- * \brief get the system timer frequency
- * \return uint32_t the system timer frequency in Hz
- */
-extern uint32_t perfc_get_systimer_frequency(void);
-
-/*!
- * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int64_t the elapsed milliseconds
- */
-extern int64_t get_system_ms(void);
-
-/*!
- * \brief get the elapsed microsecond since perf_counter is initialised
- * \return int64_t the elapsed microsecond
- */
-extern int64_t get_system_us(void);
-
-/*!
- * \brief delay specified time in microsecond
- * \param[in] wUs time in microsecond
- */
-extern void perfc_delay_us(uint32_t wUs);
-
-/*!
- * \brief delay specified time in millisecond
- * \param[in] wMs time in millisecond
- */
-#if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
-extern void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine);
-#else
-extern void perfc_delay_ms(uint32_t wMs);
-#endif
-
-/*!
  * \brief convert ticks of a reference timer to millisecond
  *
  * \param[in] lTick the tick count
@@ -642,6 +608,66 @@ int64_t perfc_convert_ticks_to_us(int64_t lTick);
  */
 extern
 int64_t perfc_convert_us_to_ticks(uint32_t wUS);
+
+/*!
+ * \brief get the system timer frequency
+ * \return uint32_t the system timer frequency in Hz
+ */
+extern uint32_t perfc_get_systimer_frequency(void);
+
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int64_t the elapsed milliseconds
+ */
+extern int64_t get_system_ms(void);
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int64_t the elapsed microsecond
+ */
+extern int64_t get_system_us(void);
+#else
+
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int64_t the elapsed milliseconds
+ */
+__STATIC_INLINE 
+int64_t get_system_ms(void)
+{
+    return perfc_convert_ticks_to_ms(get_system_ticks());
+}
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int64_t the elapsed microsecond
+ */
+__STATIC_INLINE 
+int64_t get_system_us(void)
+{
+    return perfc_convert_ticks_to_us(get_system_ticks());
+}
+
+#endif
+
+/*!
+ * \brief delay specified time in microsecond
+ * \param[in] wUs time in microsecond
+ */
+extern void perfc_delay_us(uint32_t wUs);
+
+/*!
+ * \brief delay specified time in millisecond
+ * \param[in] wMs time in millisecond
+ */
+#if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
+extern void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine);
+#else
+extern void perfc_delay_ms(uint32_t wMs);
+#endif
+
+
 
 /*!
  * \brief set an alarm with given period and check the status

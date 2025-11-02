@@ -246,9 +246,11 @@ int main (void)
             __perf_counter_printf__("\r[%010"PRIi64"]\r\n", get_system_ticks());
         }
 
+#if 0
         __cpu_usage__(10) {
             perfc_delay_us(30000);
         }
+
 
         //__stack_usage__("LED", nStackLimit) {
         __stack_usage_max__("LED", nStackLimit) {
@@ -274,9 +276,9 @@ int main (void)
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 
         pt_example_led_flash(&s_tExamplePT);
-        
-        __perf_counter_printf__("us:[%lld] \tms:[%lld]\r\n", 
-                                get_system_us(), 
-                                get_system_ms());
+#endif
+        __perf_counter_printf__("ms:[%lld] \tus:[%lld]\r\n", 
+                                get_system_ms(), 
+                                get_system_us());
     }
 }
