@@ -65,21 +65,30 @@ struct __task_cycle_info_t {
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
 
-volatile static int64_t s_lOldTimestamp;
-volatile static int64_t s_lOldTimestampUS;
-volatile static int64_t s_lOldTimestampMS;
-volatile static uint32_t s_wUSUnit = 1;
-volatile static uint32_t s_wMSUnit = 1;
-volatile static uint32_t s_wMSResidule = 0;
-volatile static uint32_t s_wUSResidule = 0;
-volatile static int64_t s_lSystemMS = 0;
-volatile static int64_t s_lSystemUS = 0;
+volatile static struct {
+    struct {
+        int64_t lTimestampBase;
+        int64_t lOldTimestamp;
+    } Ticks;
+    struct {
+        uint32_t    wResidule;
+        uint32_t    wUnit;
+        int64_t     lTimestampBase;
+        int64_t     lOldTimestamp;
+    } US;
+    struct {
+        uint32_t    wResidule;
+        uint32_t    wUnit;
+        int64_t     lTimestampBase;
+        int64_t     lOldTimestamp;
+    } MS;
+    bool    bIsSysTimerOccupied;
+}PERFC = {0};
 
-volatile static int64_t s_lSystemClockCounts = 0;
+//volatile static int64_t s_lSystemClockCounts = 0;
 
 volatile int32_t g_nOffset = 0;
 volatile int64_t g_lLastTimeStamp = 0;
-volatile static bool s_bIsSysTimerOccupied = true;
 
 /*============================ PROTOTYPES ====================================*/
 
@@ -118,27 +127,31 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
      * exception handling
      */
     __PERFC_SAFE {
-        s_lSystemClockCounts += lLoad;
+        PERFC.Ticks.lTimestampBase += lLoad;
     }
 
     // update system ms counter
     __PERFC_SAFE {
-        int64_t lTemp = s_wMSResidule + lLoad;
+        int64_t lTemp = PERFC.MS.wResidule + lLoad;
 
-        int64_t lMS = lTemp / s_wMSUnit;
-        s_lSystemMS += lMS;
+        int64_t lMS = lTemp / PERFC.MS.wUnit;
+        
+        PERFC.MS.lTimestampBase += lMS;
 
-        s_wMSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lMS * s_wMSUnit);
+        PERFC.MS.wResidule = (uint32_t)(    (int64_t)lTemp 
+                                       -    (int64_t)lMS * PERFC.MS.wUnit);
     }
 
     // update system us counter
     __PERFC_SAFE {
-        int64_t lTemp = s_wUSResidule + lLoad;
+        int64_t lTemp = PERFC.US.wResidule + lLoad;
 
-        int64_t lUS = lTemp / s_wUSUnit;
-        s_lSystemUS += lUS;
+        int64_t lUS = lTemp / PERFC.US.wUnit;
+        
+        PERFC.US.lTimestampBase += lUS;
 
-        s_wUSResidule = (uint32_t)((int64_t)lTemp - (int64_t)lUS * s_wUSUnit);
+        PERFC.US.wResidule = (uint32_t)(    (int64_t)lTemp 
+                                       -    (int64_t)lUS * PERFC.US.wUnit);
     }
 }
 
@@ -157,8 +170,8 @@ void __perf_os_patch_init(void)
 void update_perf_counter(void)
 {
     uint32_t wSystemFrequency = perfc_port_get_system_timer_freq();
-    s_wUSUnit = wSystemFrequency / 1000000ul;
-    s_wMSUnit = wSystemFrequency / 1000ul;
+    PERFC.US.wUnit = wSystemFrequency / 1000000ul;
+    PERFC.MS.wUnit = wSystemFrequency / 1000ul;
     
     __PERFC_SAFE {
         g_lLastTimeStamp = get_system_ticks();
@@ -171,18 +184,20 @@ bool perfc_init(bool bIsSysTimerOccupied)
 {
     bool bResult = false;
     __PERFC_SAFE {
-        s_bIsSysTimerOccupied = bIsSysTimerOccupied;
+        PERFC.bIsSysTimerOccupied = bIsSysTimerOccupied;
         bResult = perfc_port_init_system_timer(bIsSysTimerOccupied);            // use the longest period
         perfc_port_clear_system_timer_ovf_pending();
     }
     
     update_perf_counter();
-    s_lSystemClockCounts = 0;                       // reset system cycle counter
-    s_lSystemMS = 0;                                // reset system millisecond counter
-    s_lSystemUS = 0;                                // reset system microsecond counter
-    s_lOldTimestamp = 0;
-    s_lOldTimestampUS = 0;
-    s_lOldTimestampMS = 0;
+
+    PERFC.Ticks.lTimestampBase = 0;                                             // reset system cycle counter
+    PERFC.Ticks.lOldTimestamp = 0;
+
+    PERFC.MS.lTimestampBase = 0;                                                // reset system millisecond counter
+    PERFC.MS.lOldTimestamp = 0;
+    PERFC.US.lTimestampBase = 0;                                                // reset system microsecond counter
+    PERFC.US.lOldTimestamp = 0;
     
     __perf_os_patch_init();
     
@@ -207,7 +222,7 @@ __STATIC_INLINE int64_t check_systick(void)
      */
     if (perfc_port_is_system_timer_ovf_pending()){
     
-        if (s_bIsSysTimerOccupied) {
+        if (PERFC.bIsSysTimerOccupied) {
         
         #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
             perfc_port_clear_system_timer_ovf_pending();
@@ -247,7 +262,9 @@ void before_cycle_counter_reconfiguration(void)
             perfc_port_insert_to_system_timer_insert_ovf_handler();             /* manually handle exception */
 
         }
-        s_lSystemClockCounts = get_system_ticks();                              /* get the final cycle counter value */
+        PERFC.Ticks.lTimestampBase = get_system_ticks();                        /* get the final cycle counter value */
+        PERFC.US.lTimestampBase = get_system_us();                              /* get the final cycle counter value */
+        PERFC.MS.lTimestampBase = get_system_ms();                              /* get the final cycle counter value */
 
         perfc_port_clear_system_timer_counter();
     }
@@ -270,7 +287,7 @@ bool perfc_delay_us_user_code_in_loop(int64_t lRemainInUs)
 
 void perfc_delay_us(uint32_t wUs)
 {
-    int64_t lUs = (int64_t)wUs * (int64_t)s_wUSUnit;
+    int64_t lUs = (int64_t)wUs * (int64_t)PERFC.US.wUnit;
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
@@ -308,7 +325,7 @@ void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine)
 void perfc_delay_ms(uint32_t wMs)
 #endif
 {
-    int64_t lMs = (int64_t)wMs * (int64_t)s_wMSUnit;
+    int64_t lMs = (int64_t)wMs * (int64_t)PERFC.MS.wUnit;
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
@@ -340,7 +357,7 @@ int64_t get_system_ticks(void)
     int64_t lTemp = 0;
 
     __PERFC_SAFE {
-        lTemp = check_systick() + s_lSystemClockCounts;
+        lTemp = check_systick() + PERFC.Ticks.lTimestampBase;
         
         /* When calling get_system_ticks() in an exception handler that has a  
          * higher priority than the SysTick_Handler, in some rare cases, the 
@@ -351,10 +368,10 @@ int64_t get_system_ticks(void)
          * NOTE: the issue mentioned above doesn't accumulate or have long-lasting
          *       effects.
          */
-        if (lTemp < s_lOldTimestamp) {
-            lTemp = s_lOldTimestamp;
+        if (lTemp < PERFC.Ticks.lOldTimestamp) {
+            lTemp = PERFC.Ticks.lOldTimestamp;
         } else {
-            s_lOldTimestamp = lTemp;
+            PERFC.Ticks.lOldTimestamp = lTemp;
         }
     }
 
@@ -396,14 +413,14 @@ int64_t get_system_ms(void)
     int64_t lTemp = 0;
 
     __PERFC_SAFE {
-        lTemp = s_lSystemMS 
+        lTemp = PERFC.MS.lTimestampBase 
               + (   (check_systick() 
-                +   (int64_t)s_wMSResidule) / s_wMSUnit);
+                +   (int64_t)PERFC.MS.wResidule) / PERFC.MS.wUnit);
 
-        if (lTemp < s_lOldTimestampMS) {
-            lTemp = s_lOldTimestampMS;
+        if (lTemp < PERFC.MS.lOldTimestamp) {
+            lTemp = PERFC.MS.lOldTimestamp;
         } else {
-            s_lOldTimestampMS = lTemp;
+            PERFC.MS.lOldTimestamp = lTemp;
         }
     }
 
@@ -415,14 +432,14 @@ int64_t get_system_us(void)
     int64_t lTemp = 0;
 
     __PERFC_SAFE {
-        lTemp = s_lSystemUS 
+        lTemp = PERFC.US.lTimestampBase 
               + (   (check_systick() 
-                +   (int64_t)s_wUSResidule) / s_wUSUnit);
+                +   (int64_t)PERFC.US.wResidule) / PERFC.US.wUnit);
 
-        if (lTemp < s_lOldTimestampUS) {
-            lTemp = s_lOldTimestampUS;
+        if (lTemp < PERFC.US.lOldTimestamp) {
+            lTemp = PERFC.US.lOldTimestamp;
         } else {
-            s_lOldTimestampUS = lTemp;
+            PERFC.US.lOldTimestamp = lTemp;
         }
 
     }
@@ -432,23 +449,23 @@ int64_t get_system_us(void)
 
 int64_t perfc_convert_ticks_to_ms(int64_t lTick)
 {
-    return lTick / (int64_t)s_wMSUnit;
+    return lTick / (int64_t)PERFC.MS.wUnit;
 }
 
 int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
 {
-    int64_t lResult = (int64_t)s_wMSUnit * (int64_t)wMS;
+    int64_t lResult = (int64_t)PERFC.MS.wUnit * (int64_t)wMS;
     return lResult ? lResult : 1;
 }
 
 int64_t perfc_convert_ticks_to_us(int64_t lTick)
 {
-    return lTick / (int64_t)s_wUSUnit;
+    return lTick / (int64_t)PERFC.US.wUnit;
 }
 
 int64_t perfc_convert_us_to_ticks(uint32_t wMS)
 {
-    int64_t lResult = (int64_t)s_wUSUnit * (int64_t)wMS;
+    int64_t lResult = (int64_t)PERFC.US.wUnit * (int64_t)wMS;
     return lResult ? lResult : 1;
 }
 
