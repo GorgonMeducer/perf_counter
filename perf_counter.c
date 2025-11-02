@@ -340,6 +340,24 @@ bool perfc_init(bool bIsSysTimerOccupied)
     return bResult;
 }
 
+__STATIC_INLINE int64_t __check_and_handle_ovf(int64_t lTemp)
+{
+    __IRQ_SAFE {
+        if (perfc_port_is_system_timer_ovf_pending()){
+
+            perfc_port_clear_system_timer_ovf_pending();
+            perfc_port_insert_to_system_timer_insert_ovf_handler();
+
+            /* refresh the elapsed just in case the counter has just overflowed/underflowed
+             * after we called the perfc_port_get_system_timer_elapsed()
+             */
+            lTemp = perfc_port_get_system_timer_elapsed();
+        }
+    }
+    
+    return lTemp;
+}
+
 /*! \note this function should only be called when irq is disabled
  *        hence SysTick-LOAD and (SCB->ICSR & SCB_ICSR_PENDSTSET_Msk)
  *        won't change.
@@ -359,18 +377,7 @@ __STATIC_INLINE int64_t check_systick(void)
      if (PERFC.bIsSysTimerOccupied) {
      
      #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
-        __IRQ_SAFE {
-            if (perfc_port_is_system_timer_ovf_pending()){
-
-                perfc_port_clear_system_timer_ovf_pending();
-                perfc_port_insert_to_system_timer_insert_ovf_handler();
-
-                /* refresh the elapsed just in case the counter has just overflowed/underflowed
-                 * after we called the perfc_port_get_system_timer_elapsed()
-                 */
-                lTemp = perfc_port_get_system_timer_elapsed();
-            }
-        }
+        lTemp = __check_and_handle_ovf(lTemp);
      #else
         if (perfc_port_is_system_timer_ovf_pending()){
             lTemp = perfc_port_get_system_timer_elapsed();
@@ -378,17 +385,7 @@ __STATIC_INLINE int64_t check_systick(void)
         }
      #endif
      } else {
-         __IRQ_SAFE {
-            if (perfc_port_is_system_timer_ovf_pending()){
-                perfc_port_clear_system_timer_ovf_pending();
-                perfc_port_insert_to_system_timer_insert_ovf_handler();
-
-                /* refresh the elapsed just in case the counter has just overflowed/underflowed
-                 * after we called the perfc_port_get_system_timer_elapsed()
-                 */
-                lTemp = perfc_port_get_system_timer_elapsed();
-            }
-        }
+        lTemp = __check_and_handle_ovf(lTemp);
     }
 
     return lTemp;
