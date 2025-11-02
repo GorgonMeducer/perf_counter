@@ -30,7 +30,7 @@ extern "C" {
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 typedef struct {
-    uint8_t chState;
+    implement(perfc_pt_t);
     void *ptResource;
 } pt_led_flash_cb_t;
 

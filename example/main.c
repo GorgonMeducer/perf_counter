@@ -23,12 +23,17 @@
 
 #include "pt_example.h"
 #include "cpt_example.h"
+#include "RTE_Components.h"
+
+#include CMSIS_device_header
 
 #ifndef __PERF_CNT_USE_LONG_CLOCK__
 #include <time.h>
 #else
 typedef int64_t clock_t ;
 #endif
+
+extern uintptr_t Image$$ARM_LIB_STACK$$ZI$$Base[];
 
 extern void systimer_1ms_handler(void);
 
@@ -73,11 +78,11 @@ static example_lv0_t s_tItem[8] = {
 #endif
 uint32_t calculate_stack_usage_topdown(void)
 {
-    extern uint32_t Image$$ARM_LIB_STACK$$Limit[];
-    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Limit[];
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Length;
 
-    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Limit;
-    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length / 4;
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$ZI$$Limit;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length / 4;
     uint32_t wStackUsed = 0;
 
 
@@ -91,20 +96,20 @@ uint32_t calculate_stack_usage_topdown(void)
     
     printf("\r\nStack Usage: [%d/%d] %2.2f%%\r\n", 
             wStackUsed * 4, 
-            (uintptr_t)&Image$$ARM_LIB_STACK$$Length,
+            (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length,
             (   (float)wStackUsed * 400.0f 
-            /   (float)(uintptr_t)&Image$$ARM_LIB_STACK$$Length));
+            /   (float)(uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length));
 
     return wStackUsed * 4;
 }
 
 uint32_t calculate_stack_usage_bottomup(void)
 {
-    extern uint32_t Image$$ARM_LIB_STACK$$Base[];
-    extern uint32_t Image$$ARM_LIB_STACK$$Length;
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Length;
 
-    uint32_t *pwStack = Image$$ARM_LIB_STACK$$Base;
-    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$Length;
+    uint32_t *pwStack = Image$$ARM_LIB_STACK$$ZI$$Base;
+    uint32_t wStackSize = (uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Length;
     uint32_t wStackUsed = wStackSize / 4;
 
     do {
@@ -144,8 +149,16 @@ uint64_t s_dwStack0[256];
 __attribute__((section(".bss.stacks.coroutine")))
 uint64_t s_dwStack1[256];
 
+//uint32_t perfc_port_get_system_timer_freq(void)
+//{
+//    return 400000;
+//}
+
 int main (void)
 {
+    SysTick_Config(SystemCoreClock / 1000);
+    perfc_init(true);
+
     int32_t iCycleResult = 0;
 
     /*! demo of using() block */
@@ -159,7 +172,7 @@ int main (void)
     __perf_counter_printf__("\r\n\r\n\r\n\r\n");
 
     /*! demo of __cycleof__() operation */
-    __cycleof__() {
+    __cycleof__("") {
         foreach(s_tItem) {
             __perf_counter_printf__("Processing item with ID = %"PRIi32"\r\n", _->chID);
         }
@@ -177,6 +190,14 @@ int main (void)
     perfc_delay_ms(500);
 
     __perf_counter_printf__("\r\n delay_us(1000ul) takes %"PRIi32" cycles\r\n", (int32_t)iCycleResult);
+
+    
+    __perf_counter_printf__("Long Delay Test Start...Please wait for 10s...\r\n");
+    __IRQ_SAFE {
+        perfc_delay_ms(10000);
+    }
+    __perf_counter_printf__("Long Delay Test End...\r\n");
+
 
     /*! demo of with block */
     with(example_lv0_t, &s_tItem[0], pitem) {
@@ -213,29 +234,35 @@ int main (void)
     cpt_example_led_flash_init(&s_tExampleCPT[0], s_dwStack0, sizeof(s_dwStack0));
     cpt_example_led_flash_init(&s_tExampleCPT[1], s_dwStack1, sizeof(s_dwStack1));
 
-    while (1) {
-        if (perfc_is_time_out_ms(10000)) {
-            __perf_counter_printf__("\r[%010"PRIi64"]", get_system_ms());
-        }
-
-        __cpu_usage__(10) {
-            perfc_delay_us(30000);
-        }
-
     #if __IS_COMPILER_ARM_COMPILER__
-        extern uintptr_t Image$$ARM_LIB_STACK$$Base[];
-        uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$Base;
+        
+        uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base;
     #else
         extern uintptr_t __StackLimit[];
         uintptr_t nStackLimit = (uintptr_t)__StackLimit;
     #endif
 
-        __stack_usage__("LED", nStackLimit) {
-        //__stack_usage_max__("LED", Image$$ARM_LIB_STACK$$Base) {
+        __perf_counter_printf__("\t\tSystem Stack Remain: %"PRIu32 "\r\n", 
+                                perfc_stack_remain((uintptr_t)nStackLimit));
+
+    while (1) {
+
+        if (perfc_is_time_out_ms(10000)) {
+            __perf_counter_printf__("\r[%010"PRIi64"]\r\n", get_system_ticks());
+        }
+
+#if 0
+        __cpu_usage__(10) {
+            perfc_delay_us(30000);
+        }
+
+
+        //__stack_usage__("LED", nStackLimit) {
+        __stack_usage_max__("LED", nStackLimit) {
             float fUsage = 0;
             __cpu_usage__(10, {
                 fUsage = __usage__;
-                __perf_counter_printf__("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+                __perf_counter_printf__("\t\ttask 1 cpu usage %3.2f %%\r\n", (double)fUsage);
             }) {
                 perfc_delay_us(50000);
             }
@@ -247,11 +274,17 @@ int main (void)
         if (fsm_rt_cpl == tResult) {
             size_t tStackRemain 
                 = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
-            __perf_counter_printf__("\r\nCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
+            __perf_counter_printf__("\r\n\t\tCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
         }
+
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 
-        //pt_example_led_flash(&s_tExamplePT);
+        pt_example_led_flash(&s_tExamplePT);
+#endif
+        int64_t lTimestamp = get_system_ticks();
+        __perf_counter_printf__("ms:[%lld] \tus:[%lld]\r\n", 
+                                perfc_convert_ticks_to_ms(lTimestamp), 
+                                perfc_convert_ticks_to_us(lTimestamp));
     }
 }

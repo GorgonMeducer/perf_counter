@@ -87,10 +87,14 @@ PERFC_CPT_BEGIN(this)
     do {
         void *ptResource = NULL;
     
-    PERFC_CPT_WAIT_FOR_RES_UNTIL( 
-        (ptResource != NULL),               /* quit condition */
-        ptResource = malloc(100);          /* try to allocate memory */
-    )
+    if (fsm_rt_timeout ==
+        PERFC_CPT_WAIT_FOR_RES_UNTIL( (ptResource != NULL),                     /* quit condition */
+                                       PERFC_CPT_TIMEOUT(5000)                  /* timeout */
+
+            ptResource = malloc(1024 * 1024);                                   /* try to allocate memory */
+    )) {
+        printf("memory allocation timeout! \r\n");
+    }
 
         printf("LED ON  [%lld][%p]\r\n", get_system_ms(), ptResource);
 

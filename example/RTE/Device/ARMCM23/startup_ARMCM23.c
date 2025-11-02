@@ -1,6 +1,6 @@
 /******************************************************************************
- * @file     startup_ARMCM4.c
- * @brief    CMSIS-Core(M) Device Startup File for a Cortex-M4 Device
+ * @file     startup_ARMCM23.c
+ * @brief    CMSIS-Core Device Startup File for a Cortex-M23 Device
  * @version  V3.0.0
  * @date     06. April 2023
  ******************************************************************************/
@@ -22,8 +22,8 @@
  * limitations under the License.
  */
 
-#if defined (ARMCM4)
-  #include "ARMCM4.h"
+#if defined (ARMCM23)
+  #include "ARMCM23.h"
 #else
   #error device not specified!
 #endif
@@ -32,6 +32,10 @@
   External References
  *----------------------------------------------------------------------------*/
 extern uint32_t __INITIAL_SP;
+extern uint32_t __STACK_LIMIT;
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+extern uint32_t __STACK_SEAL;
+#endif
 
 extern __NO_RETURN void __PROGRAM_START(void);
 
@@ -47,11 +51,7 @@ __NO_RETURN void Reset_Handler  (void);
 /* Exceptions */
 void NMI_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
 void HardFault_Handler      (void) __attribute__ ((weak));
-void MemManage_Handler      (void) __attribute__ ((weak, alias("Default_Handler")));
-void BusFault_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
-void UsageFault_Handler     (void) __attribute__ ((weak, alias("Default_Handler")));
 void SVC_Handler            (void) __attribute__ ((weak, alias("Default_Handler")));
-void DebugMon_Handler       (void) __attribute__ ((weak, alias("Default_Handler")));
 void PendSV_Handler         (void) __attribute__ ((weak, alias("Default_Handler")));
 void SysTick_Handler        (void) __attribute__ ((weak, alias("Default_Handler")));
 
@@ -71,7 +71,7 @@ void Interrupt9_Handler     (void) __attribute__ ((weak, alias("Default_Handler"
   Exception / Interrupt Vector table
  *----------------------------------------------------------------------------*/
 
-#if __IS_COMPILER_GCC__
+#if defined ( __GNUC__ )
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
 #endif
@@ -82,15 +82,15 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
   Reset_Handler,                            /*     Reset Handler */
   NMI_Handler,                              /* -14 NMI Handler */
   HardFault_Handler,                        /* -13 Hard Fault Handler */
-  MemManage_Handler,                        /* -12 MPU Fault Handler */
-  BusFault_Handler,                         /* -11 Bus Fault Handler */
-  UsageFault_Handler,                       /* -10 Usage Fault Handler */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
   0,                                        /*     Reserved */
-  SVC_Handler,                              /*  -5 SVC Handler */
-  DebugMon_Handler,                         /*  -4 Debug Monitor Handler */
+  0,                                        /*     Reserved */
+  0,                                        /*     Reserved */
+  0,                                        /*     Reserved */
+  SVC_Handler,                              /*  -5 SVCall Handler */
+  0,                                        /*     Reserved */
   0,                                        /*     Reserved */
   PendSV_Handler,                           /*  -2 PendSV Handler */
   SysTick_Handler,                          /*  -1 SysTick Handler */
@@ -109,23 +109,26 @@ extern const VECTOR_TABLE_Type __VECTOR_TABLE[240];
                                             /* Interrupts 10 .. 223 are left out */
 };
 
-#if __IS_COMPILER_GCC__
+#if defined ( __GNUC__ )
 #pragma GCC diagnostic pop
 #endif
-
-#include "perf_counter.h"
 
 /*----------------------------------------------------------------------------
   Reset Handler called on controller reset
  *----------------------------------------------------------------------------*/
 __NO_RETURN void Reset_Handler(void)
 {
-    extern uint32_t Image$$ARM_LIB_STACK$$ZI$$Base[];
+  __set_PSP((uint32_t)(&__INITIAL_SP));
 
-    perfc_stack_fill(__perfc_port_get_sp(), 
-                    (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base);
-    SystemInit();                             /* CMSIS System Initialization */
-    __PROGRAM_START();                        /* Enter PreMain (C library entry point) */
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+  __set_MSPLIM((uint32_t)(&__STACK_LIMIT));
+  __set_PSPLIM((uint32_t)(&__STACK_LIMIT));
+
+  __TZ_set_STACKSEAL_S((uint32_t *)(&__STACK_SEAL));
+#endif
+
+  SystemInit();                             /* CMSIS System Initialization */
+  __PROGRAM_START();                        /* Enter PreMain (C library entry point) */
 }
 
 

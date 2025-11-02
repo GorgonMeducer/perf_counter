@@ -48,7 +48,7 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          5
-#define __PERF_COUNTER_VER_REVISE__         2
+#define __PERF_COUNTER_VER_REVISE__         3
 
 #define __PERF_COUNTER_VER_STR__            ""
 
@@ -138,6 +138,14 @@ extern "C" {
             perfc_using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =     \
                         perfc_port_disable_global_interrupt(),                  \
                     perfc_port_resume_global_interrupt(SAFE_NAME(temp)))
+#endif
+
+
+#ifndef __PERFC_SAFE
+#   define __PERFC_SAFE                                                         \
+            perfc_using(  perfc_global_interrupt_status_t SAFE_NAME(temp) =     \
+                        perfc_port_mask_systimer_interrupt(),                   \
+                    perfc_port_resume_systimer_interrupt(SAFE_NAME(temp)))
 #endif
 
 /* deprecated macro for backward compatibility */
@@ -241,8 +249,8 @@ __asm(".global __ensure_systick_wrapper\n\t");
                     __perf_counter_printf__(                                    \
                         "------------------------------------\r\n");            \
                     __perf_counter_printf__(                                    \
-                        __STR " total cycle count: %"PRIi64" [%08"PRIX64"]\r\n",\
-                            (int64_t)_, (int64_t)_);                            \
+                        "%s total cycle count: %" PRIi64 " [%08" PRIX64 "]\r\n",\
+                         (const char *)(__STR), (int64_t)_, (int64_t)_);        \
                 } else {                                                        \
                     __VA_ARGS__                                                 \
                 };                                                              \
@@ -456,10 +464,12 @@ __asm(".global __ensure_systick_wrapper\n\t");
 typedef enum {
     fsm_rt_err          = -1,    //!< fsm error, error code can be get from other interface
     fsm_rt_cpl          = 0,     //!< fsm complete
+    fsm_rt_ok           = 0,     //!< no error
     fsm_rt_on_going     = 1,     //!< fsm on-going
     fsm_rt_wait_for_obj = 2,     //!< fsm wait for object
     fsm_rt_asyn         = 3,     //!< fsm asynchronose complete, you can check it later.
     fsm_rt_wait_for_res = 4,     //!< fsm wait for resource
+    fsm_rt_timeout      = 5,     //!< fsm timeout
 } fsm_rt_t;
 //! @}
 #endif
@@ -564,40 +574,6 @@ int64_t stop_cycle_counter(void)
  */
 
 /*!
- * \brief get the system timer frequency
- * \return uint32_t the system timer frequency in Hz
- */
-extern uint32_t perfc_get_systimer_frequency(void);
-
-/*!
- * \brief get the elapsed milliseconds since perf_counter is initialised
- * \return int64_t the elapsed milliseconds
- */
-extern int64_t get_system_ms(void);
-
-/*!
- * \brief get the elapsed microsecond since perf_counter is initialised
- * \return int64_t the elapsed microsecond
- */
-extern int64_t get_system_us(void);
-
-/*!
- * \brief delay specified time in microsecond
- * \param[in] wUs time in microsecond
- */
-extern void perfc_delay_us(uint32_t wUs);
-
-/*!
- * \brief delay specified time in millisecond
- * \param[in] wMs time in millisecond
- */
-#if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
-extern void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine);
-#else
-extern void perfc_delay_ms(uint32_t wMs);
-#endif
-
-/*!
  * \brief convert ticks of a reference timer to millisecond
  *
  * \param[in] lTick the tick count
@@ -632,6 +608,66 @@ int64_t perfc_convert_ticks_to_us(int64_t lTick);
  */
 extern
 int64_t perfc_convert_us_to_ticks(uint32_t wUS);
+
+/*!
+ * \brief get the system timer frequency
+ * \return uint32_t the system timer frequency in Hz
+ */
+extern uint32_t perfc_get_systimer_frequency(void);
+
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int64_t the elapsed milliseconds
+ */
+extern int64_t get_system_ms(void);
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int64_t the elapsed microsecond
+ */
+extern int64_t get_system_us(void);
+#else
+
+/*!
+ * \brief get the elapsed milliseconds since perf_counter is initialised
+ * \return int64_t the elapsed milliseconds
+ */
+__STATIC_INLINE 
+int64_t get_system_ms(void)
+{
+    return perfc_convert_ticks_to_ms(get_system_ticks());
+}
+
+/*!
+ * \brief get the elapsed microsecond since perf_counter is initialised
+ * \return int64_t the elapsed microsecond
+ */
+__STATIC_INLINE 
+int64_t get_system_us(void)
+{
+    return perfc_convert_ticks_to_us(get_system_ticks());
+}
+
+#endif
+
+/*!
+ * \brief delay specified time in microsecond
+ * \param[in] wUs time in microsecond
+ */
+extern void perfc_delay_us(uint32_t wUs);
+
+/*!
+ * \brief delay specified time in millisecond
+ * \param[in] wMs time in millisecond
+ */
+#if __C_LANGUAGE_EXTENSIONS_PERFC_COROUTINE__
+extern void __perfc_delay_ms(uint32_t wMs, perfc_coroutine_t *ptCoroutine);
+#else
+extern void perfc_delay_ms(uint32_t wMs);
+#endif
+
+
 
 /*!
  * \brief set an alarm with given period and check the status

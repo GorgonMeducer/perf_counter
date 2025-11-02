@@ -20,6 +20,11 @@
 #if __PERFC_USE_USER_CUSTOM_PORTING__
 
 /*============================ MACROS ========================================*/
+
+#ifndef __PERFC_SYSTIMER_PRIORITY__
+#   define __PERFC_SYSTIMER_PRIORITY__      0
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 /*============================ TYPES =========================================*/
 typedef uint32_t perfc_global_interrupt_status_t;
@@ -48,6 +53,28 @@ inline
 void perfc_port_resume_global_interrupt(perfc_global_interrupt_status_t tStatus)
 {
     /* resume the stored global interrupt status */
+}
+
+
+static
+inline  
+perfc_global_interrupt_status_t perfc_port_mask_systimer_interrupt(void)
+{
+    perfc_global_interrupt_status_t tStatus;
+    
+    /* get global interrupt priority */
+    /* only mask the priority of the systimer */
+    /* return the status */
+    
+    return tStatus;
+}
+
+static
+inline  
+void perfc_port_resume_systimer_interrupt(perfc_global_interrupt_status_t tStatus)
+{
+    /* resume the stored global interrupt priority */
+    
 }
 
 #endif

@@ -88,7 +88,6 @@ extern "C" {
 
 #endif
 
-
 #undef __IS_COMPILER_ARM_COMPILER__
 #if defined(__IS_COMPILER_ARM_COMPILER_5__) && __IS_COMPILER_ARM_COMPILER_5__   \
 ||  defined(__IS_COMPILER_ARM_COMPILER_6__) && __IS_COMPILER_ARM_COMPILER_6__
@@ -104,6 +103,7 @@ extern "C" {
 #define __PLOOC_VA_NUM_ARGS(...)                                                \
             __PLOOC_VA_NUM_ARGS_IMPL( 0,##__VA_ARGS__,16,15,14,13,12,11,10,9,   \
                                       8,7,6,5,4,3,2,1,0)
+#endif
 
 #undef __COMPILER_HAS_GNU_EXTENSIONS__
 #if __PLOOC_VA_NUM_ARGS() == 0
@@ -120,8 +120,6 @@ extern "C" {
 #   define __IS_COMPILER_SUPPORT_C11__          1
 #endif
 
-
-#endif
 
 #if defined(__clang__)
 #   pragma clang diagnostic push
@@ -249,6 +247,10 @@ extern "C" {
 #undef PERFC_CONNECT7
 #undef PERFC_CONNECT8
 #undef PERFC_CONNECT9
+#undef ALT_PERFC_CONNECT2
+
+#undef SAFE_NAME
+#undef PERFC_SAFE_NAME
 
 #undef PERFC_CONNECT
 
@@ -269,6 +271,7 @@ extern "C" {
 #define __PERFC_CONNECT9(__A, __B, __C, __D, __E, __F, __G, __H, __I)           \
                                     __A##__B##__C##__D##__E##__F##__G##__H##__I
 
+
 #define ALT_PERFC_CONNECT2(__A, __B)        __PERFC_CONNECT2(__A, __B)
 #define PERFC_CONNECT2(__A, __B)            __PERFC_CONNECT2(__A, __B)
 #define PERFC_CONNECT3(__A, __B, __C)       __PERFC_CONNECT3(__A, __B, __C)
@@ -288,6 +291,8 @@ extern "C" {
 #define PERFC_CONNECT(...)                                                      \
             ALT_PERFC_CONNECT2( PERFC_CONNECT,                                  \
                                 __PLOOC_VA_NUM_ARGS(__VA_ARGS__))(__VA_ARGS__)
+
+
 
 #define SAFE_NAME(__NAME)           PERFC_CONNECT3(__,__NAME,__LINE__)
 #define PERFC_SAFE_NAME(__name)     PERFC_CONNECT3(__,__name,__LINE__)
@@ -394,6 +399,8 @@ extern "C" {
                         |   ((uint64_t)__PERFC_STACK_WATERMARK_U32__ << 32)     \
                         ))
 
+#undef __stack_usage__
+#undef __stack_usage_max__
 #ifdef __PERFC_STACK_GROWS_UPWARD__
 /*!
  * \brief measure the stack usage of the given code segement
@@ -419,9 +426,10 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR " Stack Overflow!!!"                          \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Limit: [0x%08"PRIxPTR"]\r\n",               \
+                            "%s Stack Overflow!!!"                              \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Limit: [0x%08" PRIxPTR "]\r\n",             \
+                            (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
                     } else {                                                    \
@@ -435,7 +443,8 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR " Stack Used: %"PRIuPTR " bytes\r\n",         \
+                            "%s Stack Used: %" PRIuPTR " bytes\r\n",            \
+                            (const char *)(__STR),                              \
                             __stack_used__);                                    \
                     } else {                                                    \
                         __VA_ARGS__;                                            \
@@ -470,9 +479,10 @@ extern "C" {
                 if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                    \
                     __perf_counter_printf__(                                    \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR " Stack Overflow!!!"                          \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Limit: [0x%08"PRIxPTR"]\r\n",               \
+                            "%s Stack Overflow!!!"                              \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Limit: [0x%08" PRIxPTR "]\r\n",             \
+                            (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
                 }                                                               \
@@ -489,8 +499,8 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR                                               \
-                            __STR " Stack Used: %"PRIuPTR" bytes\r\n",          \
+                            "%s Stack Used: %" PRIuPTR " bytes\r\n",            \
+                            (const char *)(__STR),                              \
                             PERFC_SAFE_NAME(__stack_used__));                   \
                     }                                                           \
                 }                                                               \
@@ -529,8 +539,8 @@ extern "C" {
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
                             __STR " Stack Overflow!!!"                          \
-                            " SP: [0x%08"PRIxPTR"]"                             \
-                            " Stack Base: [0x%08"PRIxPTR"]\r\n",                \
+                            " SP: [0x%08" PRIxPTR "]"                           \
+                            " Stack Base: [0x%08" PRIxPTR "]\r\n",              \
                             PERFC_SAFE_NAME(nSP),                               \
                             PERFC_SAFE_NAME(nStackLimit));                      \
                     } else {                                                    \
@@ -544,7 +554,7 @@ extern "C" {
                     if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                \
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
-                            __STR " Stack Used: %"PRIuPTR" bytes\r\n",          \
+                            __STR " Stack Used: %" PRIuPTR " bytes\r\n",        \
                             __stack_used__);                                    \
                     } else {                                                    \
                         __VA_ARGS__;                                            \
@@ -580,8 +590,8 @@ extern "C" {
                     __perf_counter_printf__(                                    \
                         "\r\n-------------------------------------\r\n"         \
                         __STR " Stack Overflow!!!"                              \
-                        " SP: [0x%08"PRIxPTR"]"                                 \
-                        " Stack Base: [0x%08"PRIxPTR"]\r\n",                    \
+                        " SP: [0x%08" PRIxPTR "]"                               \
+                        " Stack Base: [0x%08" PRIxPTR "]\r\n",                  \
                         PERFC_SAFE_NAME(nSP),                                   \
                         PERFC_SAFE_NAME(nStackLimit));                          \
                 }                                                               \
@@ -599,8 +609,8 @@ extern "C" {
                         __perf_counter_printf__(                                \
                             "\r\n-------------------------------------\r\n"     \
                             __STR                                               \
-                            " Stack Used Max: %"PRIuPTR" bytes\r\n",             \
-                            PERFC_SAFE_NAME(__stack_used__));         \
+                            " Stack Used Max: %" PRIuPTR " bytes\r\n",          \
+                            PERFC_SAFE_NAME(__stack_used__));                   \
                     }                                                           \
                 }                                                               \
             }                                                                   \

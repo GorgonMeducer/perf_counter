@@ -1,4 +1,4 @@
-# perf_counter (v2.5.2)
+# perf_counter (v2.5.3)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.
@@ -23,7 +23,7 @@ A dedicated template is provided to port the perf_counter to different architect
 
   - Easy to port to a different architecture with a porting template
 - **Provide Free Services**
-  - Do **NOT** interfere with existing SysTick-based applications
+  - Would **NOT** interfere with existing SysTick-based applications
 - **Support most of the arm compilers**
   - Arm Compiler 5 (armcc), Arm Compiler 6 (armclang)
   - arm gcc
@@ -37,10 +37,13 @@ A dedicated template is provided to port the perf_counter to different architect
   - `perfc_delay_us()` and `perfc_delay_ms()` with **64bit return value**.
     - Adds weak entries `perfc_delay_us_user_code_in_loop()` and `perfc_delay_ms_user_code_in_loop()` for users to override, e.g. feeding the watchdog. 
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
+  - **[new]** When passing `false` to `perfc_init()`, it is possible to use perf_counter in ISRs or global interrupt handling is disabled.
+  - **[new]** Users can call micro-seconds related APIs even when the system timer clock is less than 1MHz. 
 - **Support both RTOS and bare-metal environments**
-  - Support SysTick Reconfiguration
-  - Support changing System Frequency
-  - Support stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
+  - Supports SysTick Reconfiguration
+  - Supports changing System Frequency
+  - Supports stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
+  - **[new]** Adds macro `__PERFC_SAFE ` to avoid blocking high priority ISRs and tasks. Users should define the system timer priority level with macro `__PERFC_SYSTIMER_PRIORITY__ `. In Cortex-M, `0` means the highest configurable exception level.
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macros to detect compiler features: 
@@ -57,18 +60,19 @@ A dedicated template is provided to port the perf_counter to different architect
   - A dedicated macro `__perfc_sync_barrier__()` for code barrier. 
   - Macros to measure stack usage
     - Adds a macro `__stack_usage__()` and `__stack_usage_max__()` to measure the stack usage for a given code segment.
-    - **[new]** Adds a macro `ISR()` to measure the stack usage of a given Cortex-M Exception handling. 
+    - Adds a macro `ISR()` to measure the stack usage of a given Cortex-M Exception handling. 
       - You can define macro `__PERFC_STACK_CHECK_IN_ISR__` in project configuration to enable this feature.
-    - **[new]** You can define macro `__PERFC_STACK_WATERMARK_U32__`  in your project configuration to override the default watermark, i.e. `0xDEADBEEF`.
-    - **[new]** Supports for architectures that use growing-upward stacks. You can define macro `__PERFC_STACK_GROWS_UPWARD__` to switch.
+    - You can define macro `__PERFC_STACK_WATERMARK_U32__`  in your project configuration to override the default watermark, i.e. `0xDEADBEEF`.
+    - Supports for architectures that use growing-upward stacks. You can define macro `__PERFC_STACK_GROWS_UPWARD__` to switch.
 - Adds C Language Extensions
   - Adds Coroutine support
     - Adds watermark to stack and users can call `perfc_coroutine_stack_remain()` to get the stack usage info.
     - Defining macro `__PERFC_COROUTINE_NO_STACK_CHECK__` in **compilation command line** disables the stack-checking feature. 
   - Adds protoThread support with/without the coroutine.
+    - **[new]** Adds timeout feature in **wait_xxxx**
 
 
-### Updates
+### Important Updates
 
 - Following functions/macros are **deprecated**, please use the version with `perfc_` as prefix:
   - `init_cycle_counter()` -> `perfc_init()`
@@ -79,7 +83,7 @@ A dedicated template is provided to port the perf_counter to different architect
   - `with()` -> `perfc_with()`
   - `foreach()` -> `perfc_foreach()`
 
-- **[new]** You can define the macro `__PERFC_NO_DEPRECATED__` to disable the alias of the deprecated APIs.
+- You can define the macro `__PERFC_NO_DEPRECATED__` to disable the alias of the deprecated APIs.
 
   
 
@@ -102,10 +106,14 @@ __cycleof__(<Description String for the target>, [User Code, see ref 1]) {
 
 Here, [**ref 1**] is a small user code to read the measurement result via a local variable `__cycle_count__`. This User Code is optional. If you don't put anything here, the measured result will be shown with a `__perf_counter_printf__`. 
 
-#### **Example 1:** Simple measurement with printf
+> [!NOTE]
+>
+> The first parameter cannot be ignored. If you don't want to give a description string, please pass an empty string i.e. "". 
+
+#### **Example 1:** Simple measurement with `printf()`
 
 ```c
-    __cycleof__() {
+    __cycleof__("") {
         foreach(example_lv0_t, s_tItem, ptItem) {
             __perf_counter_printf__("Processing item with ID = %d\r\n", _->chID);
         }

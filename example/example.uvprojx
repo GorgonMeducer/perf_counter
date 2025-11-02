@@ -10,7 +10,7 @@
       <TargetName>example_arm_compiler_6</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>6240000::V6.24::.\ArmCompilerforEmbedded6.24</pCCUsed>
+      <pCCUsed>6240000::V6.24::ARMCLANG</pCCUsed>
       <uAC6>1</uAC6>
       <TargetOption>
         <TargetCommonOption>
@@ -58,7 +58,7 @@
           <ListingPath>.\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
-          <CreateBatchFile>1</CreateBatchFile>
+          <CreateBatchFile>0</CreateBatchFile>
           <BeforeCompile>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
@@ -338,7 +338,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls></MiscControls>
-              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__,__PERFC_STACK_CHECK_IN_ISR__</Define>
+              <Define>__PERFC_SYSTIMER_PRIORITY__=0xFF,NDEBUG,__PERFC_STACK_CHECK_IN_ISR__,__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__</Define>
               <Undefine></Undefine>
               <IncludePath>..</IncludePath>
             </VariousControls>
@@ -1824,7 +1824,7 @@
       </api>
     </apis>
     <components>
-      <component Capiversion="2.2.0" Cclass="CMSIS Driver" Cgroup="Ethernet" Csub="Custom" Cvendor="ARM" Cversion="1.0.0" custom="1">
+      <component Capiversion="2.2.0" Cclass="CMSIS Driver" Cgroup="Ethernet" Csub="Custom" Cvendor="ARM" Cversion="1.0.0" custom="1" ymlID="CMSIS Driver:Ethernet:Custom">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1832,33 +1832,33 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device">
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="5.6.0" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
         <package name="CMSIS" schemaVersion="1.7.7" url="http://www.keil.com/pack/" vendor="ARM" version="5.9.0"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
         </targetInfos>
       </component>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.1" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
+        <package name="CMSIS" schemaVersion="1.7.40" url="https://www.keil.com/pack/" vendor="ARM" version="6.2.0"/>
         <targetInfos>
           <targetInfo name="example_arm_compiler_6"/>
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM0 CMSIS">
+      <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM0 CMSIS" ymlID="Device:Startup&amp;C Startup">
         <package name="Cortex_DFP" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="ARM" version="1.0.0"/>
         <targetInfos>
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM4 CMSIS">
+      <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM4 CMSIS" ymlID="Device:Startup&amp;C Startup">
         <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
           <targetInfo name="example_arm_compiler_6"/>
         </targetInfos>
       </component>
-      <component Cclass="Language Extension" Cgroup="Coroutine" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter">
+      <component Cclass="Language Extension" Cgroup="Coroutine" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter" ymlID="Language Extension:Coroutine">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1866,7 +1866,7 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Language Extension" Cgroup="protoThread" Cvendor="GorgonMeducer" Cversion="1.1.0" condition="perf_counter">
+      <component Cclass="Language Extension" Cgroup="protoThread" Cvendor="GorgonMeducer" Cversion="1.1.0" condition="perf_counter" ymlID="Language Extension:protoThread">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1874,7 +1874,7 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2-dev" condition="CMSIS-CORE">
+      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.3-dev" condition="CMSIS-CORE" ymlID="Utilities:perf_counter:Core&amp;Source">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1882,7 +1882,7 @@
           <targetInfo name="library"/>
         </targetInfos>
       </component>
-      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="Keil" Cversion="1.2.0" condition="ARMCC Cortex-M" isTargetSpecific="1">
+      <component Cbundle="ARM Compiler" Cclass="Compiler" Cgroup="I/O" Csub="STDOUT" Cvariant="User" Cvendor="Keil" Cversion="1.2.0" condition="ARMCC Cortex-M" isTargetSpecific="1" ymlID="Compiler&amp;ARM Compiler:I/O:STDOUT&amp;User">
         <package name="ARM_Compiler" schemaVersion="1.7.7" url="https://www.keil.com/pack/" vendor="Keil" version="1.7.2"/>
         <targetInfos>
           <targetInfo name="example_arm compiler_5"/>
@@ -1926,6 +1926,42 @@
         <targetInfos>
           <targetInfo name="library"/>
         </targetInfos>
+      </file>
+      <file attr="config" category="linkerScript" condition="ARMCC6" name="Device\ARMCM0plus\Config\ARMCM0plus_ac6.sct" version="1.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM0P\ARMCM0plus_ac6.sct</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM0+ CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="Device\ARMCM0plus\Source\startup_ARMCM0plus.c" version="3.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM0P\startup_ARMCM0plus.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM0+ CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="Device\ARMCM0plus\Source\system_ARMCM0plus.c" version="2.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM0P\system_ARMCM0plus.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM0+ CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="linkerScript" condition="ARMCC6" name="Device\ARMCM23\Config\ARMCM23_ac6.sct" version="1.1.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM23\ARMCM23_ac6.sct</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM23 CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="Device\ARMCM23\Source\startup_ARMCM23.c" version="3.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM23\startup_ARMCM23.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM23 CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
+      </file>
+      <file attr="config" category="sourceC" name="Device\ARMCM23\Source\system_ARMCM23.c" version="2.0.0">
+        <instance index="0" removed="1">RTE\Device\ARMCM23\system_ARMCM23.c</instance>
+        <component Cclass="Device" Cgroup="Startup" Cvariant="C Startup" Cvendor="ARM" Cversion="2.2.0" condition="ARMCM23 CMSIS" isDefaultVariant="1"/>
+        <package name="Cortex_DFP" schemaVersion="1.7.33" url="https://www.keil.com/pack/" vendor="ARM" version="1.1.0"/>
+        <targetInfos/>
       </file>
       <file attr="config" category="sourceAsm" condition="ARMCC" name="Device\ARM\ARMCM3\Source\ARM\startup_ARMCM3.s" version="1.0.1">
         <instance index="0" removed="1">RTE\Device\ARMCM3\startup_ARMCM3.s</instance>

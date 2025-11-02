@@ -56,13 +56,13 @@ pt_led_flash_cb_t * pt_example_led_flash_init(pt_led_flash_cb_t *ptThis)
 fsm_rt_t pt_example_led_flash(pt_led_flash_cb_t *ptThis)
 {
 
-PERFC_PT_BEGIN(this.chState)
+PERFC_PT_BEGIN(this)
 
     do {
     PERFC_PT_WAIT_FOR_RES_UNTIL( 
         (this.ptResource != NULL),               /* quit condition */
         this.ptResource = malloc(100);          /* try to allocate memory */
-    )
+    );
 
         printf("LED ON  [%lld]\r\n", get_system_ms());
 
