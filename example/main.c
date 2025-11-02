@@ -229,20 +229,6 @@ int main (void)
     cpt_example_led_flash_init(&s_tExampleCPT[0], s_dwStack0, sizeof(s_dwStack0));
     cpt_example_led_flash_init(&s_tExampleCPT[1], s_dwStack1, sizeof(s_dwStack1));
 
-    while (1) {
-
-        __perf_counter_printf__("System Stack Remain: %"PRIu32 "\r\n", 
-                        perfc_stack_remain((uintptr_t)&Image$$ARM_LIB_STACK$$ZI$$Base));
-
-
-        if (perfc_is_time_out_ms(10000)) {
-            __perf_counter_printf__("\r[%010"PRIi64"]", get_system_ms());
-        }
-
-        __cpu_usage__(10) {
-            perfc_delay_us(30000);
-        }
-
     #if __IS_COMPILER_ARM_COMPILER__
         
         uintptr_t nStackLimit = (uintptr_t)Image$$ARM_LIB_STACK$$ZI$$Base;
@@ -251,12 +237,25 @@ int main (void)
         uintptr_t nStackLimit = (uintptr_t)__StackLimit;
     #endif
 
-        __stack_usage__("LED", nStackLimit) {
-        //__stack_usage_max__("LED", Image$$ARM_LIB_STACK$$ZI$$Base) {
+        __perf_counter_printf__("\t\tSystem Stack Remain: %"PRIu32 "\r\n", 
+                                perfc_stack_remain((uintptr_t)nStackLimit));
+
+    while (1) {
+
+        if (perfc_is_time_out_ms(10000)) {
+            __perf_counter_printf__("\r[%010"PRIi64"]\r\n", get_system_ticks());
+        }
+
+        __cpu_usage__(10) {
+            perfc_delay_us(30000);
+        }
+
+        //__stack_usage__("LED", nStackLimit) {
+        __stack_usage_max__("LED", nStackLimit) {
             float fUsage = 0;
             __cpu_usage__(10, {
                 fUsage = __usage__;
-                __perf_counter_printf__("task 1 cpu usage %3.2f %%\r\n", (double)fUsage);
+                __perf_counter_printf__("\t\ttask 1 cpu usage %3.2f %%\r\n", (double)fUsage);
             }) {
                 perfc_delay_us(50000);
             }
@@ -268,12 +267,16 @@ int main (void)
         if (fsm_rt_cpl == tResult) {
             size_t tStackRemain 
                 = perfc_coroutine_stack_remain((perfc_coroutine_t *)&s_tExampleCPT[0]);
-            __perf_counter_printf__("\r\nCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
+            __perf_counter_printf__("\r\n\t\tCoroutine Stack Remain: %"PRIu32"\r\n", tStackRemain);
         }
 
 
         perfc_coroutine_call((perfc_coroutine_t *)&s_tExampleCPT[1]);
 
         pt_example_led_flash(&s_tExamplePT);
+        
+        __perf_counter_printf__("us:[%lld] \tms:[%lld]\r\n", 
+                                get_system_us(), 
+                                get_system_ms());
     }
 }
