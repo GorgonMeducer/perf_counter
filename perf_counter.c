@@ -82,10 +82,14 @@ typedef int32_t q31_t;
 /*============================ LOCAL VARIABLES ===============================*/
 
 volatile static struct {
+
+    /* raw ticks */
     struct {
         int64_t lTimestampBase;
         int64_t lOldTimestamp;
     } Ticks;
+
+    /* microsecond */
     struct {
         uint32_t    wResidule;
         uint32_t    wUnit;
@@ -98,6 +102,8 @@ volatile static struct {
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
     } US;
+
+    /* millisecond */
     struct {
         uint32_t    wResidule;
         uint32_t    wUnit;
@@ -108,6 +114,8 @@ volatile static struct {
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
     } MS;
+    
+    /* Misc */
     bool    bIsSysTimerOccupied;
 }PERFC = {0};
 
