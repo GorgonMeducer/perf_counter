@@ -140,7 +140,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(1010=660,367,1110,924,0)(1007=105,137,312,358,0)(1008=-1,-1,-1,-1,0)(1009=1936,196,2194,784,1)(1012=-1,-1,-1,-1,0)</Name>
+          <Name>(1010=660,367,1110,924,0)(1007=105,137,312,358,0)(1008=1618,532,1994,768,1)(1009=1936,196,2194,784,1)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -163,7 +163,7 @@
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>s_tExampleCPT</ItemText>
+          <ItemText>s_tExampleCPT,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
@@ -173,7 +173,7 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Image$$ARM_LIB_STACK$$Base</ItemText>
+          <ItemText>Image$$ARM_LIB_STACK$$Base,0x10</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
@@ -184,6 +184,11 @@
           <count>5</count>
           <WinNumber>1</WinNumber>
           <ItemText>0xE000E000UL+0x0F30UL</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>PERFC,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>
@@ -855,7 +860,7 @@
 
   <Group>
     <GroupName>::Utilities</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>1</RteFlg>
