@@ -149,6 +149,11 @@ uint64_t s_dwStack0[256];
 __attribute__((section(".bss.stacks.coroutine")))
 uint64_t s_dwStack1[256];
 
+//uint32_t perfc_port_get_system_timer_freq(void)
+//{
+//    return 400000;
+//}
+
 int main (void)
 {
     SysTick_Config(SystemCoreClock / 1000);
@@ -277,8 +282,9 @@ int main (void)
 
         pt_example_led_flash(&s_tExamplePT);
 #endif
+        int64_t lTimestamp = get_system_ticks();
         __perf_counter_printf__("ms:[%lld] \tus:[%lld]\r\n", 
-                                get_system_ms(), 
-                                get_system_us());
+                                perfc_convert_ticks_to_ms(lTimestamp), 
+                                perfc_convert_ticks_to_us(lTimestamp));
     }
 }

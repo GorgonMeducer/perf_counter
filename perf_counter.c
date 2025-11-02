@@ -69,15 +69,6 @@ struct __task_cycle_info_t {
 
 typedef int32_t q16_t;
 
-/**
-* @brief 64-bit fractional data type in 1.63 format.
-*/
-typedef int64_t q63_t;
-
-/**
-* @brief 32-bit fractional data type in 1.31 format.
-*/
-typedef int32_t q31_t;
 
 /*============================ GLOBAL VARIABLES ==============================*/
 /*============================ LOCAL VARIABLES ===============================*/
@@ -92,13 +83,12 @@ volatile static struct {
 
     /* microsecond */
     struct {
+        union {
+            uint32_t    wUnit;
+            q16_t       q16Unit;
+        };
+    #if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
         uint32_t    wResidule;
-    #if defined(__PERFC_NO_Q16__)
-        uint32_t    wUnit;
-    #else
-        q16_t       q16Unit;
-    #endif
-
         struct {
             uint32_t    lCompensation;
             uint32_t    wResidule;
@@ -106,22 +96,26 @@ volatile static struct {
 
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
+    #endif
     } US;
 
     /* millisecond */
     struct {
-        uint32_t    wResidule;
         uint32_t    wUnit;
+    #if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
+        uint32_t    wResidule;
         struct {
             uint32_t    lCompensation;
             uint32_t    wResidule;
         } Overflow;
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
+    #endif
     } MS;
     
     /* Misc */
     bool    bIsSysTimerOccupied;
+    bool    bLessThan1MHz;
 }PERFC = {0};
 
 //volatile static int64_t s_lSystemClockCounts = 0;
@@ -161,20 +155,6 @@ void perfc_port_clear_system_timer_counter(void);
 
 __STATIC_INLINE 
 q16_t
-reinterpret_q16_s16(int16_t iIn0)
-{
-    return ((q16_t)(iIn0) << 16);
-}
-
-__STATIC_INLINE 
-int16_t
-reinterpret_s16_q16(q16_t q16In0)
-{
-    return (int16_t)((q16_t)(q16In0) >> 16);
-}
-
-__STATIC_INLINE 
-q16_t
 reinterpret_q16_f32(float fIn0)
 {
     return ((q16_t)((fIn0) * 65536.0f + ((fIn0) >= 0 ? 0.5f : -0.5f)));
@@ -187,86 +167,6 @@ reinterpret_f32_q16(q16_t q16In0)
     return ((float)(q16In0) / 65536.0f);
 }
 
-__STATIC_INLINE 
-q16_t
-mul_q16(q16_t q16In0, q16_t q16In1)
-{
-    return (q16_t)((((int64_t)(q16In0)) * ((int64_t)(q16In1))) >> 16);
-}
-
-__STATIC_INLINE 
-q16_t
-mul_n_q16(q16_t q16In0, int32_t nIn1)
-{
-    return q16In0 * nIn1;
-}
-
-__STATIC_INLINE 
-q16_t
-mul_f_q16(q16_t q16In0, float fIn1)
-{
-    return mul_q16(q16In0, reinterpret_q16_f32(fIn1));
-}
-
-__STATIC_INLINE 
-q16_t
-div_q16(q16_t q16In0, q16_t q16In1)
-{
-    if (0 == q16In1) {
-        return 0;
-    }
-
-    int64_t lTemp = ((int64_t)q16In0 << 16);
-    return (q16_t)(lTemp / q16In1);
-}
-
-__STATIC_INLINE 
-q16_t
-div_n_q16(q16_t q16In0, int32_t nIn1)
-{
-    if (0 == nIn1) {
-        return 0;
-    }
-    return (q16_t)(q16In0 / nIn1);
-}
-
-__STATIC_INLINE 
-q16_t
-div_f_q16(q16_t q16In0, float fIn1)
-{
-    return div_q16(q16In0, reinterpret_q16_f32(fIn1));
-}
-
-__STATIC_INLINE 
-q16_t
-abs_q16(q16_t q16In0)
-{
-    return (q16In0 < 0) ? -q16In0 : q16In0;
-}
-
-/**
-   * @brief Clips Q63 to Q31 values.
-   */
-__STATIC_FORCEINLINE q31_t clip_q63_to_q31(
-q63_t x)
-{
-return ((q31_t) (x >> 32) != ((q31_t) x >> 31)) ?
-  ((0x7FFFFFFF ^ ((q31_t) (x >> 63)))) : (q31_t) x;
-}
-
-__STATIC_INLINE
-q16_t
-qadd_q16(q16_t q16In0, q16_t q16In1) 
-{
-    return ((q16_t)(clip_q63_to_q31((q63_t)q16In0 + (q63_t)q16In1)));
-}
-
-__STATIC_INLINE
-q16_t
-qsub_q16(q16_t q16In0, q16_t q16In1) 
-{
-    return ((q16_t)(clip_q63_to_q31((q63_t)q16In0 - (q63_t)q16In1)));
-}
 
 /*
  * IMPORTANT: When you want to use perf_counter APIs in ISRs having higher 
@@ -335,25 +235,38 @@ void __perf_os_patch_init(void)
 void update_perf_counter(void)
 {
     int64_t lLoad = perfc_port_get_system_timer_top() + 1;
+    UNUSED_PARAM(lLoad);
+    
+    
     uint32_t wSystemFrequency = perfc_port_get_system_timer_freq();
 
-#if defined(__PERFC_NO_Q16__)
-    PERFC.US.wUnit = wSystemFrequency / 1000000ul;
-#else
-    PERFC.US.q16Unit = reinterpret_q16_f32( (float)wSystemFrequency 
-                                          / 1000000.0f);
-#endif
+    PERFC.bLessThan1MHz = (wSystemFrequency < 1000000ul);
 
+    if (PERFC.bLessThan1MHz) {
+        PERFC.US.q16Unit = reinterpret_q16_f32( 1000000.0f 
+                                              / (float)wSystemFrequency);
+    } else {
+    #if defined(__PERFC_NO_Q16__)
+        PERFC.US.wUnit = wSystemFrequency / 1000000ul;
+    #else
+        PERFC.US.q16Unit = reinterpret_q16_f32( (float)wSystemFrequency 
+                                              / 1000000.0f);
+    #endif
+    }
+    
+    PERFC.MS.wUnit = wSystemFrequency / 1000ul;
+
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
     PERFC.US.Overflow.lCompensation = perfc_convert_ticks_to_us(lLoad);
     PERFC.US.Overflow.wResidule = lLoad 
                                 - perfc_convert_us_to_ticks(
                                             PERFC.US.Overflow.lCompensation);
 
-    PERFC.MS.wUnit = wSystemFrequency / 1000ul;
     PERFC.MS.Overflow.lCompensation = perfc_convert_ticks_to_ms(lLoad);
     PERFC.MS.Overflow.wResidule = lLoad 
                                 - perfc_convert_ms_to_ticks(
                                             PERFC.MS.Overflow.lCompensation);
+#endif
 
     __PERFC_SAFE {
         g_nOffset = 0;
@@ -375,11 +288,13 @@ bool perfc_init(bool bIsSysTimerOccupied)
     PERFC.Ticks.lTimestampBase = 0;                                             // reset system cycle counter
     PERFC.Ticks.lOldTimestamp = 0;
 
+#if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
     PERFC.MS.lTimestampBase = 0;                                                // reset system millisecond counter
     PERFC.MS.lOldTimestamp = 0;
     PERFC.US.lTimestampBase = 0;                                                // reset system microsecond counter
     PERFC.US.lOldTimestamp = 0;
-    
+#endif
+
     __perf_os_patch_init();
     
     return bResult;
@@ -448,8 +363,11 @@ void before_cycle_counter_reconfiguration(void)
 
         }
         PERFC.Ticks.lTimestampBase = get_system_ticks();                        /* get the final cycle counter value */
+
+    #if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
         PERFC.US.lTimestampBase = get_system_us();                              /* get the final cycle counter value */
         PERFC.MS.lTimestampBase = get_system_ms();                              /* get the final cycle counter value */
+    #endif
 
         perfc_port_clear_system_timer_counter();
     }
@@ -605,29 +523,40 @@ int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
     return (int64_t)PERFC.MS.wUnit * (int64_t)wMS;
 }
 
-#if defined(__PERFC_NO_Q16__)
+
 int64_t perfc_convert_ticks_to_us(int64_t lTick)
 {
-    return lTick / (int64_t)PERFC.US.wUnit;
+    int64_t lResult;
+    
+    if (PERFC.bLessThan1MHz) {
+        lResult = Q16_TO_INT(lTick * PERFC.US.q16Unit);
+    } else {
+    #if defined(__PERFC_NO_Q16__)
+        lResult = lTick / (int64_t)PERFC.US.wUnit
+    #else
+        lResult = INT_TO_Q16(lTick) / PERFC.US.q16Unit;
+    #endif
+    }
+    
+    return lResult;
 }
 
 int64_t perfc_convert_us_to_ticks(uint32_t wUS)
 {
-    return (int64_t)PERFC.US.wUnit * (int64_t)wUS;
+    int64_t lResult;
+    
+    if (PERFC.bLessThan1MHz) {
+        lResult = INT_TO_Q16(wUS) / PERFC.US.q16Unit;
+        
+    } else {
+    #if defined(__PERFC_NO_Q16__)
+        lResult = (int64_t)PERFC.US.wUnit * (int64_t)wUS;
+    #else
+        lResult = Q16_TO_INT((int64_t)wUS * (int64_t)PERFC.US.q16Unit);
+    #endif
+    }
+    return lResult;
 }
-#else
-
-int64_t perfc_convert_ticks_to_us(int64_t lTick)
-{
-    return INT_TO_Q16(lTick) / PERFC.US.q16Unit;
-}
-
-int64_t perfc_convert_us_to_ticks(uint32_t wUS)
-{
-    return Q16_TO_INT((int64_t)wUS * (int64_t)PERFC.US.q16Unit);
-}
-
-#endif
 
 #if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
 int64_t get_system_ms(void)
