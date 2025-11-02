@@ -374,17 +374,17 @@ __STATIC_INLINE int64_t check_systick(void)
      *            perfc_port_get_system_timer_elapsed().
      *        The following code implements an equivalent logic.
      */
-     if (PERFC.bIsSysTimerOccupied) {
-     
-     #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
+    if (PERFC.bIsSysTimerOccupied) {
+
+    #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
         lTemp = __check_and_handle_ovf(lTemp);
-     #else
+    #else
         if (perfc_port_is_system_timer_ovf_pending()){
             lTemp = perfc_port_get_system_timer_elapsed();
             lTemp += perfc_port_get_system_timer_top() + 1;
         }
-     #endif
-     } else {
+    #endif
+    } else {
         lTemp = __check_and_handle_ovf(lTemp);
     }
 
