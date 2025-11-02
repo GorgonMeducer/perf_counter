@@ -238,11 +238,11 @@
             <bigend>0</bigend>
             <Strict>0</Strict>
             <Optim>5</Optim>
-            <wLevel>2</wLevel>
+            <wLevel>1</wLevel>
             <uThumb>1</uThumb>
             <VariousControls>
               <MiscControls>--std=gnu11 -fms-extensions</MiscControls>
-              <Define>__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
+              <Define>__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__,__PERF_COUNTER_CFG_USE_SYSTICK_WRAPPER__</Define>
               <Undefine></Undefine>
               <IncludePath></IncludePath>
             </VariousControls>
@@ -887,28 +887,28 @@
   <RTE>
     <apis/>
     <components>
-      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.0" condition="ARMv6_7_8-M Device">
-        <package name="CMSIS" schemaVersion="1.7.36" url="https://www.keil.com/pack/" vendor="ARM" version="6.1.0"/>
+      <component Cclass="CMSIS" Cgroup="CORE" Cvendor="ARM" Cversion="6.1.1" condition="ARMv6_7_8-M Device" ymlID="CMSIS:CORE">
+        <package name="CMSIS" schemaVersion="1.7.40" url="https://www.keil.com/pack/" vendor="ARM" version="6.2.0"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>
-      <component Cclass="Language Extension" Cgroup="Coroutine" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter">
+      <component Cclass="Language Extension" Cgroup="Coroutine" Cvendor="GorgonMeducer" Cversion="1.0.0" condition="perf_counter" ymlID="Language Extension:Coroutine">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>
-      <component Cclass="Language Extension" Cgroup="protoThread" Cvendor="GorgonMeducer" Cversion="1.1.0" condition="perf_counter">
+      <component Cclass="Language Extension" Cgroup="protoThread" Cvendor="GorgonMeducer" Cversion="1.1.0" condition="perf_counter" ymlID="Language Extension:protoThread">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example"/>
           <targetInfo name="gcc_lib"/>
         </targetInfos>
       </component>
-      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.2" condition="CMSIS-CORE">
+      <component Cclass="Utilities" Cgroup="perf_counter" Csub="Core" Cvariant="Source" Cvendor="GorgonMeducer" Cversion="2.5.3-dev" condition="CMSIS-CORE" ymlID="Utilities:perf_counter:Core&amp;Source">
         <package name="perf_counter" schemaVersion="1.7.37" url="https://raw.githubusercontent.com/GorgonMeducer/perf_counter/CMSIS-Pack/cmsis-pack/" vendor="GorgonMeducer" version="9.9.9"/>
         <targetInfos>
           <targetInfo name="example"/>
