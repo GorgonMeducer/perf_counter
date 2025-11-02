@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include <string.h>
 #include "cmsis_compiler.h"
 
@@ -53,6 +54,9 @@
 #define MAGIC_WORD_CANARY                  0xDEADBEEF
 
 /*============================ MACROFIED FUNCTIONS ===========================*/
+
+#define INT_TO_Q16(__INT)       ((__INT) >> 16)
+
 /*============================ TYPES =========================================*/
 
 struct __task_cycle_info_t {
@@ -85,12 +89,22 @@ volatile static struct {
     struct {
         uint32_t    wResidule;
         uint32_t    wUnit;
+
+        struct {
+            uint32_t    wCompenstation;
+            uint32_t    wResidule;
+        } Overflow;
+
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
     } US;
     struct {
         uint32_t    wResidule;
         uint32_t    wUnit;
+        struct {
+            uint32_t    wCompenstation;
+            uint32_t    wResidule;
+        } Overflow;
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
     } MS;
@@ -241,7 +255,12 @@ qsub_q16(q16_t q16In0, q16_t q16In1)
     return ((q16_t)(clip_q63_to_q31((q63_t)q16In0 - (q63_t)q16In1)));
 }
 
-
+/*
+ * IMPORTANT: When you want to use perf_counter APIs in ISRs having higher 
+ *            priorities than __PERFC_SYSTIMER_PRIORITY__, please make sure
+ *            the System Timer ISR (i.e. SysTick_Handler) have the same or 
+ *            higher priority.
+ */
 void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 {
     int64_t lLoad = perfc_port_get_system_timer_top() + 1;
@@ -255,26 +274,14 @@ void perfc_port_insert_to_system_timer_insert_ovf_handler(void)
 
     // update system ms counter
     __PERFC_SAFE {
-        int64_t lTemp = PERFC.MS.wResidule + lLoad;
-
-        int64_t lMS = lTemp / PERFC.MS.wUnit;
-        
-        PERFC.MS.lTimestampBase += lMS;
-
-        PERFC.MS.wResidule = (uint32_t)(    (int64_t)lTemp 
-                                       -    (int64_t)lMS * PERFC.MS.wUnit);
+        PERFC.MS.lTimestampBase += PERFC.MS.Overflow.wCompenstation;
+        PERFC.MS.wResidule += PERFC.MS.Overflow.wResidule;
     }
 
     // update system us counter
     __PERFC_SAFE {
-        int64_t lTemp = PERFC.US.wResidule + lLoad;
-
-        int64_t lUS = lTemp / PERFC.US.wUnit;
-        
-        PERFC.US.lTimestampBase += lUS;
-
-        PERFC.US.wResidule = (uint32_t)(    (int64_t)lTemp 
-                                       -    (int64_t)lUS * PERFC.US.wUnit);
+        PERFC.US.lTimestampBase += PERFC.US.Overflow.wCompenstation;
+        PERFC.US.wResidule += PERFC.US.Overflow.wResidule;
     }
 }
 
@@ -292,14 +299,20 @@ void __perf_os_patch_init(void)
 
 void update_perf_counter(void)
 {
+    int64_t lLoad = perfc_port_get_system_timer_top() + 1;
     uint32_t wSystemFrequency = perfc_port_get_system_timer_freq();
+
     PERFC.US.wUnit = wSystemFrequency / 1000000ul;
+    PERFC.US.Overflow.wCompenstation = lLoad / PERFC.US.wUnit;
+    PERFC.US.Overflow.wResidule = lLoad % PERFC.US.wUnit;
+
     PERFC.MS.wUnit = wSystemFrequency / 1000ul;
-    
+    PERFC.MS.Overflow.wCompenstation = lLoad / PERFC.MS.wUnit;
+    PERFC.MS.Overflow.wResidule = lLoad % PERFC.MS.wUnit;
+
     __PERFC_SAFE {
-        g_lLastTimeStamp = get_system_ticks();
-        __perfc_sync_barrier__();
-        g_nOffset = get_system_ticks() - g_lLastTimeStamp;
+        g_nOffset = 0;
+        __cycleof__("", {g_nOffset = __cycle_count__;}) { __NOP(); }
     }
 }
 
@@ -343,32 +356,39 @@ __STATIC_INLINE int64_t check_systick(void)
      *            perfc_port_get_system_timer_elapsed().
      *        The following code implements an equivalent logic.
      */
-    if (perfc_port_is_system_timer_ovf_pending()){
-    
-        if (PERFC.bIsSysTimerOccupied) {
-        
-        #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
-            perfc_port_clear_system_timer_ovf_pending();
-            perfc_port_insert_to_system_timer_insert_ovf_handler();
+     if (PERFC.bIsSysTimerOccupied) {
+     
+     #if defined(__PERFC_ALLOWS_RUNNING_WIHTOUT_SYSTIMER_ISR__)
+        __IRQ_SAFE {
+            if (perfc_port_is_system_timer_ovf_pending()){
 
-            /* refresh the elapsed just in case the counter has just overflowed/underflowed
-             * after we called the perfc_port_get_system_timer_elapsed()
-             */
-            lTemp = perfc_port_get_system_timer_elapsed();
-        #else
+                perfc_port_clear_system_timer_ovf_pending();
+                perfc_port_insert_to_system_timer_insert_ovf_handler();
+
+                /* refresh the elapsed just in case the counter has just overflowed/underflowed
+                 * after we called the perfc_port_get_system_timer_elapsed()
+                 */
+                lTemp = perfc_port_get_system_timer_elapsed();
+            }
+        }
+     #else
+        if (perfc_port_is_system_timer_ovf_pending()){
             lTemp = perfc_port_get_system_timer_elapsed();
             lTemp += perfc_port_get_system_timer_top() + 1;
-        #endif
-        } else {
-            perfc_port_clear_system_timer_ovf_pending();
-            perfc_port_insert_to_system_timer_insert_ovf_handler();
-
-            /* refresh the elapsed just in case the counter has just overflowed/underflowed
-             * after we called the perfc_port_get_system_timer_elapsed()
-             */
-            lTemp = perfc_port_get_system_timer_elapsed();
         }
-        
+     #endif
+     } else {
+         __IRQ_SAFE {
+            if (perfc_port_is_system_timer_ovf_pending()){
+                perfc_port_clear_system_timer_ovf_pending();
+                perfc_port_insert_to_system_timer_insert_ovf_handler();
+
+                /* refresh the elapsed just in case the counter has just overflowed/underflowed
+                 * after we called the perfc_port_get_system_timer_elapsed()
+                 */
+                lTemp = perfc_port_get_system_timer_elapsed();
+            }
+        }
     }
 
     return lTemp;
