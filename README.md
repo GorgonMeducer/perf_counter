@@ -1,4 +1,4 @@
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter) ![GitHub](https://img.shields.io/github/license/GorgonMeducer/perf_counter) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/GorgonMeducer/perf_counter?include_prereleases)
 
 # perf_counter (v2.5.3)
 A dedicated performance counter mainly for micro-controllers. 
