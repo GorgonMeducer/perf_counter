@@ -1,3 +1,5 @@
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter)
+
 # perf_counter (v2.5.3)
 A dedicated performance counter mainly for micro-controllers. 
 
