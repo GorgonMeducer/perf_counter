@@ -19,6 +19,11 @@
     <release version="9.9.9" tag="9.9.9">
       Active development ...
     </release>
+    <release date="2025-11-29" version="2.5.4" tag="v2.5.4" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.4/GorgonMeducer.perf_counter.2.5.4.pack" >
+      Release v2.5.4
+      - Fixs an integer overflow issue caused by a typo in perfc_delay_us()
+      - Other minor changes.
+    </release>
     <release date="2025-11-02" version="2.5.3" tag="v2.5.3" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.3/GorgonMeducer.perf_counter.2.5.3.pack" >
       Release v2.5.3
       - Allowing specifying a variable as the name string in __cycleof__().
