@@ -245,7 +245,7 @@ For example, when inserting user code, you can read CPI from `__PERF_INFO__.fCPI
 ```c
 void main(void)
 {
-    init_cycle_counter(false);
+    perfc_init(false);
 
     __perf_counter_printf__("Run coremark\r\n");
 
@@ -290,6 +290,8 @@ int main (void)
 {
    int i, n;
    
+   ...
+       
    n = 5;
    
    /* Initialize random number generator */
@@ -349,8 +351,8 @@ This example shows how to use the delta value of `get_system_ticks()` to measure
 perf_counter provides the basic timer services for delaying a given period and polling-for-timeout. For example:
 
 ```c
-delay_ms(1000);   /* block the program for 1000ms */
-delay_us(50);	  /* block the program for 50us */
+perfc_delay_ms(1000);   /* block the program for 1000ms */
+perfc_delay_us(50);	  /* block the program for 50us */
 
 while(1) {
     /* return true every 1000 ms */
@@ -566,7 +568,7 @@ void main(void)
      *!        occupied by user applications or RTOS; otherwise, pass
      *!        false. 
      */
-    init_cycle_counter(true);
+    perfc_init(true);
     
     ...
     while(1) {
