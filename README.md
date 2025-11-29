@@ -658,7 +658,7 @@ YES. For such scenario, please initialize the **perf_counter** with:
 perfc_init(false);
 ```
 
-and make sure the system timer (e.g. **SysTick**) is only used by **perf_counter.** If the SysTick is used by RTOS or other application, you can port perf_counter to a different timer using the `perfc_port_user.h` and `perfc_port_user.c` stored in the `template` folder. 
+and make sure the system timer (e.g. **SysTick**) is only used by **perf_counter.** If the SysTick is used by an RTOS or other applications, you can port perf_counter to a different timer using the `perfc_port_user.h` and `perfc_port_user.c` stored in the `template` folder. 
 
 
 
