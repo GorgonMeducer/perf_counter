@@ -1,6 +1,6 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter) ![GitHub](https://img.shields.io/github/license/GorgonMeducer/perf_counter) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/GorgonMeducer/perf_counter?include_prereleases)
 
-# perf_counter (v2.5.3)
+# perf_counter (v2.5.4)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.
@@ -39,13 +39,13 @@ A dedicated template is provided to port the perf_counter to different architect
   - `perfc_delay_us()` and `perfc_delay_ms()` with **64bit return value**.
     - Adds weak entries `perfc_delay_us_user_code_in_loop()` and `perfc_delay_ms_user_code_in_loop()` for users to override, e.g. feeding the watchdog. 
   - Provides Timestamp services via `get_system_ticks()`, `get_system_us` and `get_system_ms()`.
-  - **[new]** When passing `false` to `perfc_init()`, it is possible to use perf_counter in ISRs or global interrupt handling is disabled.
-  - **[new]** Users can call micro-seconds related APIs even when the system timer clock is less than 1MHz. 
+  - When passing `false` to `perfc_init()`, it is possible to use perf_counter in ISRs or global interrupt handling is disabled.
+  - Users can call micro-seconds related APIs even when the system timer clock is less than 1MHz. 
 - **Support both RTOS and bare-metal environments**
   - Supports SysTick Reconfiguration
   - Supports changing System Frequency
   - Supports stack-overflow detection in RTOS environment via `perfc_check_task_stack_canary_safe()`
-  - **[new]** Adds macro `__PERFC_SAFE ` to avoid blocking high priority ISRs and tasks. Users should define the system timer priority level with macro `__PERFC_SYSTIMER_PRIORITY__ `. In Cortex-M, `0` means the highest configurable exception level.
+  - Adds macro `__PERFC_SAFE ` to avoid blocking high priority ISRs and tasks. Users should define the system timer priority level with macro `__PERFC_SYSTIMER_PRIORITY__ `. In Cortex-M, `0` means the highest configurable exception level.
 - **Utilities for C language enhancement**
   - Macros to detect compilers, e.g. `__IS_COMPILER_ARM_COMPILER_6__`, `__IS_COMPILER_LLVM__` etc.
   - Macros to detect compiler features: 
@@ -71,7 +71,7 @@ A dedicated template is provided to port the perf_counter to different architect
     - Adds watermark to stack and users can call `perfc_coroutine_stack_remain()` to get the stack usage info.
     - Defining macro `__PERFC_COROUTINE_NO_STACK_CHECK__` in **compilation command line** disables the stack-checking feature. 
   - Adds protoThread support with/without the coroutine.
-    - **[new]** Adds timeout feature in **wait_xxxx**
+    -  Adds timeout feature in **wait_xxxx**
 
 
 ### Important Updates
@@ -481,7 +481,7 @@ void main(void)
      *!        occupied by user applications or RTOS; otherwise, pass
      *!        false. 
      */
-    init_cycle_counter(true);
+    perfc_init(true);
     
     ...
     while(1) {
@@ -502,7 +502,7 @@ __super_loop_monitor__()
 ```
 
 9. It is nice to add macro definition `__PERF_COUNTER__` to your project GLOBALLY. It helps other modules to detect the existence of perf_counter. For Example, LVGL [`lv_conf_cmsis.h`](https://github.com/lvgl/lvgl/blob/d367bb7cf17dc34863f4439bba9b66a820088951/env_support/cmsis-pack/lv_conf_cmsis.h#L81-L99) use this macro to detect perf_counter and uses `get_system_ms()` to implement `lv_tick_get()`.
-10. **[new]** It is nice to add `-include "perfc_common.h"` (or using equivalent option of your compiler) to the command line **GLOBALLY**.
+10. It is nice to add `-include "perfc_common.h"` (or using equivalent option of your compiler) to the command line **GLOBALLY**.
 
 
 
@@ -629,7 +629,7 @@ Since version v2.1.0, I removed the unnecessary bundle feature from the cmsis-pa
 
 Sorry about this inconvenience. 
 
-### 3.3 [new] How to feed the watchdog in `perfc_delay_ms()`?
+### 3.3 How to feed the watchdog in `perfc_delay_ms()`?
 
 Since version v2.5.0, it is possible to feed the watchdog while waiting for `perfc_delay_ms()` to return. You can implement a function called `perfc_delay_ms_user_code_in_loop()` in ANY of your C source file and use it to feed the watchdog:
 
@@ -648,7 +648,15 @@ bool perfc_delay_ms_user_code_in_loop(int64_t lRemainInMs)
 }
 ```
 
+### 3.4 Can I use perf_counter APIs in ISRs and/or when the global interrupt is disabled?
 
+YES. For such scenario, please initialize the **perf_counter** with:
+
+```c
+perfc_init(false);
+```
+
+and make sure the system timer (e.g. **SysTick**) is only used by **perf_counter.** If the SysTick is used by RTOS or other application, you can port perf_counter to a different timer using the `perfc_port_user.h` and `perfc_port_user.c` stored in the `template` folder. 
 
 
 
