@@ -390,7 +390,7 @@ bool perfc_delay_us_user_code_in_loop(int64_t lRemainInUs)
 
 void perfc_delay_us(uint32_t wUs)
 {
-    int16_t lTicks = perfc_convert_us_to_ticks(wUs);
+    int64_t lTicks = perfc_convert_us_to_ticks(wUs);
     int32_t iCompensate = g_nOffset > PERF_CNT_DELAY_US_COMPENSATION
                         ? g_nOffset 
                         : PERF_CNT_DELAY_US_COMPENSATION;
