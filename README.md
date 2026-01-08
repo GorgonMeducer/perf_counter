@@ -1,6 +1,6 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter) ![GitHub](https://img.shields.io/github/license/GorgonMeducer/perf_counter) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/GorgonMeducer/perf_counter?include_prereleases)
 
-# perf_counter (v2.5.4)
+# perf_counter (v2.5.5-dev)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.
@@ -212,7 +212,7 @@ void main(void)
 
 #### 1.2.2 Cycle per Instruction and L1 DCache Miss Rate
 
-For **Armv8.1-m** processors that implement the **PMU**, it is easy to measure the **CPI** (Cycle per Instruction) and **L1 DCache miss rate** with the macro `__cpu_perf__()`.
+For **Armv8.1-m** processors that implement the **PMU**, it is easy to measure the **CPI** (Cycle per Instruction), **L1 DCache miss rate** and **L1 ICache miss rate**with the macro `__cpu_perf__()`.
 
 **Syntax**:
 
@@ -230,11 +230,13 @@ struct {
     uint64_t dwNoInstr;                 /* number of instruction executed */        
     uint64_t dwNoMemAccess;             /* number of memory access */
     uint64_t dwNoL1DCacheRefill;        /* number of L1 DCache Refill */
+    uint64_t dwNoL1ICacheRefill;        /* number of L1 ICache Refill */
     int64_t lCycles;                    /* number of CPU cycles */
     uint32_t wInstrCalib;                                               
     uint32_t wMemAccessCalib;                                           
     float fCPI;                         /* Cycle per Instruction */
     float fDCacheMissRate;              /* L1 DCache miss rate in percentage */
+    float fICacheMissRate;              /* L1 ICache miss rate in percentage */
 } __PERF_INFO__;
 ```
 
