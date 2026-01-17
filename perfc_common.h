@@ -339,7 +339,7 @@ extern "C" {
                                     (__VA_ARGS__)
 
 #undef __perfc_with2
-#undef __perfc_perfc_with3
+#undef __perfc_with3
 #undef perfc_with
 
 #define __perfc_with1(__addr)                                                   \
