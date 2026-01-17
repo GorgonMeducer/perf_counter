@@ -238,3 +238,32 @@ task_cycle_info_t * get_rtos_task_cycle_info(void)
 {
     return &(((struct __task_cycle_info_t *)pxCurrentTCB->pxStack)->tInfo);
 }
+
+const uint32_t __perf_freertos_stack_skip_size = sizeof(__task_cycle_info_t);
+
+/**
+ * @brief Use the following code to replace the `prvTaskCheckFreeStackSpace` function in FreeRTOS/task.c
+ *
+ */
+
+// #if ((configUSE_TRACE_FACILITY == 1) || (INCLUDE_uxTaskGetStackHighWaterMark == 1) || (INCLUDE_uxTaskGetStackHighWaterMark2 == 1))
+
+// static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace(const uint8_t *pucStackByte)
+// {
+//     uint32_t ulCount = 0U;
+
+//     extern const uint32_t __perf_freertos_stack_skip_size;
+//     pucStackByte -= portSTACK_GROWTH * __perf_freertos_stack_skip_size;  // skip perf_counter used space
+
+//     while (*pucStackByte == (uint8_t)tskSTACK_FILL_BYTE)
+//     {
+//         pucStackByte -= portSTACK_GROWTH;
+//         ulCount++;
+//     }
+
+//     ulCount /= (uint32_t)sizeof(StackType_t); /*lint !e961 Casting is not redundant on smaller architectures. */
+
+//     return (configSTACK_DEPTH_TYPE)ulCount;
+// }
+
+// #endif /* ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark2 == 1 ) ) */
