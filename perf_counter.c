@@ -101,7 +101,7 @@ volatile static struct {
 
     /* millisecond */
     struct {
-        uint32_t    wUnit;
+        uint32_t wUnit;
     #if defined(__PERFC_USE_DEDICATED_MS_AND_US__)
         uint32_t    wResidule;
         struct {
@@ -111,6 +111,7 @@ volatile static struct {
         int64_t     lTimestampBase;
         int64_t     lOldTimestamp;
     #endif
+        int32_t nRTCCalib;
     } MS;
     
     /* Misc */
@@ -373,6 +374,13 @@ void before_cycle_counter_reconfiguration(void)
     }
 }
 
+void perfc_system_ms_calibration(int64_t lRTCMS)
+{
+    __PERFC_SAFE {
+        PERFC.MS.nRTCCalib += lRTCMS - get_system_ms();
+    }
+}
+
 __attribute__((constructor))
 void __perf_counter_init(void)
 {
@@ -480,6 +488,10 @@ int64_t get_system_ticks(void)
         }
     }
 
+    if (PERFC.MS.nRTCCalib) {
+        lTemp += perfc_convert_ms_to_ticks(PERFC.MS.nRTCCalib);
+    }
+
     return lTemp;
 }
 
@@ -518,9 +530,9 @@ int64_t perfc_convert_ticks_to_ms(int64_t lTick)
     return lTick / (int64_t)PERFC.MS.wUnit;
 }
 
-int64_t perfc_convert_ms_to_ticks(uint32_t wMS)
+int64_t perfc_convert_ms_to_ticks(int32_t nMS)
 {
-    return (int64_t)PERFC.MS.wUnit * (int64_t)wMS;
+    return (int64_t)PERFC.MS.wUnit * (int64_t)nMS;
 }
 
 
@@ -575,6 +587,10 @@ int64_t get_system_ms(void)
             PERFC.MS.lOldTimestamp = lTemp;
         }
     }
+    
+    if (PERFC.MS.nRTCCalib) {
+        lTemp += PERFC.MS.nRTCCalib;
+    }
 
     return lTemp;
 }
@@ -594,6 +610,11 @@ int64_t get_system_us(void)
         } else {
             PERFC.US.lOldTimestamp = lTemp;
         }
+    }
+
+    if (PERFC.MS.nRTCCalib) {
+        lTemp += perfc_convert_ticks_to_us(
+                    perfc_convert_ms_to_ticks(PERFC.MS.nRTCCalib));
     }
 
     return lTemp;

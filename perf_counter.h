@@ -545,6 +545,7 @@ extern int64_t clock(void);
 /*!
  * \brief try to set a start pointer for the performance counter
  */
+CMSIS_DEPRECATED
 static inline
 void start_cycle_counter(void)
 {
@@ -556,6 +557,7 @@ void start_cycle_counter(void)
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
+CMSIS_DEPRECATED
 static inline
 int64_t stop_cycle_counter(void)
 {
@@ -585,11 +587,11 @@ int64_t perfc_convert_ticks_to_ms(int64_t lTick);
 /*!
  * \brief convert millisecond into ticks of the reference timer
  *
- * \param[in] wMS the target time in millisecond
+ * \param[in] nMS the target time in millisecond
  * \return int64_t the ticks
  */
 extern
-int64_t perfc_convert_ms_to_ticks(uint32_t wMS);
+int64_t perfc_convert_ms_to_ticks(int32_t nMS);
 
 /*!
  * \brief convert ticks of a reference timer to microsecond
@@ -893,6 +895,15 @@ extern void update_perf_counter(void);
  *       the Load register and Current Value register to zero.
  */
 extern void before_cycle_counter_reconfiguration(void);
+
+
+/*!
+ * \brief you can use this function to calibrate the system timestamp with a 
+ *        milisecond read from RTC.
+ * \note the maximum error could be around 1ms. 
+ */
+extern
+void perfc_system_ms_calibration(int64_t lRTCMS);
 
 /*! @} */
 
