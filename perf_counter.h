@@ -587,11 +587,11 @@ int64_t perfc_convert_ticks_to_ms(int64_t lTick);
 /*!
  * \brief convert millisecond into ticks of the reference timer
  *
- * \param[in] nMS the target time in millisecond
+ * \param[in] lMS the target time in millisecond
  * \return int64_t the ticks
  */
 extern
-int64_t perfc_convert_ms_to_ticks(int32_t nMS);
+int64_t perfc_convert_ms_to_ticks(int64_t nMS);
 
 /*!
  * \brief convert ticks of a reference timer to microsecond
@@ -605,11 +605,11 @@ int64_t perfc_convert_ticks_to_us(int64_t lTick);
 /*!
  * \brief convert microsecond into ticks of the reference timer
  *
- * \param[in] wUS the target time in microsecond
+ * \param[in] lUS the target time in microsecond
  * \return int64_t the ticks
  */
 extern
-int64_t perfc_convert_us_to_ticks(uint32_t wUS);
+int64_t perfc_convert_us_to_ticks(int64_t lUS);
 
 /*!
  * \brief get the system timer frequency
