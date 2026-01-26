@@ -108,6 +108,14 @@ extern "C" {
 #   endif
 #endif
 
+#ifndef PERFC_DEPRECATED
+#   if defined(CMSIS_DEPRECATED)
+#       define PERFC_DEPRECATED     CMSIS_DEPRECATED
+#   else
+#       define PERFC_DEPRECATED     __attribute__((deprecated))
+#   endif
+#endif
+
 /*============================ MACROFIED FUNCTIONS ===========================*/
 
 #ifndef UNUSED_PARAM
@@ -545,7 +553,7 @@ extern int64_t clock(void);
 /*!
  * \brief try to set a start pointer for the performance counter
  */
-CMSIS_DEPRECATED
+PERFC_DEPRECATED
 static inline
 void start_cycle_counter(void)
 {
@@ -557,7 +565,7 @@ void start_cycle_counter(void)
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
-CMSIS_DEPRECATED
+PERFC_DEPRECATED
 static inline
 int64_t stop_cycle_counter(void)
 {
