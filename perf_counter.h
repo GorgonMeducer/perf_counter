@@ -48,9 +48,9 @@ extern "C" {
  */
 #define __PERF_COUNTER_VER_MAJOR__          2
 #define __PERF_COUNTER_VER_MINOR__          5
-#define __PERF_COUNTER_VER_REVISE__         4
+#define __PERF_COUNTER_VER_REVISE__         5
 
-#define __PERF_COUNTER_VER_STR__            ""
+#define __PERF_COUNTER_VER_STR__            "dev"
 
 #define __PER_COUNTER_VER__    (__PERF_COUNTER_VER_MAJOR__ * 10000ul            \
                                +__PERF_COUNTER_VER_MINOR__ * 100ul              \
@@ -105,6 +105,14 @@ extern "C" {
 #       define PERFC_NOINIT   __attribute__(( section( ".bss.noinit")))
 #   else
 #       define PERFC_NOINIT
+#   endif
+#endif
+
+#ifndef PERFC_DEPRECATED
+#   if defined(CMSIS_DEPRECATED)
+#       define PERFC_DEPRECATED     CMSIS_DEPRECATED
+#   else
+#       define PERFC_DEPRECATED     __attribute__((deprecated))
 #   endif
 #endif
 
@@ -545,6 +553,7 @@ extern int64_t clock(void);
 /*!
  * \brief try to set a start pointer for the performance counter
  */
+PERFC_DEPRECATED
 static inline
 void start_cycle_counter(void)
 {
@@ -556,6 +565,7 @@ void start_cycle_counter(void)
  * \note  you can have multiple stop_cycle_counter following one start point
  * \return int32_t the elapsed cycle count
  */
+PERFC_DEPRECATED
 static inline
 int64_t stop_cycle_counter(void)
 {
@@ -585,11 +595,11 @@ int64_t perfc_convert_ticks_to_ms(int64_t lTick);
 /*!
  * \brief convert millisecond into ticks of the reference timer
  *
- * \param[in] wMS the target time in millisecond
+ * \param[in] lMS the target time in millisecond
  * \return int64_t the ticks
  */
 extern
-int64_t perfc_convert_ms_to_ticks(uint32_t wMS);
+int64_t perfc_convert_ms_to_ticks(int64_t nMS);
 
 /*!
  * \brief convert ticks of a reference timer to microsecond
@@ -603,11 +613,11 @@ int64_t perfc_convert_ticks_to_us(int64_t lTick);
 /*!
  * \brief convert microsecond into ticks of the reference timer
  *
- * \param[in] wUS the target time in microsecond
+ * \param[in] lUS the target time in microsecond
  * \return int64_t the ticks
  */
 extern
-int64_t perfc_convert_us_to_ticks(uint32_t wUS);
+int64_t perfc_convert_us_to_ticks(int64_t lUS);
 
 /*!
  * \brief get the system timer frequency
@@ -893,6 +903,15 @@ extern void update_perf_counter(void);
  *       the Load register and Current Value register to zero.
  */
 extern void before_cycle_counter_reconfiguration(void);
+
+
+/*!
+ * \brief you can use this function to calibrate the system timestamp with a 
+ *        milisecond read from RTC.
+ * \note the maximum error could be around 1ms. 
+ */
+extern
+void perfc_system_ms_calibration(int64_t lRTCMS);
 
 /*! @} */
 

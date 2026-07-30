@@ -200,7 +200,7 @@ label_switch_start:                                                             
  */
 #define PERFC_CPT_TIMEOUT(__MS)                                                 \
             {                                                                   \
-                int16_t lCurrentMs = get_system_ms();                           \
+                int64_t lCurrentMs = get_system_ms();                           \
                 if (0 == lTimestamp) {                                          \
                     lTimestamp = lCurrentMs;                                    \
                 } else if ((lCurrentMs - lTimestamp) >= (__MS)) {               \

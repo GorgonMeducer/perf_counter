@@ -34,11 +34,13 @@
             uint64_t dwNoInstr;                                                 \
             uint64_t dwNoMemAccess;                                             \
             uint64_t dwNoL1DCacheRefill;                                        \
+            uint64_t dwNoL1ICacheRefill;                                        \
             int64_t lCycles;                                                    \
             uint32_t wInstrCalib;                                               \
             uint32_t wMemAccessCalib;                                           \
             float fCPI;                                                         \
             float fDCacheMissRate;                                              \
+            float fICacheMissRate;                                              \
         } __PERF_INFO__ = {0},                                                  \
         ({                                                                      \
             __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
@@ -49,6 +51,8 @@
                                           - __PERF_INFO__.dwNoMemAccess;        \
             __PERF_INFO__.dwNoL1DCacheRefill                                    \
                 = perfc_pmu_get_L1_dcache_refill_count();                       \
+            __PERF_INFO__.dwNoL1ICacheRefill                                    \
+                = perfc_pmu_get_L1_icache_refill_count();                       \
             __PERF_INFO__.dwNoInstr = perfc_pmu_get_instruction_count();        \
             __PERF_INFO__.dwNoMemAccess = perfc_pmu_get_memory_access_count();  \
         }),                                                                     \
@@ -62,12 +66,19 @@
             __PERF_INFO__.dwNoL1DCacheRefill                                    \
                 = perfc_pmu_get_L1_dcache_refill_count()                        \
                 - __PERF_INFO__.dwNoL1DCacheRefill;                             \
+            __PERF_INFO__.dwNoL1ICacheRefill                                    \
+                = perfc_pmu_get_L1_icache_refill_count()                        \
+                - __PERF_INFO__.dwNoL1ICacheRefill;                             \
                                                                                 \
             __PERF_INFO__.fDCacheMissRate                                       \
                         = (float)( (double)__PERF_INFO__.dwNoL1DCacheRefill     \
                                  / (double)__PERF_INFO__.dwNoMemAccess)         \
                         * 100.0f;                                               \
                                                                                 \
+            __PERF_INFO__.fICacheMissRate                                       \
+                        = (float)( (double)__PERF_INFO__.dwNoL1ICacheRefill     \
+                                 / (double)__PERF_INFO__.dwNoInstr)             \
+                        * 100.0f;                                               \
             __PERF_INFO__.fCPI = (float)(    (double)__PERF_INFO__.lCycles      \
                                        /    (double)__PERF_INFO__.dwNoInstr);   \
             if (__PLOOC_VA_NUM_ARGS(__VA_ARGS__) == 0) {                        \
@@ -80,6 +91,8 @@
                         "Memory Access Count: %"PRIi64"\r\n"                    \
                         "L1 DCache Refill Count: %"PRIi64"\r\n"                 \
                         "L1 DCache Miss Rate: %3.4f %% \r\n"                    \
+                        "L1 ICache Refill Count: %"PRIi64"\r\n"                 \
+                        "L1 ICache Miss Rate: %3.4f %% \r\n"                    \
                         ,                                                       \
                         (__str),                                                \
                         __PERF_INFO__.dwNoInstr,                                \
@@ -87,7 +100,9 @@
                         (double)__PERF_INFO__.fCPI,                             \
                         __PERF_INFO__.dwNoMemAccess,                            \
                         __PERF_INFO__.dwNoL1DCacheRefill,                       \
-                        (double)__PERF_INFO__.fDCacheMissRate                   \
+                        (double)__PERF_INFO__.fDCacheMissRate,                  \
+                        __PERF_INFO__.dwNoL1ICacheRefill,                       \
+                        (double)__PERF_INFO__.fICacheMissRate                   \
                         );                                                      \
              } else {                                                           \
                 __VA_ARGS__                                                     \
@@ -184,6 +199,9 @@ uint64_t perfc_pmu_get_memory_access_count(void);
 
 extern
 uint64_t perfc_pmu_get_L1_dcache_refill_count(void);
+
+extern
+uint64_t perfc_pmu_get_L1_icache_refill_count(void);
 
 /*============================ IMPLEMENTATION ================================*/
 
