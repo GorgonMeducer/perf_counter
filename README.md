@@ -1,6 +1,6 @@
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/GorgonMeducer/perf_counter) ![GitHub](https://img.shields.io/github/license/GorgonMeducer/perf_counter) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/GorgonMeducer/perf_counter?include_prereleases)
 
-# perf_counter (v2.5.5-dev)
+# perf_counter (v2.5.5)
 A dedicated performance counter mainly for micro-controllers. 
 
 For Cortex-M processors, the Systick will be used by default. The `perf_counter` shares the SysTick with users' original SysTick function(s) without interfering with it. This library will bring new functionalities, such as performance counter,` perfc_delay_us`, `perfc_delay_ms` and `clock()` service defined in `time.h`.

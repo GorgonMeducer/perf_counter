@@ -364,7 +364,7 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="preIncludeGlobal"   name="perfc_common.h"               condition="No GCC"/>
@@ -386,7 +386,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="preIncludeGlobal"   name="perfc_common.h"               condition="No GCC"/>
@@ -463,7 +463,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="os/perf_os_patch_rtx5.c"/>
@@ -475,7 +475,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_freertos.c"/>
@@ -498,7 +498,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_rt_thread.c"/>
@@ -516,7 +516,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.5.5-dev" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_threadx.c"/>
@@ -541,7 +541,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
           </Pre_Include_Global_h>
         </component>
 
-        <component Cclass="Language Extension" Cgroup="protoThread" Cversion="1.1.0" condition="perf_counter">
+        <component Cclass="Language Extension" Cgroup="protoThread" Cversion="1.1.1" condition="perf_counter">
           <description>A C software infrastructure for coroutines.</description>
           <files>
             <file category="header"            name="perfc_task_pt.h"/>
