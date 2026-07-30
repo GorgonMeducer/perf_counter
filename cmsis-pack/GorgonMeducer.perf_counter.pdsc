@@ -16,6 +16,15 @@
   <repository type="git">https://github.com/GorgonMeducer/perf_counter.git</repository>
   
   <releases>
+    <release date="2026-07-30" version="2.5.5" tag="v2.5.5" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.5/GorgonMeducer.perf_counter.2.5.5.pack" >
+      Release v2.5.5
+      - Adds ICache miss rate calculation in PMU porting
+      - Fixes the FreeRTOS-patch-false-stackoverflow-report issue
+      - Adds new API to calibrate systemstamp with value read from RTC
+      - Fixes int16_t-and-int32_t typos
+      - Improves the default porting
+      - Other minor fixes
+    </release>
     <release date="2025-11-29" version="2.5.4" tag="v2.5.4" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.4/GorgonMeducer.perf_counter.2.5.4.pack" >
       Release v2.5.4
       - Fixs an integer overflow issue caused by a typo in perfc_delay_us()
@@ -361,7 +370,7 @@
   -->
 
     <components>
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="Core" Cvariant="Source" isDefaultVariant="true" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="preIncludeGlobal"   name="perfc_common.h"               condition="No GCC"/>
@@ -383,7 +392,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="Core" Cvariant="SourceNoWrapper" isDefaultVariant="false" condition="CMSIS-CORE">
               <description>A dedicated performance counter for Cortex-M systick.</description>
               <files>
                 <file category="preIncludeGlobal"   name="perfc_common.h"               condition="No GCC"/>
@@ -396,7 +405,7 @@
 #define __PERF_COUNTER__ 1
               </RTE_Components_h>
             </component>
-            <component Cclass="Utilities" Cversion="1.3.0" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" isDefaultVariant="false" condition="perf_counter">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="User Defined" Cversion="1.3.0" isDefaultVariant="false" condition="perf_counter">
               <description>A user define system timer</description>
               <files>
                 <file category="sourceC"        name="template/perfc_port_user.c" attr="config"  version="1.3.0"/>
@@ -416,7 +425,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="1.3.0" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" isDefaultVariant="true" condition="PMU Devices">
+            <component Cclass="Utilities" Cgroup="perf_counter" Csub="Porting" Cvariant="PMU" Cversion="1.4.0" isDefaultVariant="true" condition="PMU Devices">
               <description>Using the Performande Monitor Unit</description>
               <files>
                 <file category="sourceC"        name="perfc_port_pmu.c"/>
@@ -460,7 +469,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="RTX5 Patch" condition="RTX5 Patch">
               <description>A Patch for RTX5</description>
               <files>
                 <file category="source"     name="os/perf_os_patch_rtx5.c"/>
@@ -472,7 +481,7 @@
               </Pre_Include_Global_h>
             </component>
 
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="FreeRTOS Patch" condition="perf_counter">
               <description>A Patch for FreeRTOS</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_freertos.c"/>
@@ -495,7 +504,7 @@ extern void __freertos_evr_on_task_switched_in(void *ptTCB, unsigned int uxTopPr
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="RT-Thread Patch" condition="perf_counter">
               <description>A Patch for RT-Thread</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_rt_thread.c"/>
@@ -513,7 +522,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
               </Pre_Include_Global_h>
             </component>
             
-            <component Cclass="Utilities" Cversion="2.5.4" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
+            <component Cclass="Utilities" Cversion="2.5.5" Cgroup="perf_counter" Csub="ThreadX Patch" condition="perf_counter">
               <description>A Patch for ThreadX</description>
               <files>
                 <file category="sourceC"    name="os/perf_os_patch_threadx.c"/>
@@ -538,7 +547,7 @@ extern void __rt_thread_scheduler_hook(struct rt_thread *from, struct rt_thread 
           </Pre_Include_Global_h>
         </component>
 
-        <component Cclass="Language Extension" Cgroup="protoThread" Cversion="1.1.0" condition="perf_counter">
+        <component Cclass="Language Extension" Cgroup="protoThread" Cversion="1.1.1" condition="perf_counter">
           <description>A C software infrastructure for coroutines.</description>
           <files>
             <file category="header"            name="perfc_task_pt.h"/>

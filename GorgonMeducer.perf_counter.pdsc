@@ -19,6 +19,15 @@
     <release version="9.9.9" tag="9.9.9">
       Active development ...
     </release>
+    <release date="2026-07-30" version="2.5.5" tag="v2.5.5" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.5/GorgonMeducer.perf_counter.2.5.5.pack" >
+      Release v2.5.5
+      - Adds ICache miss rate calculation in PMU porting
+      - Fixes the FreeRTOS-patch-false-stackoverflow-report issue
+      - Adds new API to calibrate systemstamp with value read from RTC
+      - Fixes int16_t-and-int32_t typos
+      - Improves the default porting
+      - Other minor fixes
+    </release>
     <release date="2025-11-29" version="2.5.4" tag="v2.5.4" url="https://github.com/GorgonMeducer/perf_counter/releases/download/v2.5.4/GorgonMeducer.perf_counter.2.5.4.pack" >
       Release v2.5.4
       - Fixs an integer overflow issue caused by a typo in perfc_delay_us()
